@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_18_123400) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_05_141759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_123400) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "drivers", force: :cascade do |t|
+    t.string "name"
+    t.integer "age"
+    t.integer "number"
+    t.integer "height"
+    t.string "nationality"
+    t.integer "number_of_championships"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "number_of_wins"
+    t.integer "number_of_podiums"
+  end
+
   create_table "examples", force: :cascade do |t|
     t.string "name"
     t.string "gender"
@@ -28,8 +41,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_123400) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "helyek", id: false, force: :cascade do |t|
-    t.string "nev", null: false
+  create_table "series", force: :cascade do |t|
+    t.string "name"
+    t.integer "number_of_drivers"
+    t.integer "number_of_races"
+    t.integer "number_of_teams"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "name"
+    t.integer "number_of_championships"
+    t.integer "number_of_races"
+    t.string "headquarters_city"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "technical_director"
+    t.integer "first_win"
+    t.integer "last_championship_win"
+    t.integer "date_of_establishment"
   end
 
 end

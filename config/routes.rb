@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
+  root "drivers#index"
+
   namespace :api do
     namespace :v1 do
-      resources :examples
+      resources :series
+      resources :drivers
+      resources :cars
     end
   end
-  root "cars#index"
-  get "/cars", to:"cars#index"
+  
+  get "*path", to:"drivers#index", via: :all
 end

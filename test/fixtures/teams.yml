@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  number_of_championships: 1
+  number_of_races: 1
+  headquarters_city: MyString
+  date_of_establishment: 2023-09-30
+
+two:
+  name: MyString
+  number_of_championships: 1
+  number_of_races: 1
+  headquarters_city: MyString
+  date_of_establishment: 2023-09-30

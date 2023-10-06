@@ -4,10 +4,12 @@ function BackgroundVideo() {
   return (
     <div
       style={{
+        objectFit: "cover",
+        width: "80vw",
+        height: "100vh",
         position: "fixed",
-        width: "100%",
-        right: 150,
-        bottom: 0,
+        top: 0,
+        left: 0,
         zIndex: -1,
       }}
     >
