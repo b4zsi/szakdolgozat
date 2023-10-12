@@ -1,0 +1,28 @@
+body {
+    background-repeat: no-repeat;
+    position: relative;
+    background-image: url("../Series_f1.jpeg");
+    background-size: contain;
+    border-radius: 20px;
+}
+
+.image {
+    object-fit: cover;
+    z-index: -100;
+    height: 400px;
+    width: 100%;
+    position: relative;
+    background-size: cover;
+}
+
+div {
+ color: "white"
+}
+
+.title {
+    text-align: center;
+    font-size: "10em";
+    font-family: "Monaco";
+    color: white;
+    z-index: -1;
+}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -15,48 +15,50 @@ import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import axios from "axios";
-
-const API_URL = "http://localhost:3000/api/v1/series";
-const pages = ["dropdown", "Fórum", "Bejelentkezés", "Regisztráció"];
-const settings = ["Profil", "Kijelentkezés"];
-
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "right",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  "& .MuiPaper-root": {
-    borderRadius: 3,
-    marginTop: theme.spacing(1),
-    minWidth: 90,
-    color: theme.palette.mode === "light" ? "black" : theme.palette.grey[300],
-    boxShadow:
-      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-    "& .MuiMenu-list": {
-      padding: "4px 0",
-    },
-    "& .MuiMenuItem-root": {
-      "& .MuiSvgIcon-root": {
-        fontSize: 18,
-        marginRight: theme.spacing(1.5),
-      },
-      "&:active": {
-        backgroundColor: "black",
-      },
-    },
-  },
-}));
+import { Link } from "react-router-dom";
+import { SeriesModel } from "../../model/SeriesModel";
 
 function ResponsiveAppBar() {
+  const API_URL = "http://localhost:3000/api/v1/series";
+  const pages = ["Szeriák", "Fórum", "Bejelentkezés", "Regisztráció"];
+  const settings = ["Profil", "Kijelentkezés"];
+
+  const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+      elevation={0}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      {...props}
+    />
+  ))(({ theme }) => ({
+    "& .MuiPaper-root": {
+      borderRadius: 3,
+      marginTop: theme.spacing(1),
+      minWidth: 90,
+      color: theme.palette.mode === "light" ? "black" : theme.palette.grey[300],
+      boxShadow:
+        "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+      "& .MuiMenu-list": {
+        padding: "4px 0",
+      },
+      "& .MuiMenuItem-root": {
+        "& .MuiSvgIcon-root": {
+          fontSize: 18,
+          marginRight: theme.spacing(1.5),
+        },
+        "&:active": {
+          backgroundColor: "light-grey",
+        },
+      },
+    },
+  }));
+
   const [series, setSeries] = useState([]);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -74,6 +76,7 @@ function ResponsiveAppBar() {
     let mounted = true;
     getAPIData().then((items: any) => {
       if (mounted) {
+        console.log(items[0].id);
         setSeries(items);
       }
     });
@@ -108,7 +111,7 @@ function ResponsiveAppBar() {
   return (
     <AppBar
       position="static"
-      style={{ background: "transparent", boxShadow: "none" }}
+      style={{ background: "transparent", boxShadow: "none", zIndex: 1 }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -150,7 +153,7 @@ function ResponsiveAppBar() {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) =>
-              !page.match("dropdown") ? (
+              !page.match("Szeriák") ? (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
@@ -182,14 +185,17 @@ function ResponsiveAppBar() {
                     open={open}
                     onClose={handleClose}
                   >
-                    {series.map((series: any) => (
-                      <MenuItem
-                        onClick={handleClose}
-                        disableRipple
-                        key={series.id}
-                      >
-                        {series.name}
-                      </MenuItem>
+                    {series.map((series: SeriesModel) => (
+                      <div key={series.name}>
+                        <MenuItem onClick={handleClose} disableRipple>
+                          <a
+                            style={{ textDecoration: "none" }}
+                            href={"http://localhost:3001/series/" + series.id}
+                          >
+                            {series.name}
+                          </a>
+                        </MenuItem>
+                      </div>
                     ))}
                   </StyledMenu>
                 </div>

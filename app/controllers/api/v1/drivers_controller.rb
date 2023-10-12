@@ -6,8 +6,17 @@ class Api::V1::DriversController < ApplicationController
     end
 
     def show
-        Driver.find_by(name)
+        @drivers = Driver.where(series_id: params[:id])
+        #note to self: a find_by csak az elso elofordulast adja vissza, a where az osszeset
 
-        render json: DriverSerializer.new(drivers)
+        render json: @drivers, each_serializer: DriverSerializer
     end
+
+
+    private
+
+    def driver_params
+        params.require(:drivers).permit(:id)
+    end
+
 end
