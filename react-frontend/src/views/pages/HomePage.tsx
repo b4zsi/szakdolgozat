@@ -20,7 +20,11 @@ const HomePage = () => {
       <div className="App">
         <ResponsiveAppBar />
         <Typeanimation />
-        <BackgroundVideo />
+
+        <div style={{ width: "90%" }}>
+          <BackgroundVideo />
+        </div>
+
         <div>
           <CustomButton variant="contained">Galéria</CustomButton>
           <CustomButton variant="contained">Fórum</CustomButton>

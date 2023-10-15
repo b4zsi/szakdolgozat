@@ -6,6 +6,9 @@ import ResponsiveAppBar from "../navbar/navbar";
 import "../../styles/seriesStyle.css";
 import SeriesSingular from "../Series_singular/Series_singular";
 import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import { Box, Typography } from "@mui/material";
 
 const series_url =
   "http://localhost:3000/api/v1/series/" + document.URL.split("/")[4];
@@ -23,6 +26,14 @@ async function getAPIData2() {
   return drivers_data.data;
 }
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  //padding: theme.spacing(2),
+  //textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
 const Series = () => {
   let seriesType: SeriesModel = {
     id: 0,
@@ -39,6 +50,10 @@ const Series = () => {
       nationality: "",
       number_of_wins: 0,
       number_of_podiums: 0,
+      description: "",
+      profile_picture: "",
+      series_id: 0,
+      team_id: 0,
     },
   ];
   const [series, setSeries] = useState(seriesType);
@@ -60,21 +75,57 @@ const Series = () => {
       mounted = true;
     };
   }, []);
-
   return (
     <>
       <div>
         <ResponsiveAppBar />
+        <img
+          src={require(".././../Series_f1.jpeg")}
+          alt="kep"
+          className="image"
+        />
         <div>
-          <div className="title">{series.name}</div>
-          {/* <img src="../../McLaren-MCL35M.jpeg" alt="kep" /> */}
+          <Typography
+            sx={{
+              fontWeight: "400",
+              fontSize: "13em",
+              fontFamily: "Monaco",
+              zIndex: 2,
+            }}
+            variant="h1"
+            style={{ textAlign: "center", marginTop: 50 }}
+            color="white"
+          >
+            {series.name}
+          </Typography>
         </div>
-        <Grid container spacing={2}>
-          {drivers.map((item: DriverModel) => (
-            //<</>div key={item.name}>{item.name}</div>
-            <SeriesSingular driver={item} key={item.name} />
-          ))}
-        </Grid>
+        <Box sx={{ margin: 5 }}>
+          <Typography
+            variant="h1"
+            sx={{
+              fontWeight: "400",
+              fontSize: "4em",
+              fontFamily: "Monaco",
+              marginTop: 10,
+              color: "grey",
+            }}
+          >
+            Drivers
+          </Typography>
+          <Grid
+            container
+            spacing={1}
+            style={{
+              backgroundColor: "grey",
+              borderRadius: 15,
+              paddingLeft: 30,
+            }}
+          >
+            {drivers.map((item: DriverModel) => (
+              <SeriesSingular driver={item} key={item.name} />
+            ))}
+          </Grid>
+        </Box>
       </div>
     </>
   );

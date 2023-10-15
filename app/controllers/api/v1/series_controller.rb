@@ -7,7 +7,6 @@ class Api::V1::SeriesController < ApplicationController
 
     def show
         @series = Series.find_by(id: params[:id])
-        puts "helloszia"
         render json: @series, serializer: SeriesSerializer
     end
 
@@ -16,9 +15,8 @@ class Api::V1::SeriesController < ApplicationController
         if series.save
             render json: @series, serializer: SeriesSerializer
         else
-            render json: {error: airline.errors.message}, status: 422
+            render json: {error: series.errors.message}, status: 422
         end
-
     end
 
     def update
@@ -26,7 +24,7 @@ class Api::V1::SeriesController < ApplicationController
         if series.save
             render json: @series, serializer: SeriesSerializer
         else
-            render json: {error: airline.errors.message}, status: 422
+            render json: {error: series.errors.message}, status: 422
         end
     end
 
@@ -35,7 +33,7 @@ class Api::V1::SeriesController < ApplicationController
         if series.save
             render json: @series, serializer: SeriesSerializer
         else
-            render json: {error: airline.errors.message}, status: 422
+            render json: {error: series.errors.message}, status: 422
         end
     end
 

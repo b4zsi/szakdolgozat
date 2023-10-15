@@ -5,4 +5,8 @@ export interface DriverModel {
   nationality: string;
   number_of_wins: number;
   number_of_podiums: number;
+  description: string;
+  profile_picture: string;
+  series_id: number;
+  team_id: number;
 }

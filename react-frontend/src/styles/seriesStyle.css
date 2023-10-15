@@ -1,28 +1,25 @@
 body {
     background-repeat: no-repeat;
     position: relative;
-    background-image: url("../Series_f1.jpeg");
-    background-size: contain;
-    border-radius: 20px;
+    background-color: rgba(240, 240, 240, 1);
 }
 
 .image {
-    object-fit: cover;
-    z-index: -100;
-    height: 400px;
-    width: 100%;
-    position: relative;
-    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    filter: blur(8px);
+    -webkit-filter: blur(1px);
+    width: fit-content;
+    z-index: -1;
+    background-size: cover; /* Adjust to cover the entire container */
+    background-position: center; /* Center the image within the container */
+    width: 100vw; /* Set the width of the container to the full viewport width */
+    height: 45vh; /* Set the height of the container to the full viewport height */
+    top: 0;
+    left: 0;
 }
 
 div {
- color: "white"
-}
-
-.title {
-    text-align: center;
-    font-size: "10em";
-    font-family: "Monaco";
-    color: white;
-    z-index: -1;
+ color: "white";
+ z-index: 1;
 }
