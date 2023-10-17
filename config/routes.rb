@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :series, param: :id
       resources :drivers
       resources :cars
+      resources :teams
     end
   end
   

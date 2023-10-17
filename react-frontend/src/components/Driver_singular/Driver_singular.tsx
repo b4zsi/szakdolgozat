@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { DriverModel } from "../../model/DriverModel";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,7 +10,7 @@ type Driver = {
   driver: DriverModel;
 };
 
-const SeriesSingular: React.FC<Driver> = (driver: Driver) => {
+const Driver_Singular: FC<Driver> = (driver: Driver) => {
   return (
     <div className="">
       <Card
@@ -58,4 +58,4 @@ const SeriesSingular: React.FC<Driver> = (driver: Driver) => {
   );
 };
 
-export default SeriesSingular;
+export default Driver_Singular;

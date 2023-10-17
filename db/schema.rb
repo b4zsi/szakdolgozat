@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_15_125812) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_16_200401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,6 +66,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_15_125812) do
     t.integer "last_championship_win"
     t.integer "date_of_establishment"
     t.integer "series_id"
+    t.binary "team_picture"
+    t.string "team_color"
   end
 
 end

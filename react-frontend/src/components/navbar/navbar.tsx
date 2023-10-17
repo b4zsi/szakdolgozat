@@ -15,7 +15,6 @@ import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { SeriesModel } from "../../model/SeriesModel";
 
 function ResponsiveAppBar() {
@@ -76,7 +75,6 @@ function ResponsiveAppBar() {
     let mounted = true;
     getAPIData().then((items: any) => {
       if (mounted) {
-        console.log(items[0].id);
         setSeries(items);
       }
     });
