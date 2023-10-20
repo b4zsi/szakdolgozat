@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;1,300&display=swap');
+
+.card{
+    position: relative !important;
+    margin: 5px !important;
+    margin-top: 10px !important;
+    height: 250px !important;
+    width: 25vh !important;
+    padding: 0px !important;
+    background-color: rgba(300, 300,300, 0.7) !important;
+    border-radius: 50px !important;
+}
+
+ .cardMedia{
+    height: 180px !important;
+    width: 170px !important;
+    align-content: center !important;
+    margin-left: 10% !important;
+    
+    border-radius: 5px !important;
+    position: relative !important;
+    top: 10px !important;
+}
+
+.name{
+    text-align: center ;
+    margin: 0px ; 
+     padding: 0px;
+    font-size: 1.2em !important;
+    font-family: "Sans" monospace !important;
+    color: black;
+}

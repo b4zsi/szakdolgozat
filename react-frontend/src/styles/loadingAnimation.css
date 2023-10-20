@@ -1,0 +1,41 @@
+
+.loader {
+    width: 130px;
+    height: 48px;
+    display: inline-block;
+    background: linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000 100%), linear-gradient(45deg, #000 25%, white 25%, white 75%, #000 75%, #000 100%);
+    font-size: 20px;
+    background-size: 32px 32px;
+    box-sizing: border-box;
+    animation: raceBoard 0.6s linear infinite;
+    background-position: 0 0, 16px 16px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    position: absolute;
+    top: 40%;
+    transform: translate(0, -50%);
+    padding-left: 60%;
+    margin-left: 20%;
+  }
+  
+  @keyframes raceBoard {
+    0% {
+      background-position: 0 0, 16px 16px;
+    }
+    100% {
+      background-position: 32px 0px, 48px 16px;
+    }
+  }
+  
+  .text{
+    text-align: center;
+    margin-left: 40%;
+    font-size: 3em;
+    display: flex;
+    font-family: "Monaco";
+    position: absolute;
+    font-weight:100 !important;
+    top:36%;
+    transform: translate(0, -70%);
+  }

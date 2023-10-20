@@ -5,9 +5,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { TeamModel } from "../../model/TeamModel";
+import hexRgb from "hex-rgb";
+import "../../styles/team_singularStyle.css";
 
 type Team = {
-  team: TeamModel;
+  properties: TeamModel;
 };
 
 const TeamSingular: FC<Team> = (team: Team) => {
@@ -18,23 +20,19 @@ const TeamSingular: FC<Team> = (team: Team) => {
           borderRadius: 7,
           position: "relative",
           margin: 1,
-          height: 250,
+          height: "35vh",
           width: 250,
           padding: 0,
-          backgroundColor: "rgba(300, 300,300, 0.7)",
+          backgroundColor: `${hexRgb(team.properties.team_color + "B3", {
+            format: "css",
+          })}`,
+          backgroundSize: "cover",
+          color: "white",
         }}
       >
         <CardMedia
-          style={{
-            height: 180,
-            width: 170,
-            alignContent: "center",
-            marginLeft: "15%",
-            borderRadius: 5,
-            position: "relative",
-            top: 10,
-          }}
-          image={`data:image/jpeg;base64,${team.team.team_picture}`}
+          className="card-media"
+          image={`data:image/jpeg;base64,${team.properties.team_picture}`}
           title="drivers"
         />
         <CardContent>
@@ -50,7 +48,7 @@ const TeamSingular: FC<Team> = (team: Team) => {
               fontFamily: "Monaco",
             }}
           >
-            {team.team.name}
+            {team.properties.name}
           </Typography>
         </CardContent>
       </Card>

@@ -5,6 +5,7 @@ import ResponsiveAppBar from "../../components/navbar/navbar";
 import BackgroundVideo from "../../components/backgroundvideo/backgroundVideo";
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
+import Footer from "../../components/footerComponent/footer";
 
 const CustomButton = styled(Button)({
   margin: "20px",
@@ -27,10 +28,10 @@ const HomePage = () => {
 
         <div>
           <CustomButton variant="contained">Galéria</CustomButton>
-          <CustomButton variant="contained">Fórum</CustomButton>
+          <CustomButton variant="contained">Naptár</CustomButton>
         </div>
       </div>
-      ;
+      <Footer />
     </>
   );
 };

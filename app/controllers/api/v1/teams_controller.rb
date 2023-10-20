@@ -1,13 +1,11 @@
 class Api::V1::TeamsController < ApplicationController
     def index
         team = Team.all
-        puts("dikkszoszi")
         render json: team, each_serializer: TeamSerializer
     end
 
     def show
         teams = Team.where(series_id: params[:id]).order(:id)
-        puts("xddddd")
         render json: teams, each_serializer: TeamSerializer
     end
 

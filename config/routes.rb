@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :drivers
       resources :cars
       resources :teams
+      resources :images
     end
   end
   

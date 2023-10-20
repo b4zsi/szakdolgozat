@@ -17,9 +17,7 @@ const SingleLineGridList: FC<String> = ({ drivers }: any) => {
         style={{ flexWrap: "nowrap", transform: "translateZ(0)" }}
         cols={2.5}
       >
-        {drivers.map((item: DriverModel) => (
-          <DriverSingular driver={item} key={item.name} />
-        ))}
+        hello
       </ImageList>
     </div>
   );

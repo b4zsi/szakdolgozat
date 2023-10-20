@@ -1,41 +1,30 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import { SeriesModel } from "../../model/SeriesModel";
 import { DriverModel } from "../../model/DriverModel";
 import ResponsiveAppBar from "../navbar/navbar";
-import "../../styles/seriesStyle.css";
+import "./seriesStyle.css";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Box, ImageList, Typography } from "@mui/material";
 import DriverSingular from "../Driver_singular/Driver_singular";
 import { TeamModel } from "../../model/TeamModel";
 import TeamSingular from "../Team_singular/Team_singular";
+import "../../styles/loadingAnimation.css";
+import { ImageModel } from "../../model/ImageModel";
+import SeriesStats from "../SeriesStats/SeriesStats";
 
-const series_url =
-  "http://localhost:3000/api/v1/series/" + document.URL.split("/")[4];
+const series_number: number = parseInt(document.URL.split("/")[4]);
 
-const drivers_url =
-  "http://localhost:3000/api/v1/drivers/" + document.URL.split("/")[4];
+const series_url = "http://localhost:3000/api/v1/series/" + series_number;
 
-const teams_url =
-  "http://localhost:3000/api/v1/teams/" + document.URL.split("/")[4];
+const drivers_url = "http://localhost:3000/api/v1/drivers/" + series_number;
 
-async function getSeriesData() {
-  const series_data = await axios.get(series_url);
-  return series_data.data;
-}
+const teams_url = "http://localhost:3000/api/v1/teams/" + series_number;
 
-async function getDriverData() {
-  const drivers_data = await axios.get(drivers_url);
-  return drivers_data.data;
-}
-async function getTeamData() {
-  const teams_data = await axios.get(teams_url);
-  return teams_data.data;
-}
+const images_url = "http://localhost:3000/api/v1/images";
 
 const Series = () => {
-  console.log("hello");
   let seriesType: SeriesModel = {
     id: 0,
     name: "",
@@ -43,22 +32,7 @@ const Series = () => {
     number_of_drivers: 0,
     number_of_teams: 0,
   };
-  let teamType: TeamModel[] = [
-    {
-      id: 0,
-      name: "",
-      number_of_championships: 0,
-      number_of_races: 0,
-      headquarters_city: "",
-      technical_director: "",
-      first_win: 0,
-      last_championship_win: 0,
-      date_of_establishment: 0,
-      series_id: 0,
-      team_picture: "",
-      team_color: "",
-    },
-  ];
+
   let driverType: DriverModel[] = [
     {
       id: 0,
@@ -73,68 +47,70 @@ const Series = () => {
       team_id: 0,
     },
   ];
+  let teamType: TeamModel[] = [
+    {
+      id: 0,
+      name: "",
+      number_of_championships: 0,
+      number_of_races: 0,
+      headquarters_city: "",
+      technical_director: "",
+      first_win: 0,
+      last_championship_win: 0,
+      date_of_establishment: 0,
+      series_id: 1,
+      team_picture: "",
+      team_color: "ffffff",
+    },
+  ];
+  let imageType: ImageModel[] = [
+    {
+      id: 0,
+      image_name: "",
+      image_url: "",
+    },
+  ];
+
   const [series, setSeries] = useState(seriesType);
   const [drivers, setDrivers] = useState(driverType);
   const [teams, setTeams] = useState(teamType);
+  const [images, setImages] = useState(imageType);
+  const [isPageLoading, setIsPageLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = false;
-    getSeriesData().then((items: any) => {
-      if (!mounted) {
-        setSeries(items);
-      }
-    });
-    getDriverData().then((items: any) => {
-      if (!mounted) {
-        setDrivers(items);
-      }
-    });
-    getTeamData().then((items: any) => {
-      if (!mounted) {
-        setTeams(items);
-      }
-    });
-    return () => {
-      mounted = true;
+    const fetchData = async () => {
+      await axios.get(series_url).then((data) => {
+        setSeries(data.data);
+      });
+      await axios.get(drivers_url).then((data) => {
+        setDrivers(data.data);
+      });
+      await axios.get(teams_url).then((data) => {
+        setTeams(data.data);
+      });
+      await axios.get(images_url).then((data) => {
+        setImages(data.data);
+      });
     };
+    fetchData().then(() => setIsPageLoading(false));
   }, []);
-  console.log(teams);
-  return (
-    <>
+  return isPageLoading ? (
+    <Fragment>
+      <div className="text">betöltés...</div>
+      <div className="loader"></div>
+    </Fragment>
+  ) : (
+    <Fragment>
       <div>
         <ResponsiveAppBar />
         <img
-          src={require("../../black-image.jpeg")}
+          src={`data:image/jpeg;base64,${images[series_number - 1].image_url}`}
           alt="kep"
           className="image"
         />
-        <div>
-          <Typography
-            sx={{
-              fontWeight: "400",
-              fontSize: "13em",
-              fontFamily: "Monaco",
-              zIndex: 2,
-            }}
-            variant="h1"
-            style={{ textAlign: "center", marginTop: 50 }}
-            color="white"
-          >
-            {series.name}
-          </Typography>
-        </div>
-        <Box sx={{ margin: 5 }}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: "400",
-              fontSize: "4em",
-              fontFamily: "Monaco",
-              marginTop: 4,
-              color: "grey",
-            }}
-          >
-            Drivers
+        <Box sx={{ margin: 5, marginTop: 30 }}>
+          <Typography variant="h1" className="title">
+            Versenyzők
           </Typography>
           <Paper variant="outlined">
             <Grid
@@ -144,23 +120,23 @@ const Series = () => {
               justifyContent={"center"}
               wrap="nowrap"
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "space-around",
-                  overflow: "hidden",
-                }}
-              >
-                <ImageList
-                  style={{
-                    display: "flex",
-                    flexWrap: "nowrap",
-                    transform: "translateZ(0)",
-                  }}
-                >
+              <div className="oneLineDiv">
+                <ImageList className="imageList">
                   {drivers.map((item: DriverModel) => (
-                    <DriverSingular driver={item} key={item.name} />
+                    <DriverSingular
+                      properties={item}
+                      team_color={
+                        series.id === 1
+                          ? teams[item.team_id - 1].team_color
+                          : series.id === 2
+                          ? teams[item.team_id - 11].team_color
+                          : series.id === 3
+                          ? teams[item.team_id - 22].team_color
+                          : teams[0].team_color
+                      }
+                      team_id={item.team_id}
+                      key={item.name}
+                    />
                   ))}
                 </ImageList>
               </div>
@@ -168,17 +144,8 @@ const Series = () => {
           </Paper>
         </Box>
         <Box sx={{ margin: 5 }}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: "400",
-              fontSize: "4em",
-              fontFamily: "Monaco",
-              marginTop: 4,
-              color: "grey",
-            }}
-          >
-            Teams
+          <Typography variant="h1" className="title">
+            Csapatok
           </Typography>
           <Paper variant="outlined">
             <Grid
@@ -188,31 +155,21 @@ const Series = () => {
               justifyContent={"center"}
               wrap="nowrap"
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "space-around",
-                  overflow: "hidden",
-                }}
-              >
-                <ImageList
-                  style={{
-                    display: "flex",
-                    flexWrap: "nowrap",
-                    transform: "translateZ(0)",
-                  }}
-                >
+              <div className="oneLineDiv">
+                <ImageList className="imageList">
                   {teams.map((item: TeamModel) => (
-                    <TeamSingular team={item} key={item.name} />
+                    <TeamSingular properties={item} key={item.name} />
                   ))}
                 </ImageList>
               </div>
             </Grid>
           </Paper>
+        </Box>
+        <Box>
+          <SeriesStats properties={series} />
         </Box>
       </div>
-    </>
+    </Fragment>
   );
 };
 
