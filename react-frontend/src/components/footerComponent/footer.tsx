@@ -1,24 +1,31 @@
-import React from "react";
+import React, { useContext } from "react";
+import CopyrightIcon from "@mui/icons-material/Copyright";
+import { IsLoadingGlobalState } from "../LoadingContextProvider";
 
 function Footer() {
-  return (
+  const { isPageLoading, setIsPageLoading } = useContext(IsLoadingGlobalState);
+  return !isPageLoading ? (
     <div
       style={{
-        backgroundColor: "black",
+        background:
+          " linear-gradient(to left, rgba(0,0,0,1), rgba(55,55,55, 1))",
         position: "absolute",
         width: "100%",
         height: "10%",
-        bottom: 0,
+        left: 0,
         color: "white",
         fontSize: 25,
       }}
     >
       <footer>
-        <p style={{ textAlign: "center", margin: "auto" }}>
+        <div>
           2023 Minden jog fenntartva.
-        </p>
+          <CopyrightIcon style={{ margin: 5 }} />
+        </div>
       </footer>
     </div>
+  ) : (
+    <></>
   );
 }
 

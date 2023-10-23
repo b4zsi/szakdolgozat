@@ -1,59 +1,46 @@
-import { FC } from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TeamModel } from "../../model/TeamModel";
-import hexRgb from "hex-rgb";
-import "../../styles/team_singularStyle.css";
+import axios from "axios";
 
-type Team = {
-  properties: TeamModel;
+const team_id: string = document.URL.split("/")[4];
+const team_url = "http://localhost:3000/api/v1/teams/" + team_id;
+
+const Team_singular = () => {
+  let navigate = useNavigate();
+  let teamType: TeamModel = {
+    id: 0,
+    name: "",
+    number_of_championships: 0,
+    number_of_races: 0,
+    headquarters_city: "",
+    date_of_establishment: 0,
+    technical_director: "",
+    first_win: 0,
+    last_championship_win: 0,
+    series_id: 0,
+    team_color: "",
+    team_picture: "",
+    slug: "",
+  };
+  const [team, setTeam] = useState(teamType);
+
+  if (team_id.match(/[1-9]/g)) {
+    window.location.reload();
+  }
+  useEffect(() => {
+    const fetchData = async () => {
+      await axios
+        .get(team_url)
+        .then((data) => {
+          setTeam(data.data[0]);
+        })
+        .catch(() => navigate("/"));
+    };
+    fetchData();
+  }, [navigate]);
+  console.log(team);
+  return <div>{team.name}</div>;
 };
 
-const TeamSingular: FC<Team> = (team: Team) => {
-  return (
-    <div className="">
-      <Card
-        sx={{
-          borderRadius: 7,
-          position: "relative",
-          margin: 1,
-          height: "35vh",
-          width: 250,
-          padding: 0,
-          backgroundColor: `${hexRgb(team.properties.team_color + "B3", {
-            format: "css",
-          })}`,
-          backgroundSize: "cover",
-          color: "white",
-        }}
-      >
-        <CardMedia
-          className="card-media"
-          image={`data:image/jpeg;base64,${team.properties.team_picture}`}
-          title="drivers"
-        />
-        <CardContent>
-          <Divider variant="middle" style={{ height: 2 }} />
-          <Typography
-            gutterBottom
-            component="div"
-            style={{
-              textAlign: "center",
-              margin: 0,
-              padding: 0,
-              fontSize: "1.3em",
-              fontFamily: "Monaco",
-            }}
-          >
-            {team.properties.name}
-          </Typography>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-
-export default TeamSingular;
+export default Team_singular;

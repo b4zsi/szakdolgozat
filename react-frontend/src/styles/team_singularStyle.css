@@ -8,8 +8,10 @@
     
 }
 
-.card-media img {
-    object-fit: cover;
-    width: 100px;
-    opacity: 0;
+.card-image{
+    width: 100%;
+    position: relative;
+    align-content: center;
+    object-fit: contain;
+    top:15px
 }

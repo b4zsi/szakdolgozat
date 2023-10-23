@@ -11,4 +11,5 @@ export interface TeamModel {
   series_id: number;
   team_picture: string;
   team_color: string;
+  slug: "";
 }

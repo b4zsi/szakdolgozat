@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { DriverModel } from "../../model/DriverModel";
-import DriverSingular from "../Driver_singular/Driver_singular";
+import DriverSingular from "../Drivers/Drivers";
 import ImageList from "@material-ui/core/ImageList";
 
 const SingleLineGridList: FC<String> = ({ drivers }: any) => {

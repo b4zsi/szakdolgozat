@@ -3,29 +3,27 @@
 body {
     background-repeat: no-repeat;
     position: relative;
-    background-color: rgba(240, 240, 240, 1);
+    margin: 0;
+    width: 100%;
+    height: 110%;
+    font-family: 'Roboto Mono' !important;
 }
 
 .image {
     background-repeat: no-repeat;
     position: absolute;
-    z-index: -1;
-    background-color: black;
+    z-index:-1;
+    background: linear-gradient(to left, rgba(0,0,0,0.9), rgba(55,55,55, 0.5));
     background-size: cover;
     background-position: center;
     width: 100vw;
-    height: 35vh;
+    height: 42vh;
     top: 0;
     left: 0;
-    margin-bottom: 150;
 }
 
 .title{
-    font-size: 1em;
-    font-family: 'Roboto' !important;
-    font-weight: 100 !important;
-    margin-top: 4 ;
-    color: grey;
+    color: white;
 }
 
 .oneLineDiv{
@@ -34,13 +32,31 @@ body {
     justify-content: space-around !important;
     overflow: hidden !important;
     margin-left: 15px !important;
+    background-color: rgba(55,55,55, 0.5) !important;
+    height: max-content;
 }
 
 .imageList{
-    margin-top: 25 !important;
+    margin-top: 60 !important;
     margin-left: 15 !important;
     display: flex !important;
     flex-wrap: nowrap !important;
     transform: translateZ(0) !important;
 }
 
+.driverGrid{
+    margin: 0;
+    padding: 0;
+}
+
+.background{
+    background: linear-gradient(to left, rgba(0,0,0,0.9), rgba(55,55,55, 0.5));
+    width: 100%;
+    height: 130vh;
+    margin: 0;
+}
+
+.driverLink, :hover, :visited, :active{
+    text-decoration: none !important;
+    
+}

@@ -105,11 +105,10 @@ function ResponsiveAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   return (
     <AppBar
       position="static"
-      style={{ background: "transparent", boxShadow: "none", zIndex: 1 }}
+      style={{ background: "inherit", boxShadow: "none", zIndex: -1 }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -187,7 +186,7 @@ function ResponsiveAppBar() {
                       <div key={index}>
                         <MenuItem onClick={handleClose} disableRipple>
                           <a
-                            style={{ textDecoration: "none" }}
+                            style={{ textDecoration: "none", color: "black" }}
                             href={"http://localhost:3001/series/" + series.id}
                           >
                             {series.name}

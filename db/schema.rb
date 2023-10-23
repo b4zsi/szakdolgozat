@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_19_195530) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_215712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_19_195530) do
     t.text "description"
     t.binary "profile_picture"
     t.integer "team_id"
+    t.string "slug"
+    t.string "team_slug"
   end
 
   create_table "examples", force: :cascade do |t|
@@ -48,8 +50,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_19_195530) do
   create_table "images", force: :cascade do |t|
     t.binary "image_url"
     t.string "image_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "series", force: :cascade do |t|
@@ -59,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_19_195530) do
     t.integer "number_of_teams"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -75,6 +78,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_19_195530) do
     t.integer "series_id"
     t.binary "team_picture"
     t.string "team_color"
+    t.string "slug"
   end
 
 end

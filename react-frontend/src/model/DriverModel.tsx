@@ -8,5 +8,7 @@ export interface DriverModel {
   description: string;
   profile_picture: string;
   series_id: number;
+  team_slug: string;
   team_id: number;
+  slug: "";
 }

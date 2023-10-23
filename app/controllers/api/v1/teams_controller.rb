@@ -5,7 +5,11 @@ class Api::V1::TeamsController < ApplicationController
     end
 
     def show
-        teams = Team.where(series_id: params[:id]).order(:id)
+        if (1..9).include?(params[:id].to_i)
+            teams = Team.where(series_id: params[:id]).order(:id)
+        else
+            teams = Team.where(slug: params[:id])
+        end
         render json: teams, each_serializer: TeamSerializer
     end
 

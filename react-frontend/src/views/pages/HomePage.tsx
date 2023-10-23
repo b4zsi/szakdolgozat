@@ -1,11 +1,9 @@
 import React from "react";
 import "../../App.css";
 import Typeanimation from "../../components/typeAnimation/typeanimation";
-import ResponsiveAppBar from "../../components/navbar/navbar";
 import BackgroundVideo from "../../components/backgroundvideo/backgroundVideo";
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
-import Footer from "../../components/footerComponent/footer";
 
 const CustomButton = styled(Button)({
   margin: "20px",
@@ -19,7 +17,6 @@ const HomePage = () => {
   return (
     <>
       <div className="App">
-        <ResponsiveAppBar />
         <Typeanimation />
 
         <div style={{ width: "90%" }}>
@@ -31,7 +28,6 @@ const HomePage = () => {
           <CustomButton variant="contained">Naptár</CustomButton>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
