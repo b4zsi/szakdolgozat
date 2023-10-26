@@ -14,6 +14,7 @@ import { ImageModel } from "../../model/ImageModel";
 import SeriesStats from "../SeriesStats/SeriesStats";
 import { Link, useNavigate } from "react-router-dom";
 import { IsLoadingGlobalState } from "../LoadingContextProvider";
+import Loader from "../loader";
 
 const series_number: number = parseInt(document.URL.split("/")[4]);
 
@@ -75,6 +76,7 @@ const Series = () => {
       id: 0,
       image_name: "",
       image_url: "",
+      team_slug: "",
     },
   ];
 
@@ -105,10 +107,7 @@ const Series = () => {
     fetchData().then(() => setIsPageLoading(false));
   }, [navigate]);
   return isPageLoading ? (
-    <Fragment>
-      <div className="text">betöltés...</div>
-      <div className="loader"></div>
-    </Fragment>
+    <Loader />
   ) : (
     <Fragment>
       <div className="background">
@@ -117,7 +116,7 @@ const Series = () => {
           alt="kep"
           className="image"
         />
-        <Box sx={{ marginTop: 35 }}>
+        <Box sx={{ marginTop: 35.9, color: "white" }}>
           <SeriesStats properties={series} />
         </Box>
         <Box sx={{ margin: 5 }}>
@@ -143,9 +142,6 @@ const Series = () => {
                       to={`/drivers/${item.slug}`}
                       key={item.name}
                       className="driverLink"
-                      onClick={() => {
-                        setIsPageLoading(true);
-                      }}
                     >
                       <Drivers
                         properties={item}

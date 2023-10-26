@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_23_215712) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_171901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_215712) do
     t.string "image_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string "team_slug"
   end
 
   create_table "series", force: :cascade do |t|

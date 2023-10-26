@@ -40,3 +40,7 @@
     top:36%;
     transform: translate(0, -70%);
   }
+
+  .loaderDiv{
+    height: 1000px;
+  }

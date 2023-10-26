@@ -1,0 +1,33 @@
+.card-media{
+    height: 22vh;
+    width: 30vh;
+    align-content: center;
+    position: relative;
+    object-fit: cover;
+    
+}
+
+.card-image{
+    width: 100%;
+    position: relative;
+    align-content: center;
+    object-fit: contain;
+    top:10px;
+}
+
+.cardContainer {
+    border-radius: 20px;
+    position: relative;
+    margin: 1;
+    height: 40vh;
+    width: 250;
+    padding: 0;
+    color: white;
+    z-index: 2;
+    box-shadow: 10px 15px black;
+    transition: transform .5s;
+}
+
+.cardContainer:hover {
+    transform: scale(1.1);
+}

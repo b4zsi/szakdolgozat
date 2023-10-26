@@ -4,7 +4,7 @@ import { IsLoadingGlobalState } from "../LoadingContextProvider";
 
 function Footer() {
   const { isPageLoading, setIsPageLoading } = useContext(IsLoadingGlobalState);
-  return !isPageLoading ? (
+  return isPageLoading ? (
     <div
       style={{
         background:

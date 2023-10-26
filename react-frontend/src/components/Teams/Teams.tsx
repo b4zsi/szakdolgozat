@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { TeamModel } from "../../model/TeamModel";
 import hexRgb from "hex-rgb";
-import "../../styles/team_singularStyle.css";
+import "../../styles/teamsStyle.css";
 
 type Team = {
   properties: TeamModel;
@@ -17,18 +17,11 @@ const Teams: FC<Team> = (team: Team) => {
     <div>
       <Card
         sx={{
-          borderRadius: 7,
-          position: "relative",
-          margin: 1,
-          height: "35vh",
-          width: 250,
-          padding: 0,
           backgroundColor: `${hexRgb(team.properties.team_color + "B3", {
             format: "css",
           })}`,
-          color: "white",
-          zIndex: 2,
         }}
+        className="cardContainer"
       >
         <CardMedia className="card-media" title="drivers">
           <img

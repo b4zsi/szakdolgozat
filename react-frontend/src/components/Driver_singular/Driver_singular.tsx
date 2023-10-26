@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { DriverModel } from "../../model/DriverModel";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Divider, Grid, Paper } from "@mui/material";
 import "../../styles/Driver_singular.css";
 import { TeamModel } from "../../model/TeamModel";
 import "../../styles/loadingAnimation.css";
 import hexRgb from "hex-rgb";
+import Loader from "../loader";
 
 const driver_id: string = document.URL.split("/")[4];
 const driver_url = "http://localhost:3000/api/v1/drivers/" + driver_id;
@@ -71,64 +72,73 @@ const Driver_singular = () => {
     });
   }, [navigate]);
   return isPageLoading ? (
+    <Loader />
+  ) : (
     <Fragment>
-      <div style={{ height: "1000px" }}>
-        <div className="text">betöltés...</div>
-        <div className="loader"></div>
+      <div
+        className="backgroundStuff"
+        style={{
+          backgroundColor: `${hexRgb(team.team_color + "B3", {
+            format: "css",
+          })}`,
+        }}
+      ></div>
+      <div
+        style={{
+          backgroundColor: `${hexRgb(team.team_color + "B3", {
+            format: "css",
+          })}`,
+        }}
+        className="mainDiv"
+      >
+        <Grid container spacing={3} className="mainGrid">
+          <Grid item xs={4}>
+            <img
+              src={`data:image/jpeg;base64,${driver.profile_picture}`}
+              alt="kep"
+              className="kep"
+            />
+          </Grid>
+          <Grid item xs={8} container className="propertiesGrid">
+            <Grid item xs={4}>
+              Életkor
+              <Divider variant="middle" className="divider" />
+              {driver.age}
+            </Grid>
+            <Grid item xs={4}>
+              Név
+              <Divider variant="middle" className="divider" />
+              {driver.name}
+            </Grid>
+            <Grid item xs={4}>
+              Pódiumok száma
+              <Divider variant="middle" className="divider" />
+              {driver.number_of_podiums}
+            </Grid>
+            <Grid item xs={4}>
+              Győzelmek száma
+              <Divider variant="middle" className="divider" />
+              {driver.number_of_wins}
+            </Grid>
+            <Grid item xs={4}>
+              Nemzetiség
+              <Divider variant="middle" className="divider" />
+              {driver.nationality}
+            </Grid>
+            <Grid item xs={4}>
+              Csapat
+              <Divider variant="middle" className="divider" />
+              <Link to={`/teams/${team.slug}`} className="link">
+                {team.name}
+              </Link>
+            </Grid>
+          </Grid>
+        </Grid>
+        <div>
+          <Paper className="driverDescripition">{driver.description}</Paper>
+        </div>
       </div>
     </Fragment>
-  ) : (
-    <div
-      className="mainDiv"
-      style={{
-        backgroundColor: `${hexRgb(team.team_color + "B3", { format: "css" })}`,
-      }}
-    >
-      <Grid container spacing={3} className="mainGrid">
-        <Grid item xs={4}>
-          <img
-            src={`data:image/jpeg;base64,${driver.profile_picture}`}
-            alt="kep"
-            className="kep"
-          />
-        </Grid>
-        <Grid item xs={8} container className="propertiesGrid">
-          <Grid item xs={4}>
-            Életkor
-            <Divider variant="middle" className="divider" />
-            {driver.age}
-          </Grid>
-          <Grid item xs={4}>
-            Név
-            <Divider variant="middle" className="divider" />
-            {driver.name}
-          </Grid>
-          <Grid item xs={4}>
-            Pódiumok száma
-            <Divider variant="middle" className="divider" />
-            {driver.number_of_podiums}
-          </Grid>
-          <Grid item xs={4}>
-            Győzelmek száma
-            <Divider variant="middle" className="divider" />
-            {driver.number_of_wins}
-          </Grid>
-          <Grid item xs={4}>
-            Nemzetiség
-            <Divider variant="middle" className="divider" />
-            {driver.nationality}
-          </Grid>
-          <Grid item xs={4}>
-            Csapat
-            <Divider variant="middle" className="divider" />
-            {team.name}
-          </Grid>
-        </Grid>
-      </Grid>
-      <div>
-        <Paper className="driverDescripition">{driver.description}</Paper>
-      </div>
-    </div>
   );
 };
 

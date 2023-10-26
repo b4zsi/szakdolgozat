@@ -108,7 +108,7 @@ function ResponsiveAppBar() {
   return (
     <AppBar
       position="static"
-      style={{ background: "inherit", boxShadow: "none", zIndex: -1 }}
+      style={{ background: "inherit", boxShadow: "none", zIndex: 1 }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>

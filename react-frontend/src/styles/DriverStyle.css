@@ -9,6 +9,12 @@
     padding: 0px !important;
     background-color: rgba(250, 250,250, 0.7) !important;
     border-radius: 25px !important;
+    box-shadow: 10px 15px black !important;
+    transition: transform .5s;
+}
+
+.card:hover {
+    transform: scale(1.1);
 }
 
  .cardMedia{
@@ -16,7 +22,6 @@
     width: 170px !important;
     align-content: center !important;
     margin-left: 10% !important;
-    
     border-radius: 5px !important;
     position: relative !important;
     top: 10px !important;

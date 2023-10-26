@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       resources :drivers
       resources :cars
       resources :teams
-      resources :images
+      resources :images, param: :team_slug
     end
   end
   

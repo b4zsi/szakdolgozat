@@ -21,7 +21,7 @@ const SeriesStats: FC<SeriesType> = (series: SeriesType) => {
         color: "white",
       }}
     >
-      <Grid item xs={4} style={{ padding: 0 }}>
+      <Grid item xs={4} style={{ padding: 0, color: "white" }}>
         {series.properties.number_of_drivers}
         <Divider
           variant="middle"
@@ -29,7 +29,7 @@ const SeriesStats: FC<SeriesType> = (series: SeriesType) => {
         />
         <p style={{ fontSize: 30 }}>Versenyzők száma</p>
       </Grid>
-      <Grid item xs={4} style={{ padding: 0 }}>
+      <Grid item xs={4} style={{ padding: 0, color: "white" }}>
         {series.properties.number_of_races}
         <Divider
           variant="middle"
@@ -37,7 +37,7 @@ const SeriesStats: FC<SeriesType> = (series: SeriesType) => {
         />
         <p style={{ fontSize: 30 }}>Versenyek száma</p>
       </Grid>
-      <Grid item xs={4} style={{ padding: 0 }}>
+      <Grid item xs={4} style={{ padding: 0, color: "white" }}>
         {series.properties.number_of_teams}
         <Divider
           variant="middle"

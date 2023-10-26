@@ -1,6 +1,5 @@
-body{
-    z-index: 1;
-    background-color: inherit;
+.mainDiv{
+    height: 120% !important;
 }
 
 .kep {
@@ -11,7 +10,6 @@ body{
     margin: auto;
     align-content: flex-end;
     display: flex;
-
 }
 
 .propertiesGrid {
@@ -19,7 +17,6 @@ body{
     color: white;
     font-size: 3vh;
     font-weight: bold;
-    padding-top: 5% !important; 
     padding-right: 5%;
 }
 
@@ -43,19 +40,24 @@ body{
 }
 
 .mainGrid {
-    padding-top: 4.5%;
     margin-bottom: 5%;
+    padding-left: 4%;
+    color: white !important;
 }
-.mainDiv {
-    background-repeat: no-repeat;
-    position: absolute;
-    background-color: grey;
-    z-index: -1;
-    width: 100vw;
-    height: 130%;
-    top: 0;
-    left: 0;
+
+.link, :visited, :active, :checked, :hover{
+    text-decoration: none;
+}
+
+.backgroundStuff {
     background-size: cover;
     background-position: center;
-    margin-top: 100;
+    width: 100vw;
+    height: 5.25vh;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    position: absolute;
+    z-index:-1;
+
 }

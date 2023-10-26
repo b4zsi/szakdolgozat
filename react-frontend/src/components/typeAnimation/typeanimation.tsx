@@ -13,6 +13,7 @@ function Typeanimation() {
           display: "inline-block",
           marginTop: 200,
           fontFamily: "Monaco",
+          color: "white",
         }}
         repeat={Infinity}
       />
