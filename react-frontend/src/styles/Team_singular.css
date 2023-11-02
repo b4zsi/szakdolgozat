@@ -27,7 +27,6 @@
     z-index: -1;
     position: relative;
     top: 2%;
-
 }
 
 .propertyGridItem {
@@ -55,10 +54,13 @@
 }
 
 .subTitle {
-    margin: auto;
-    font-size: 5vw;
-    text-align: center;
+    margin-bottom: 0;
+    margin-left: 10%;
+    font-size: 2.5vw;
+    text-align: left;
     color: black;
+    z-index: -1;
+    padding-top: 100px;
 }
 
 @keyframes fade-in {

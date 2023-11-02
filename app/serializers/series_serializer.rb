@@ -3,4 +3,5 @@ class SeriesSerializer < ActiveModel::Serializer
 
   has_many :teams
   has_many :drivers
+  has_many :images
 end

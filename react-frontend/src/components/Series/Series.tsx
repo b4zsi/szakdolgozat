@@ -1,6 +1,5 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment } from "react";
 import axios from "axios";
-import { SeriesModel } from "../../model/SeriesModel";
 import { DriverModel } from "../../model/DriverModel";
 import "../../styles/seriesStyle.css";
 import Grid from "@mui/material/Grid";
@@ -10,113 +9,60 @@ import Drivers from "../Drivers/Drivers";
 import { TeamModel } from "../../model/TeamModel";
 import Teams from "../Teams/Teams";
 import "../../styles/loadingAnimation.css";
-import { ImageModel } from "../../model/ImageModel";
 import SeriesStats from "../SeriesStats/SeriesStats";
-import { Link, useNavigate } from "react-router-dom";
-import { IsLoadingGlobalState } from "../LoadingContextProvider";
-import Loader from "../loader";
+import {
+  Link,
+  LoaderFunction,
+  useLoaderData,
+  useParams,
+} from "react-router-dom";
+import { SeriesModel } from "../../model/SeriesModel";
+import { ImageModel } from "../../model/ImageModel";
 
-const series_number: number = parseInt(document.URL.split("/")[4]);
-
-const series_url = "http://localhost:3000/api/v1/series/" + series_number;
-
-const drivers_url = "http://localhost:3000/api/v1/drivers/" + series_number;
-
-const teams_url = "http://localhost:3000/api/v1/teams/" + series_number;
-
-const images_url = "http://localhost:3000/api/v1/images";
-
+function driverSort(a: DriverModel, b: DriverModel) {
+  return a.id - b.id;
+}
+function getTeamColor(teams: TeamModel[], driver: DriverModel): string {
+  let color = "";
+  teams.map((team: TeamModel) => {
+    if (team.slug.match(driver.team_slug)) {
+      color = team.team_color;
+    }
+  });
+  return color;
+}
+let allDataType: {
+  series: SeriesModel;
+  drivers: DriverModel[];
+  teams: TeamModel[];
+  images: ImageModel[];
+};
 const Series = () => {
-  console.log(series_number);
-  let navigate = useNavigate();
-  let seriesType: SeriesModel = {
-    id: 0,
-    name: "",
-    number_of_races: 0,
-    number_of_drivers: 0,
-    number_of_teams: 0,
-    slug: "",
+  const allData: typeof allDataType = useLoaderData() as {
+    series: SeriesModel;
+    drivers: DriverModel[];
+    teams: TeamModel[];
+    images: ImageModel[];
   };
+  const { id } = useParams<string>();
+  const series: SeriesModel = allData.series;
+  const drivers: DriverModel[] = allData.drivers.sort(
+    (a: DriverModel, b: DriverModel) => driverSort(a, b)
+  );
+  const teams: TeamModel[] = allData.teams;
+  const images: ImageModel[] = allData.images;
 
-  let driverType: DriverModel[] = [
-    {
-      id: 0,
-      name: "",
-      age: 0,
-      nationality: "",
-      number_of_wins: 0,
-      number_of_podiums: 0,
-      description: "",
-      profile_picture: "",
-      series_id: 0,
-      team_slug: "",
-      team_id: 0,
-      slug: "",
-    },
-  ];
-  let teamType: TeamModel[] = [
-    {
-      id: 0,
-      name: "",
-      number_of_championships: 0,
-      number_of_races: 0,
-      headquarters_city: "",
-      technical_director: "",
-      first_win: 0,
-      last_championship_win: 0,
-      date_of_establishment: 0,
-      series_id: 1,
-      team_picture: "",
-      team_color: "ffffff",
-      slug: "",
-    },
-  ];
-  let imageType: ImageModel[] = [
-    {
-      id: 0,
-      image_name: "",
-      image_url: "",
-      team_slug: "",
-    },
-  ];
-
-  const [series, setSeries] = useState(seriesType);
-  const [drivers, setDrivers] = useState(driverType);
-  const [teams, setTeams] = useState(teamType);
-  const [images, setImages] = useState(imageType);
-  const { isPageLoading, setIsPageLoading } = useContext(IsLoadingGlobalState);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await axios
-        .get(series_url)
-        .then((data) => {
-          setSeries(data.data);
-        })
-        .catch(() => navigate("/"));
-      await axios.get(drivers_url).then((data) => {
-        setDrivers(data.data);
-      });
-      await axios.get(teams_url).then((data) => {
-        setTeams(data.data);
-      });
-      await axios.get(images_url).then((data) => {
-        setImages(data.data);
-      });
-    };
-    fetchData().then(() => setIsPageLoading(false));
-  }, [navigate]);
-  return isPageLoading ? (
-    <Loader />
-  ) : (
+  return (
     <Fragment>
       <div className="background">
         <img
-          src={`data:image/jpeg;base64,${images[series_number - 1].image_url}`}
+          src={`data:image/jpeg;base64,${
+            images[id === undefined ? 0 : parseInt(id) - 1].image_url
+          }`}
           alt="kep"
           className="image"
         />
-        <Box sx={{ marginTop: 35.9, color: "white" }}>
+        <Box sx={{ marginTop: "24.4%", color: "white" }}>
           <SeriesStats properties={series} />
         </Box>
         <Box sx={{ margin: 5 }}>
@@ -145,15 +91,7 @@ const Series = () => {
                     >
                       <Drivers
                         properties={item}
-                        team_color={
-                          series.id === 1
-                            ? teams[item.team_id - 1].team_color
-                            : series.id === 2
-                            ? teams[item.team_id - 11].team_color
-                            : series.id === 3
-                            ? teams[item.team_id - 22].team_color
-                            : teams[0].team_color
-                        }
+                        team_color={getTeamColor(teams, item)}
                         team_id={item.team_id}
                       />
                     </Link>
@@ -200,6 +138,35 @@ const Series = () => {
       </div>
     </Fragment>
   );
+};
+
+export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
+  params,
+}) => {
+  const returnData: typeof allDataType = {
+    series: {
+      id: 0,
+      name: "",
+      number_of_teams: 0,
+      number_of_drivers: 0,
+      number_of_races: 0,
+      slug: "",
+    },
+    drivers: [],
+    teams: [],
+    images: [],
+  };
+  console.log(params.id);
+  const series_url = "http://localhost:3000/api/v1/series/" + params.id;
+
+  await axios.get(series_url).then((data) => {
+    console.log(data.data);
+    returnData.drivers = data.data.drivers;
+    returnData.series = data.data;
+    returnData.teams = data.data.teams;
+    returnData.images = data.data.images;
+  });
+  return returnData;
 };
 
 export default Series;

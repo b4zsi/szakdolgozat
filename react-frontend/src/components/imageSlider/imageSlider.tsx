@@ -12,18 +12,16 @@ const Slider: React.FC<image> = (images: image) => {
   const slideLength = images.images.length;
 
   const autoScroll = true;
-  let slideInterval: any;
-  let intervalTime = 5000;
+  let slideInterval: NodeJS.Timeout;
+  const intervalTime = 5000;
 
   const nextSlide = () => {
     setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
-    console.log("next");
   };
 
-  const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? slideLength - 1 : currentSlide - 1);
-    console.log("prev");
-  };
+  // const prevSlide = () => {
+  //   setCurrentSlide(currentSlide === 0 ? slideLength - 1 : currentSlide - 1);
+  // };
 
   function auto() {
     slideInterval = setInterval(nextSlide, intervalTime);
@@ -43,7 +41,7 @@ const Slider: React.FC<image> = (images: image) => {
   return (
     <Fragment>
       <div className="slider">
-        {images.images.map((image: ImageModel, index: any) => {
+        {images.images.map((image: ImageModel, index: number) => {
           return (
             <div
               className={index === currentSlide ? "slide current" : "slide"}

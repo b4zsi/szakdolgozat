@@ -1,79 +1,26 @@
 import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
-import { DriverModel } from "../../model/DriverModel";
-import { Link, useNavigate } from "react-router-dom";
+import React, { Fragment } from "react";
+import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import { Divider, Grid, Paper } from "@mui/material";
 import "../../styles/Driver_singular.css";
-import { TeamModel } from "../../model/TeamModel";
 import "../../styles/loadingAnimation.css";
+import { DriverModel } from "../../model/DriverModel";
 import hexRgb from "hex-rgb";
-import Loader from "../loader";
+import { TeamModel } from "../../model/TeamModel";
 
-const driver_id: string = document.URL.split("/")[4];
-const driver_url = "http://localhost:3000/api/v1/drivers/" + driver_id;
-
+let allDataType: {
+  driver: DriverModel;
+  team: TeamModel;
+};
 const Driver_singular = () => {
-  const [isPageLoading, setIsPageLoading] = useState(true);
-  let navigate = useNavigate();
-  let driverType: DriverModel = {
-    id: 0,
-    name: "",
-    age: 0,
-    nationality: "",
-    number_of_wins: 0,
-    number_of_podiums: 0,
-    description: "",
-    profile_picture: "",
-    series_id: 0,
-    team_slug: "",
-    team_id: 0,
-    slug: "",
+  const allData: typeof allDataType = useLoaderData() as {
+    driver: DriverModel;
+    team: TeamModel;
   };
-  let teamType: TeamModel = {
-    id: 0,
-    name: "",
-    number_of_championships: 0,
-    number_of_races: 0,
-    headquarters_city: "",
-    technical_director: "",
-    first_win: 0,
-    last_championship_win: 0,
-    date_of_establishment: 0,
-    series_id: 1,
-    team_picture: "",
-    team_color: "ffffff",
-    slug: "",
-  };
-  const [driver, setDriver] = useState(driverType);
-  const [team, setTeam] = useState(teamType);
-  if (driver_id.match(/[1-9]/g)) {
-    window.location.reload();
-  }
+  const driver = allData.driver;
+  const team = allData.team;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await axios
-        .get(driver_url)
-        .then((data) => {
-          setDriver(data.data[0]);
-          return data.data[0];
-        })
-        .then(async (data) => {
-          await axios
-            .get("http://localhost:3000/api/v1/teams/" + data.team_slug)
-            .then(async (data) => {
-              setTeam(data.data[0]);
-            });
-        })
-        .catch(() => navigate("/"));
-    };
-    fetchData().then(() => {
-      setIsPageLoading(false);
-    });
-  }, [navigate]);
-  return isPageLoading ? (
-    <Loader />
-  ) : (
+  return (
     <Fragment>
       <div
         className="backgroundStuff"
@@ -140,6 +87,58 @@ const Driver_singular = () => {
       </div>
     </Fragment>
   );
+};
+
+export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
+  params,
+}) => {
+  const driver_url = "http://localhost:3000/api/v1/drivers/" + params.slug;
+  const allData: typeof allDataType = {
+    driver: {
+      id: 0,
+      name: "",
+      nationality: "",
+      age: 0,
+      number_of_wins: 0,
+      number_of_podiums: 0,
+      description: "",
+      profile_picture: "",
+      series_id: 0,
+      team_id: 0,
+      team_slug: "",
+      slug: "",
+    },
+    team: {
+      id: 0,
+      number_of_championships: 0,
+      number_of_races: 0,
+      name: "",
+      headquarters_city: "",
+      technical_director: "",
+      first_win: 0,
+      date_of_establishment: 0,
+      series_id: 0,
+      team_picture: "",
+      last_championship_win: 0,
+      team_color: "",
+      slug: "",
+    },
+  };
+  await axios
+    .get(driver_url)
+    .then((data) => {
+      allData.driver = data.data[0];
+      return data.data[0];
+    })
+    .then(async (data) => {
+      await axios
+        .get("http://localhost:3000/api/v1/teams/" + data.team_slug)
+        .then(async (data) => {
+          console.log(data.data[0]);
+          allData.team = data.data[0];
+        });
+    });
+  return allData;
 };
 
 export default Driver_singular;

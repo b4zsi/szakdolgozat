@@ -16,10 +16,16 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import axios from "axios";
 import { SeriesModel } from "../../model/SeriesModel";
+import { Link } from "react-router-dom";
 
 function ResponsiveAppBar() {
   const API_URL = "http://localhost:3000/api/v1/series";
-  const pages = ["Szeriák", "Fórum", "Bejelentkezés", "Regisztráció"];
+  const pages = [
+    { name: "Szeriák", url: "/series" },
+    { name: "Fórum", url: "/" },
+    { name: "Bejelentkezés", url: "/login" },
+    { name: "Regisztráció", url: "/signup" },
+  ];
   const settings = ["Profil", "Kijelentkezés"];
 
   const StyledMenu = styled((props: MenuProps) => (
@@ -58,7 +64,7 @@ function ResponsiveAppBar() {
     },
   }));
 
-  const [series, setSeries] = useState([]);
+  const [series, setSeries] = useState<SeriesModel[]>([]);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -73,7 +79,7 @@ function ResponsiveAppBar() {
 
   React.useEffect(() => {
     let mounted = true;
-    getAPIData().then((items: any) => {
+    getAPIData().then((items: SeriesModel[]) => {
       if (mounted) {
         setSeries(items);
       }
@@ -143,20 +149,30 @@ function ResponsiveAppBar() {
             >
               {pages.map((page, index) => (
                 <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography
+                    textAlign="center"
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    {page.name}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page, index) =>
-              !page.match("Szeriák") ? (
+              !page.name.match("Szeriák") ? (
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  {page}
+                  <Link
+                    to={page.url}
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    {page.name}
+                  </Link>
                 </Button>
               ) : (
                 <div key={index}>
@@ -185,12 +201,12 @@ function ResponsiveAppBar() {
                     {series.map((series: SeriesModel, index) => (
                       <div key={index}>
                         <MenuItem onClick={handleClose} disableRipple>
-                          <a
+                          <Link
                             style={{ textDecoration: "none", color: "black" }}
-                            href={"http://localhost:3001/series/" + series.id}
+                            to={"/series/" + series.id}
                           >
                             {series.name}
-                          </a>
+                          </Link>
                         </MenuItem>
                       </div>
                     ))}

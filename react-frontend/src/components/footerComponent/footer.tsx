@@ -1,10 +1,7 @@
-import React, { useContext } from "react";
 import CopyrightIcon from "@mui/icons-material/Copyright";
-import { IsLoadingGlobalState } from "../LoadingContextProvider";
 
 function Footer() {
-  const { isPageLoading, setIsPageLoading } = useContext(IsLoadingGlobalState);
-  return isPageLoading ? (
+  return (
     <div
       style={{
         background:
@@ -24,8 +21,6 @@ function Footer() {
         </div>
       </footer>
     </div>
-  ) : (
-    <></>
   );
 }
 

@@ -6,8 +6,12 @@ class Api::V1::SeriesController < ApplicationController
     end
 
     def show
-        @series = Series.find_by(id: params[:id])
-        render json: @series, serializer: SeriesSerializer
+        if (1..9).include?(params[:id].to_i)
+            series = Series.find_by(id: params[:id])
+        else
+            series = Series.where(slug: params[:id])
+        end
+        render json: series, serializer: SeriesSerializer
     end
 
     def create
@@ -45,7 +49,7 @@ class Api::V1::SeriesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
          def series_params
-             params.require(:series).permit(:id, :name)
+             params.require(:series).permit(:id, :slug)
          end
 
          def options

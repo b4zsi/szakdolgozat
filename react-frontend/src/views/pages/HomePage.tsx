@@ -13,6 +13,8 @@ const CustomButton = styled(Button)({
   borderRadius: "10px",
 });
 
+//const signInForm = document.querySelector("#sign_in_form");
+
 const HomePage = () => {
   return (
     <>

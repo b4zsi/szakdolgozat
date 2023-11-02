@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  root "drivers#index"
+  devise_for :users
+  root "cars#index"
 
 
   namespace :api do
@@ -12,7 +13,7 @@ Rails.application.routes.draw do
     end
   end
   
-  get "*path", to:"drivers#index", via: :all
+  get "*path", to:"cars#index", via: :all
 
   
 end

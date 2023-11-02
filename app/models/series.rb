@@ -1,6 +1,7 @@
 class Series < ApplicationRecord
-    has_many :teams, class_name: "Team", foreign_key: "series_id"
+    has_many :teams
     has_many :drivers
+    has_many :images, class_name:"Image", foreign_key:"team_slug"
 
     before_create :slugify
 
