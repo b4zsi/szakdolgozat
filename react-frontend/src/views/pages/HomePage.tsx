@@ -4,6 +4,7 @@ import Typeanimation from "../../components/typeAnimation/typeanimation";
 import BackgroundVideo from "../../components/backgroundvideo/backgroundVideo";
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const CustomButton = styled(Button)({
   margin: "20px",
@@ -12,8 +13,6 @@ const CustomButton = styled(Button)({
   fontSize: "20px",
   borderRadius: "10px",
 });
-
-//const signInForm = document.querySelector("#sign_in_form");
 
 const HomePage = () => {
   return (
@@ -26,8 +25,22 @@ const HomePage = () => {
         </div>
 
         <div>
-          <CustomButton variant="contained">Galéria</CustomButton>
-          <CustomButton variant="contained">Naptár</CustomButton>
+          <CustomButton variant="contained" className="button1">
+            <Link
+              to="/gallery"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              Galéria
+            </Link>
+          </CustomButton>
+          <CustomButton variant="contained" className="button2">
+            <Link
+              to="/calendar"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              Naptár
+            </Link>
+          </CustomButton>
         </div>
       </div>
     </>

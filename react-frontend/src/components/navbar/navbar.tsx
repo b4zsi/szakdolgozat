@@ -17,16 +17,27 @@ import { useState } from "react";
 import axios from "axios";
 import { SeriesModel } from "../../model/SeriesModel";
 import { Link } from "react-router-dom";
+import { UserModel } from "../../model/UserModel";
+import toast, { Toaster } from "react-hot-toast";
 
 function ResponsiveAppBar() {
   const API_URL = "http://localhost:3000/api/v1/series";
-  const pages = [
+
+  const noUserPages = [
+    { name: "Főoldal", url: "/" },
     { name: "Szeriák", url: "/series" },
-    { name: "Fórum", url: "/" },
     { name: "Bejelentkezés", url: "/login" },
     { name: "Regisztráció", url: "/signup" },
   ];
-  const settings = ["Profil", "Kijelentkezés"];
+  const [pages, setPages] =
+    useState<{ name: string; url: string }[]>(noUserPages);
+  const userPages = [
+    { name: "Főoldal", url: "/" },
+    { name: "Szeriák", url: "/series" },
+    { name: "Fórum", url: "/" },
+    { name: "Naptár", url: "/calendar" },
+  ];
+  const [user, setUser] = useState<UserModel | null>(null);
 
   const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -76,12 +87,26 @@ function ResponsiveAppBar() {
     const response = await axios.get(API_URL);
     return response.data;
   }
+  async function getUser() {
+    const owner = localStorage.getItem("resource_owner")!;
+    const userAsModel =
+      owner === undefined ? null : (JSON.parse(owner) as UserModel);
+    setUser(userAsModel);
+    return userAsModel;
+  }
 
   React.useEffect(() => {
     let mounted = true;
     getAPIData().then((items: SeriesModel[]) => {
       if (mounted) {
         setSeries(items);
+      }
+    });
+    getUser().then((user) => {
+      if (user) {
+        setPages(userPages);
+      } else {
+        setPages(noUserPages);
       }
     });
     return () => {
@@ -111,6 +136,29 @@ function ResponsiveAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  async function handleLogout(event: React.MouseEvent<HTMLElement>) {
+    event.preventDefault();
+    const refresh_token = localStorage.getItem("refresh_token");
+    await fetch("http://localhost:3000/users/sign_out", {
+      method: "DELETE",
+      body: JSON.stringify({
+        refresh_token,
+      }),
+      headers: { "Content-type": "application/json" },
+    }).then((response) => {
+      console.log(response);
+      if (response.status === 204) {
+        localStorage.removeItem("resource_owner");
+        setUser(null);
+        toast.success("Sikeres kijelentkezés");
+        window.location.reload();
+      } else {
+        toast.error("Hiba a kijelentkezés során");
+      }
+    });
+  }
+
   return (
     <AppBar
       position="static"
@@ -215,36 +263,42 @@ function ResponsiveAppBar() {
               )
             )}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting: string, index) => (
-                <MenuItem key={index} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+          <Toaster />
+          {user && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {user?.email}
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Profil</Typography>
                 </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Button onClick={handleLogout} style={{ color: "black" }}>
+                    <Typography textAlign="center">Kijelentkezés</Typography>
+                  </Button>
+                </MenuItem>
+              </Menu>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

@@ -13,12 +13,13 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  OutlinedInput,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { Fragment, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/SignupStyle.css";
+import { UserModel } from "../../model/UserModel";
+import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 
 const api_url = "http://localhost:3000/users/tokens";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,42 +27,7 @@ let access_token: string | null;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let refresh_token = localStorage.getItem("refresh_token");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-let resource_owner: string | null;
-
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("hello");
-  const signUpForm = document.querySelector("#sign_up_form");
-  console.log(document.forms);
-  if (signUpForm) {
-    signUpForm?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      console.log("first");
-      const email = document.querySelector("#email")!.ariaValueText;
-      const password = document.querySelector("#new-password")!.ariaValueText;
-      const password_confirm =
-        document.querySelector("#password-confirm")!.ariaValueText;
-
-      if (password !== password_confirm) {
-        alert("passwords do not match");
-        return;
-      }
-
-      const response = await fetch(`${api_url}/sign_up`, {
-        method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-        headers: { "Content-type": "application/json" },
-      });
-
-      await handleAuthResponse(response);
-      //userSession();
-    });
-  } else {
-    console.log("sign up not found");
-  }
-});
+let resource_owner: UserModel | null;
 
 // function nullOrUndefined(itemToCheck: string | null) {
 //   return itemToCheck == null || itemToCheck === "undefined";
@@ -76,6 +42,7 @@ async function handleAuthResponse(response: Response) {
   access_token = data.token;
   refresh_token = data.refresh_token;
   resource_owner = data.resource_owner;
+  return data;
 }
 
 //#region faszsag
@@ -171,11 +138,48 @@ async function handleAuthResponse(response: Response) {
 //#endregion
 
 function SignUp() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [showPassword, SetShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!password.match(passwordConfirm)) {
+      toastNotification(1, "A megadott jelszavak nem egyeznek.");
+      return;
+    }
+
+    const response = await fetch(`${api_url}/sign_up`, {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: { "Content-type": "application/json" },
+    });
+
+    await handleAuthResponse(response).then((data) => {
+      if (response.ok) {
+        navigate("/");
+        toastNotification(0, "Sikeres regisztráció");
+      } else {
+        toastNotification(1, data.error_description[0]);
+      }
+    });
+    //userSession();
+  };
 
   const passwordInput = (
-    <OutlinedInput
+    <Input
+      value={password}
+      onChange={(e) => {
+        setPassword(e.target.value);
+      }}
       autoComplete="new-password"
+      style={{ marginBottom: "10px" }}
       id="new-password"
       type={showPassword ? "text" : "password"}
       endAdornment={
@@ -194,8 +198,13 @@ function SignUp() {
   );
 
   const passwordConfirmInput = (
-    <OutlinedInput
+    <Input
+      value={passwordConfirm}
+      onChange={(e) => {
+        setPasswordConfirm(e.target.value);
+      }}
       autoComplete="new-password"
+      style={{ marginBottom: "20px" }}
       id="password-confirm"
       type={showPassword ? "text" : "password"}
       endAdornment={
@@ -214,65 +223,80 @@ function SignUp() {
   );
 
   return (
-    <section>
-      <Container maxWidth="md">
-        <Card sx={{ boxShadow: 1, maxWidth: "md" }}>
-          <CardContent>
-            <Container maxWidth="sm">
-              <Typography variant="h2" color="text.primary" gutterBottom>
-                Regisztráció
-              </Typography>
-              <form id="sign_up_form" itemID="sign_up_form">
-                <FormControl fullWidth>
-                  <InputLabel required htmlFor="email" id="email-label">
-                    Email cím
-                  </InputLabel>
-                  <Input id="email" type="email" autoComplete="username" />
-                  <FormHelperText id="email-helper-text">
-                    A jelszavad nem kerül megosztásra
-                  </FormHelperText>
-                </FormControl>
-                <FormControl fullWidth>
-                  <InputLabel required htmlFor="password" id="password-label">
-                    Jelszó
-                  </InputLabel>
-                  {passwordInput}
-                </FormControl>
-                <FormControl fullWidth>
-                  <InputLabel
-                    required
-                    htmlFor="password-confirm"
-                    id="password-confirm-label"
-                  >
-                    Jelszó újra
-                  </InputLabel>
-                  {passwordConfirmInput}
-                </FormControl>
-                <FormControl fullWidth>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    id="submit"
-                  >
-                    Regisztráció
-                  </Button>
-                </FormControl>
-              </form>
-            </Container>
-          </CardContent>
-          <Divider light={false} />
-          <CardActions
-            sx={{ marginTop: "1em", justifyContent: "center" }}
-            disableSpacing
-          >
-            <Box>
-              <Link to="/login">Bejelentkezés</Link>
-            </Box>
-          </CardActions>
-        </Card>
-      </Container>
-    </section>
+    <Fragment>
+      <div className="backgroundStuff"></div>
+      <section>
+        <Container maxWidth="md" className="container">
+          <Card sx={{ boxShadow: 1, maxWidth: "md" }}>
+            <CardContent>
+              <Container maxWidth="sm">
+                <Typography className="title" gutterBottom>
+                  Regisztráció
+                </Typography>
+                <form id="sign_up_form" onSubmit={handleSubmit}>
+                  <FormControl fullWidth>
+                    <InputLabel required htmlFor="email" id="email-label">
+                      Email cím
+                    </InputLabel>
+                    <Input
+                      id="email"
+                      type="email"
+                      autoComplete="username"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                      }}
+                    />
+                    <FormHelperText id="email-helper-text">
+                      A jelszavad nem kerül megosztásra
+                    </FormHelperText>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel required htmlFor="password" id="password-label">
+                      Jelszó
+                    </InputLabel>
+                    {passwordInput}
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel
+                      required
+                      htmlFor="password-confirm"
+                      id="password-confirm-label"
+                    >
+                      Jelszó újra
+                    </InputLabel>
+                    {passwordConfirmInput}
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <Button
+                      variant="outlined"
+                      type="submit"
+                      id="submit"
+                      style={{ backgroundColor: "lightGrey", color: "black" }}
+                    >
+                      Regisztráció
+                    </Button>
+                  </FormControl>
+                </form>
+              </Container>
+            </CardContent>
+            <Divider light={false} />
+            <CardActions
+              sx={{ marginTop: "1em", justifyContent: "center" }}
+              disableSpacing
+            >
+              <Box>
+                <Link className="link" to="/login">
+                  Ha van már fiókod, <br />
+                  ide kattinta bejelentkezhetsz
+                </Link>
+              </Box>
+            </CardActions>
+          </Card>
+        </Container>
+        <CustomSnackbar />
+      </section>
+    </Fragment>
   );
 }
 

@@ -6,6 +6,12 @@
 body{
 height: 720px;
 }
-.button{
+.button1{
   margin: 50;
+}
+.button1:hover{
+  background-color: red !important;
+}
+.button2:hover{
+  background-color: purple !important;
 }

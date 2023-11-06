@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module SzakdolgozatProject
   class Application < Rails::Application
+    Rails.application.config.session_store :disabled
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 

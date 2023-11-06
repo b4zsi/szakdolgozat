@@ -1,0 +1,43 @@
+.root{
+    display: "block" !important;
+    flex-wrap: "wrap" !important;
+    justify-content: "space-around" !important;
+    overflow: "hidden" !important;
+     background-color: black !important;
+     width: 98%;
+     margin: auto;
+} 
+.galleryList {
+    width: 500 !important;
+    height: 450 !important;
+}
+.galleryItem{
+    margin: 5px !important;
+    width: 350px;
+    height: 300px !important;
+    
+}
+.galleryItem:hover{
+    transform: scale(1.05);
+}
+.galleryImage{
+    border-radius: 10px;
+}
+.teamFilterButton{
+    margin: 2px !important;
+    width: 120px;
+    height: 50px;
+    font-size: 60% !important;
+    background-color: rgba(255,255,255, 0.6) !important;
+}
+.filterRemoveButton{
+    color: red !important;
+    width: 100px;
+    height: 40px;
+}
+.filterSwitch{
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    float: left;
+}

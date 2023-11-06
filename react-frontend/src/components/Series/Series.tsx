@@ -10,12 +10,7 @@ import { TeamModel } from "../../model/TeamModel";
 import Teams from "../Teams/Teams";
 import "../../styles/loadingAnimation.css";
 import SeriesStats from "../SeriesStats/SeriesStats";
-import {
-  Link,
-  LoaderFunction,
-  useLoaderData,
-  useParams,
-} from "react-router-dom";
+import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import { SeriesModel } from "../../model/SeriesModel";
 import { ImageModel } from "../../model/ImageModel";
 
@@ -44,21 +39,18 @@ const Series = () => {
     teams: TeamModel[];
     images: ImageModel[];
   };
-  const { id } = useParams<string>();
+  //const { id } = useParams<string>();
   const series: SeriesModel = allData.series;
   const drivers: DriverModel[] = allData.drivers.sort(
     (a: DriverModel, b: DriverModel) => driverSort(a, b)
   );
   const teams: TeamModel[] = allData.teams;
   const images: ImageModel[] = allData.images;
-
   return (
     <Fragment>
       <div className="background">
         <img
-          src={`data:image/jpeg;base64,${
-            images[id === undefined ? 0 : parseInt(id) - 1].image_url
-          }`}
+          src={`data:image/jpeg;base64,${images[0].image_url}`}
           alt="kep"
           className="image"
         />
@@ -156,11 +148,9 @@ export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
     teams: [],
     images: [],
   };
-  console.log(params.id);
   const series_url = "http://localhost:3000/api/v1/series/" + params.id;
 
   await axios.get(series_url).then((data) => {
-    console.log(data.data);
     returnData.drivers = data.data.drivers;
     returnData.series = data.data;
     returnData.teams = data.data.teams;

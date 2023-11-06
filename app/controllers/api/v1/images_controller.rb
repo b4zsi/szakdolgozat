@@ -1,7 +1,7 @@
 class Api::V1::ImagesController < ApplicationController
     def index
-        image = Image.all
-        render json: image, each_serializer: ImageSerializer
+        @image = Image.all
+        render json: @image, Serializer: ImageSerializer
     end
 
     def show

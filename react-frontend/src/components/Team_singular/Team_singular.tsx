@@ -80,16 +80,6 @@ const Team_singular = () => {
           </Grid>
         </Grid>
         <p className="subTitle">Versenyzők</p>
-        <Grid container spacing={3}>
-          {drivers.map((driver: DriverModel) => {
-            console.log(driver);
-            return (
-              <Grid item xs={6} key={driver.name}>
-                {driver.name}
-              </Grid>
-            );
-          })}
-        </Grid>
         <Grid
           container
           spacing={3}

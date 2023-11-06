@@ -3,4 +3,5 @@ export interface ImageModel {
   image_url: string;
   image_name: string;
   team_slug: string;
+  description: string;
 }
