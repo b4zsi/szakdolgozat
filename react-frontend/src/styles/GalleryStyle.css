@@ -6,8 +6,11 @@
      background-color: black !important;
      width: 98%;
      margin: auto;
+     float: left;
+     
 } 
 .galleryList {
+    display: flex;
     width: 500 !important;
     height: 450 !important;
 }
@@ -36,8 +39,38 @@
     height: 40px;
 }
 .filterSwitch{
-    display: flex;
-    background-color: white;
+    display: block;
     border-radius: 10px;
     float: left;
+    background-color: grey;
+    width: 50%;
+    clear: left;
 }
+
+.userOnly{
+    background-image: url("../authBack.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color:white;
+    font-size: 4vh;
+    font-weight: bold;
+    height: 700px;
+}
+.userOnlyCard {
+    margin: auto !important;
+    position: relative;
+    top: 40%;
+    width: 60%;
+    border-radius: 10px !important;
+    background-color: rgba(255,255,255,0.7) !important;
+    text-align: justify;
+}
+.link {
+    color: white !important;
+    text-decoration: none;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+

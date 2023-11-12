@@ -1,5 +1,3 @@
-import CopyrightIcon from "@mui/icons-material/Copyright";
-
 function Footer() {
   return (
     <div
@@ -15,10 +13,7 @@ function Footer() {
       }}
     >
       <footer>
-        <div>
-          2023 Minden jog fenntartva.
-          <CopyrightIcon style={{ margin: 5 }} />
-        </div>
+        <div>2023 | Minden jog fenntartva.</div>
       </footer>
     </div>
   );

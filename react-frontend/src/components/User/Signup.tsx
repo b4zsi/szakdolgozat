@@ -18,32 +18,9 @@ import {
 import React, { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/SignupStyle.css";
-import { UserModel } from "../../model/UserModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 
-const api_url = "http://localhost:3000/users/tokens";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let access_token: string | null;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let refresh_token = localStorage.getItem("refresh_token");
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let resource_owner: UserModel | null;
-
-// function nullOrUndefined(itemToCheck: string | null) {
-//   return itemToCheck == null || itemToCheck === "undefined";
-// }
-
-async function handleAuthResponse(response: Response) {
-  const data = await response.json();
-  console.log(data);
-
-  localStorage.setItem("resource_owner", JSON.stringify(data.resource_owner));
-  localStorage.setItem("refresh_token", data.refresh_token);
-  access_token = data.token;
-  refresh_token = data.refresh_token;
-  resource_owner = data.resource_owner;
-  return data;
-}
+const api_url = "http://localhost:3000";
 
 //#region faszsag
 // async function userSession() {
@@ -151,25 +128,27 @@ function SignUp() {
       toastNotification(1, "A megadott jelszavak nem egyeznek.");
       return;
     }
-
-    const response = await fetch(`${api_url}/sign_up`, {
+    if (!(password && passwordConfirm)) {
+      toastNotification(1, "Hiányzó jelszó.");
+      return;
+    }
+    const response = await fetch(`${api_url}/signup`, {
       method: "POST",
       body: JSON.stringify({
-        email,
-        password,
+        user: {
+          email,
+          password,
+        },
       }),
       headers: { "Content-type": "application/json" },
     });
 
-    await handleAuthResponse(response).then((data) => {
-      if (response.ok) {
-        navigate("/");
-        toastNotification(0, "Sikeres regisztráció");
-      } else {
-        toastNotification(1, data.error_description[0]);
-      }
-    });
-    //userSession();
+    if (response.ok) {
+      navigate("/");
+      toastNotification(0, "Sikeres regisztráció");
+    } else {
+      toastNotification(1, response.statusText);
+    }
   };
 
   const passwordInput = (

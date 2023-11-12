@@ -1,0 +1,22 @@
+.userOnly{
+    background-image: url("../authBack.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color:white;
+    font-size: 4vh;
+    font-weight: bold;
+    height: 700px;
+}
+.userOnlyCard {
+    margin: auto !important;
+    position: relative;
+    top: 40%;
+    width: 60%;
+    border-radius: 10px !important;
+    background-color: rgba(255,255,255,0.7) !important;
+    text-align: justify;
+}
+.link {
+    color: white !important;
+    text-decoration: none;
+}

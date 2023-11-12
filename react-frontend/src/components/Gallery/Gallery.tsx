@@ -1,54 +1,234 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { ImageModel } from "../../model/ImageModel";
 import axios from "axios";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import {
   Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
   ImageList,
   ImageListItem,
   ImageListItemBar,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Switch,
+  TextField,
 } from "@mui/material";
 import "../../styles/GalleryStyle.css";
 import { TeamModel } from "../../model/TeamModel";
+import getUser from "../userManagement";
+import { UserModel } from "../../model/UserModel";
 
 let allDataType: {
   teams: TeamModel[];
   images: ImageModel[];
+  user: UserModel;
 };
 
 function Gallery() {
+  const imageEventURL = "http://localhost:3000/api/v1/images";
+  const jwt_token = localStorage.getItem("jwt");
   const itemData: typeof allDataType = useLoaderData() as {
     teams: TeamModel[];
     images: ImageModel[];
+    user: UserModel;
   };
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [useFilter, setUseFilter] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [user, setUser] = useState<UserModel | null>(itemData.user);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [base64Image, setBase64Image] = useState<string | ArrayBuffer | null>(
+    ""
+  );
+  const [teamSlug, setTeamSlug] = useState<string>(itemData.teams[0].name);
+  const [description, setDescription] = useState<string>("");
 
-  return (
-    <Fragment>
-      <Switch
-        title="hello"
-        onClick={() => {
-          setUseFilter(!useFilter);
-        }}
-        className="filterSwitch"
-      />
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+  const handleTeamChange = (event: SelectChangeEvent<string>) => {
+    console.log(event.target.value);
+    setTeamSlug(event.target.value);
+  };
+  const handledescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setDescription(event.target.value);
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader();
+    setImage(URL.createObjectURL(event.target.files![0]));
+    reader.onloadend = () => {
+      console.log(reader.result);
+      setBase64Image(reader.result);
+    };
+    reader.readAsDataURL(event.target.files![0]);
+  };
+
+  const handleSubmit = async () => {
+    const imagesForm = new FormData();
+    if (base64Image) {
+      imagesForm.append("imagesForm[image_url]", base64Image.toString());
+    }
+    imagesForm.append("imagesForm[image_name]", name);
+    imagesForm.append("imagesForm[team_slug]", teamSlug);
+    imagesForm.append("imagesForm[description]", description);
+    await fetch(imageEventURL, {
+      method: "POST",
+      headers: {
+        Authorization: `${jwt_token}`,
+      },
+      body: imagesForm,
+    })
+      .then((response) => {
+        if (response.ok) {
+          setOpen(false);
+        }
+        console.log(response);
+      })
+      .catch((response: Response) => {
+        response.json().then((data) => {
+          console.log(data);
+        });
+      });
+  };
+
+  return !user ? (
+    <div className="userOnly">
+      <Card className="userOnlyCard">
+        A galéria csak felhasználóknak elérhető.&emsp;
+        <Link to="/login">Jelentkezz be</Link>&ensp;vagy ha még nincs fiókod,
+        akkor&emsp;
+        <Link to="/signup">regisztrálj</Link>!
+      </Card>
+    </div>
+  ) : (
+    <div className="wrapper">
+      <div>
+        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+          Kép hozzáadása
+        </Button>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Upload Image</DialogTitle>
+          <DialogContent>
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Kép neve"
+              type="text"
+              fullWidth
+              value={name}
+              onChange={handleNameChange}
+            />
+            <input
+              required
+              accept="image/*"
+              style={{ display: "none" }}
+              id="raised-button-file"
+              type="file"
+              onChange={handleImageChange}
+            />
+            <Select
+              required
+              autoFocus
+              margin="dense"
+              id="team_slug"
+              label="Csapat"
+              type="text"
+              fullWidth
+              value={teamSlug}
+              onChange={handleTeamChange}
+            >
+              {itemData.teams.map((team: TeamModel) => (
+                <MenuItem value={team.slug} key={team.id}>
+                  {team.name}
+                </MenuItem>
+              ))}
+            </Select>
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="description"
+              label="Képleírás"
+              type="text"
+              fullWidth
+              value={description}
+              onChange={handledescriptionChange}
+              maxRows={2}
+            />
+            <label htmlFor="raised-button-file">
+              <Button variant="text" component="span">
+                Kép feltöltés
+              </Button>
+            </label>
+            {image && <img src={image} alt="Preview" />}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Mégse
+            </Button>
+            <Button onClick={handleSubmit} color="primary">
+              Feltöltés
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
+      <div className="filterSwitch">
+        Szűrők:
+        <Switch
+          defaultChecked={false}
+          onClick={() => {
+            setUseFilter(!useFilter);
+          }}
+        />
+      </div>
+
       {useFilter && (
         <div>
-          csapat
-          {itemData.teams.map((team: TeamModel) => (
-            <Button
-              className="teamFilterButton"
-              key={team.id}
-              variant="contained"
-              onClick={() => {
-                setTeamFilter(team.slug);
+          <FormControl>
+            <InputLabel id="csapat-select-label">Csapat</InputLabel>
+            <Select
+              style={{ color: "white", backgroundColor: "grey" }}
+              id="csapat-select"
+              label="csapat"
+              value={teamFilter}
+              onChange={(data) => {
+                setTeamFilter(data.target.value);
               }}
             >
-              {team.name}
-            </Button>
-          ))}
+              {itemData.teams.map((team: TeamModel) => (
+                <MenuItem value={team.slug} key={team.id}>
+                  {team.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button
             className="filterRemoveButton"
             variant="text"
@@ -75,7 +255,7 @@ function Gallery() {
             .map((image: ImageModel) => (
               <ImageListItem key={image.id} className="galleryItem">
                 <img
-                  src={`data:image/jpeg;base64,${image.image_url}`}
+                  src={image.image_url}
                   alt={image.image_name}
                   className="galleryImage"
                 />
@@ -87,7 +267,7 @@ function Gallery() {
             ))}
         </ImageList>
       </div>
-    </Fragment>
+    </div>
   );
 }
 
@@ -97,6 +277,11 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
   const allData: typeof allDataType = {
     teams: [],
     images: [],
+    user: {
+      id: 0,
+      email: "",
+      admin: false,
+    },
   };
 
   await axios
@@ -115,6 +300,11 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
     .then(async () => {
       await axios.get(team_url).then((data) => {
         allData.teams = data.data;
+      });
+    })
+    .then(async () => {
+      getUser().then((data) => {
+        allData.user = data!;
       });
     });
   return allData;

@@ -21,9 +21,11 @@ import { useState } from "react";
 import { IsLoadingGlobalState } from "./components/LoadingContextProvider";
 import Login from "./components/User/Login";
 import SignUp from "./components/User/Signup";
-import Calendar from "./components/Calendar/Calendar";
+import Calendar, { CalendarLoader } from "./components/Calendar/Calendar";
 import Forum from "./components/Forum/Forum";
 import Gallery, { GalleryLoader } from "./components/Gallery/Gallery";
+import Profile from "./components/User/Profile";
+import UpdateProfile from "./components/User/UpdateProfile";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -34,9 +36,11 @@ const router = createBrowserRouter(
       <Route index Component={HomePage} />
       <Route Component={Login} path="/login" />
       <Route Component={SignUp} path="/signup" />
-      <Route Component={Calendar} path="/calendar" />
+      <Route Component={Calendar} path="/calendar" loader={CalendarLoader} />
       <Route Component={Forum} path="/forum" />
       <Route Component={Gallery} path="/gallery/" loader={GalleryLoader} />
+      <Route Component={Profile} path="/profile" />
+      <Route Component={UpdateProfile} path="/profile-update" />
 
       <Route path="series/:id" Component={Series} loader={SeriesLoader} />
       <Route

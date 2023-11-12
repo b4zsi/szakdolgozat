@@ -9,18 +9,12 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-  config.api.configure do |api|
-    api.sign_up.enabled = true
-    api.authorization.location = :both
-    api.base_token_model = 'Devise::Api::Token'
-    api.base_controller = '::DeviseController'
-  end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '791f6a3b2b0e2e48972d7a89fda9dff3f8d910ed779b35f718048572c694452b31800a2044cbe3acd2b1f13c4c24c2133db2069d2196bb61980874776f401127'
+  # config.secret_key = '82c1019d6f624cc911e11636dc471489fa83a149fd6555d433831a4d18dc2ce76bc3a4a4a3595c34731585d448c8864434df3b241f8c06ed4634d1fb94d0c665'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -30,6 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
+  
   config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
 
   # Configure the class responsible to send e-mails.
@@ -85,7 +80,7 @@ Devise.setup do |config|
   # enable this with :database unless you are using a custom strategy.
   # The supported strategies are:
   # :database      = Support basic authentication with authentication key + password
-  # config.http_authenticatable = false
+  config.http_authenticatable = [:database]
 
   # If 401 status code should be returned for AJAX requests. True by default.
   # config.http_authenticatable_on_xhr = true
@@ -132,7 +127,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '55c2f2bf4775632e29f9a46e22db1d4aefbe0a3877944917e2175ba44adde8277ecf1957706e60747fcbe9740c3d4b8cea9f8c7d315387bd27450358d906a7c4'
+  # config.pepper = '21871f2586e26d42e0600c077f459c73a5b38f0d089a62fb587daccfe7acf7376802262474edb758ec90c118e94e4eb73351bba780787dd545e9e44866e1a4da'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -269,7 +264,7 @@ Devise.setup do |config|
   # should add them to the navigational formats lists.
   #
   # The "*/*" below is required to match Internet Explorer requests.
-   config.navigational_formats = ['*/*', :html, :turbo_stream]
+  config.navigational_formats = []
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -316,4 +311,18 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+  config.warden do |warden|
+    warden.scope_defaults :user, store: false
+  end
+
+  config.jwt do |jwt|
+    jwt.secret = Rails.application.credentials.fetch(:secret_key_base)
+    jwt.dispatch_requests = [
+      ['POST', %r{^/login$}]
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^/logout$}]
+    ]
+    jwt.expiration_time = 3.hours.to_i
+  end
 end

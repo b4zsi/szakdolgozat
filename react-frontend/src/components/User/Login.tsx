@@ -17,24 +17,10 @@ import {
 import React, { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/SignupStyle.css";
+import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 
-const api_url = "http://localhost:3000/users/tokens";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let access_token: string | null;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-//let refresh_token = localStorage.getItem("refresh_token");
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let resource_owner: string | null;
+const api_url = "http://localhost:3000";
 
-async function handleAuthResponse(response: Response) {
-  const data = await response.json();
-  console.log("elsodata");
-  console.log(data);
-  localStorage.setItem("access_token", data.token);
-  localStorage.setItem("resource_owner", JSON.stringify(data.resource_owner));
-  localStorage.setItem("refresh_token", data.refresh_token);
-  return response;
-}
 //#region faszsag
 // async function userSession() {
 //   await refreshToken();
@@ -163,24 +149,33 @@ function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const response = await fetch(`${api_url}/sign_in`, {
+    await fetch(`${api_url}/login`, {
       method: "POST",
       body: JSON.stringify({
-        email,
-        password,
+        user: {
+          email,
+          password,
+        },
       }),
-      headers: { "Content-type": "application/json" },
+      headers: {
+        "Content-type": "application/json",
+      },
+    }).then((response: Response) => {
+      const jwt = response.headers.get("Authorization");
+      localStorage.setItem("jwt", jwt!);
+      toastNotification(0, "Sikeres bejelentkezés.").then(() => {
+        navigate("/");
+      });
     });
 
-    await handleAuthResponse(response).then((data: Response) => {
-      if (data.ok) {
-        console.log(data);
-        navigate("/");
-      } else {
-        console.log(data);
-      }
-    });
-    //userSession();
+    // await handleAuthResponse().then(async (data) => {
+    //   if (response!.ok) {
+    //     toastNotification(0, "Sikeres bejelentkezés.").then(() => {});
+    //   } else {
+    //     console.log(data);
+    //     toastNotification(1, "data.error_description[0]");
+    //   }
+    // });
   };
 
   const passwordInput = (
@@ -210,6 +205,7 @@ function Login() {
   return (
     <Fragment>
       <div className="backgroundStuff"></div>
+      <CustomSnackbar />
 
       <section>
         <Container maxWidth="md" className="container">
@@ -267,8 +263,7 @@ function Login() {
               <Box>
                 <Typography variant="body2" align="center">
                   <Link to="/forgot-password" className="link">
-                    Itt kérhetsz új jelszavat, ha még neked is túl erős volt az
-                    előző.
+                    Elfelejtett jelszó
                   </Link>
                   <br />
                   <Link to="/signup" className="link">

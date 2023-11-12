@@ -1,10 +1,17 @@
+import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
+import "../../styles/PageNotFound.css";
 
 export default function NotFound() {
   return (
-    <div>
-      Page Not Found.
-      <Link to="/">Go back to main page</Link>
+    <div className="background">
+      <Card className="notFoundCard">
+        Ez az oldal nem létezik. Vissza a&ensp;
+        <Link to="/" className="link">
+          Főoldalra
+        </Link>
+        .
+      </Card>
     </div>
   );
 }

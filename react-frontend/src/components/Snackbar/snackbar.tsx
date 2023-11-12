@@ -2,7 +2,7 @@ import React from "react";
 import toast, { ToastBar, Toaster } from "react-hot-toast";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const toastNotification = (status: number, szoveg: string) => {
+export const toastNotification = async (status: number, szoveg: string) => {
   if (status === 0) {
     toast.success(szoveg, {
       duration: 3500,

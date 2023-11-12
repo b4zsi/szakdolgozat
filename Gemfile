@@ -14,7 +14,8 @@ gem "puma", "~> 5.0"
 
 gem 'active_model_serializers'
 gem "devise"
-gem "devise-api"
+gem "devise-jwt", "0.10.0"
+gem "jsonapi-serializer"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
@@ -46,6 +47,7 @@ group :development, :test do
 end
 
 group :development do
+  
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end

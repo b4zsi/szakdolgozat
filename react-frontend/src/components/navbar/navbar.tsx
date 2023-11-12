@@ -18,10 +18,12 @@ import axios from "axios";
 import { SeriesModel } from "../../model/SeriesModel";
 import { Link } from "react-router-dom";
 import { UserModel } from "../../model/UserModel";
-import toast, { Toaster } from "react-hot-toast";
+import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+import "../../styles/navBarStyle.css";
 
 function ResponsiveAppBar() {
   const API_URL = "http://localhost:3000/api/v1/series";
+  const current_user_url = "http://localhost:3000/current_user";
 
   const noUserPages = [
     { name: "Főoldal", url: "/" },
@@ -34,9 +36,17 @@ function ResponsiveAppBar() {
   const userPages = [
     { name: "Főoldal", url: "/" },
     { name: "Szeriák", url: "/series" },
-    { name: "Fórum", url: "/" },
+    { name: "Fórum", url: "/forum" },
     { name: "Naptár", url: "/calendar" },
+    { name: "Galéria", url: "/gallery" },
   ];
+  // const adminPages = [
+  //   { name: "Főoldal", url: "/" },
+  //   { name: "Szériák", url: "/series" },
+  //   { name: "Fórum", url: "/forum" },
+  //   { name: "Naptár", url: "/calendar" },
+  //   { name: "Fiókok", url: "/fiokok" },
+  // ];
   const [user, setUser] = useState<UserModel | null>(null);
 
   const StyledMenu = styled((props: MenuProps) => (
@@ -88,11 +98,22 @@ function ResponsiveAppBar() {
     return response.data;
   }
   async function getUser() {
-    const owner = localStorage.getItem("resource_owner")!;
-    const userAsModel =
-      owner === undefined ? null : (JSON.parse(owner) as UserModel);
-    setUser(userAsModel);
-    return userAsModel;
+    const jwt_token = localStorage.getItem("jwt");
+    await fetch(`${current_user_url}`, {
+      method: "GET",
+      headers: {
+        Authorization: `${jwt_token}`,
+      },
+    })
+      .then((response) => {
+        response.json().then((data: UserModel) => {
+          setUser(data);
+          setPages(userPages);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   React.useEffect(() => {
@@ -102,13 +123,7 @@ function ResponsiveAppBar() {
         setSeries(items);
       }
     });
-    getUser().then((user) => {
-      if (user) {
-        setPages(userPages);
-      } else {
-        setPages(noUserPages);
-      }
-    });
+    getUser();
     return () => {
       mounted = false;
     };
@@ -139,22 +154,21 @@ function ResponsiveAppBar() {
 
   async function handleLogout(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault();
-    const refresh_token = localStorage.getItem("refresh_token");
-    await fetch("http://localhost:3000/users/sign_out", {
+    const jwt = localStorage.getItem("jwt");
+    await fetch("http://localhost:3000/logout", {
       method: "DELETE",
-      body: JSON.stringify({
-        refresh_token,
-      }),
-      headers: { "Content-type": "application/json" },
-    }).then((response) => {
-      console.log(response);
-      if (response.status === 204) {
-        localStorage.removeItem("resource_owner");
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `${jwt}`,
+      },
+    }).then(async (response) => {
+      if (response.status === 200) {
         setUser(null);
-        toast.success("Sikeres kijelentkezés");
-        window.location.reload();
+        toastNotification(0, "Sikeres kijelentkezés").then(() => {
+          window.location.reload();
+        });
       } else {
-        toast.error("Hiba a kijelentkezés során");
+        toastNotification(1, "Hiba a kijelentkezés során");
       }
     });
   }
@@ -212,6 +226,7 @@ function ResponsiveAppBar() {
               !page.name.match("Szeriák") ? (
                 <Button
                   key={index}
+                  className="navItem"
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
@@ -263,7 +278,7 @@ function ResponsiveAppBar() {
               )
             )}
           </Box>
-          <Toaster />
+          <CustomSnackbar />
           {user && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
@@ -287,7 +302,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {user?.email}
+                {user.email}
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">Profil</Typography>
                 </MenuItem>
