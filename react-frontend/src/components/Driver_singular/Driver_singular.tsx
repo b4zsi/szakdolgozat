@@ -1,17 +1,19 @@
 import axios from "axios";
 import React, { Fragment } from "react";
 import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
-import { Divider, Grid, Paper } from "@mui/material";
+import { Button, Divider, Grid, Paper } from "@mui/material";
 import "../../styles/Driver_singular.css";
 import "../../styles/loadingAnimation.css";
 import { DriverModel } from "../../model/DriverModel";
 import hexRgb from "hex-rgb";
 import { TeamModel } from "../../model/TeamModel";
+import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 
 let allDataType: {
   driver: DriverModel;
   team: TeamModel;
 };
+const current_user_url = "http://localhost:3000/current_user/";
 const Driver_singular = () => {
   const allData: typeof allDataType = useLoaderData() as {
     driver: DriverModel;
@@ -20,6 +22,27 @@ const Driver_singular = () => {
   const driver = allData.driver;
   const team = allData.team;
 
+  const submitFavDriver = async () => {
+    const jwt = localStorage.getItem("jwt");
+    await fetch(current_user_url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${jwt}`,
+      },
+      body: JSON.stringify({
+        user: {
+          fav_driver: driver.slug,
+        },
+      }),
+    }).then(async (response) => {
+      if (response.ok) {
+        await response.json().then((data) => {
+          toastNotification(0, data.message);
+        });
+      }
+    });
+  };
   return (
     <Fragment>
       <div
@@ -46,6 +69,7 @@ const Driver_singular = () => {
               className="kep"
             />
           </Grid>
+          <CustomSnackbar />
           <Grid item xs={8} container className="propertiesGrid">
             <Grid item xs={4}>
               Életkor
@@ -81,6 +105,15 @@ const Driver_singular = () => {
             </Grid>
           </Grid>
         </Grid>
+        <Button
+          variant="contained"
+          className="fav_driverButton"
+          onClick={() => {
+            submitFavDriver();
+          }}
+        >
+          Kedvenc versenyző
+        </Button>
         <div>
           <Paper className="driverDescripition">{driver.description}</Paper>
         </div>

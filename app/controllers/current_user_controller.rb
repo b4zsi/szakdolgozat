@@ -3,4 +3,29 @@ class CurrentUserController < ApplicationController
   def index
     render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
   end
+
+  def update
+    @user = current_user
+    if @user.update(user_params)
+      render json: {message: "Adatok sikeresen módosítva."}, status: 200
+    else 
+      render json: {message:"Hiba az adatok módosítása közben."}, status:422
+    end
+  end
+
+  def destroy
+    @user = current_user
+
+    if @user.destroy(user_params)
+      render json: {message: "Fiók sikeresen törölve."}, status: 200
+    else 
+      render json: {message:"Hiba a fiók törlése közben."}, status:422
+    end
+  end
+
+  private 
+  def user_params
+    params.require(:user).permit(:id, :email, :admin, :username, :keresztnev, :vezeteknev, :fav_team, :fav_driver)
+  end
+
 end

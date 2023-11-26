@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Menu, { MenuProps } from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
@@ -16,10 +15,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import axios from "axios";
 import { SeriesModel } from "../../model/SeriesModel";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserModel } from "../../model/UserModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import "../../styles/navBarStyle.css";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 
 function ResponsiveAppBar() {
   const API_URL = "http://localhost:3000/api/v1/series";
@@ -93,6 +93,8 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const location = useLocation();
+  const navigate = useNavigate();
   async function getAPIData() {
     const response = await axios.get(API_URL);
     return response.data;
@@ -127,7 +129,7 @@ function ResponsiveAppBar() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [location.pathname, navigate]);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -165,7 +167,7 @@ function ResponsiveAppBar() {
       if (response.status === 200) {
         setUser(null);
         toastNotification(0, "Sikeres kijelentkezés").then(() => {
-          window.location.reload();
+          navigate("/");
         });
       } else {
         toastNotification(1, "Hiba a kijelentkezés során");
@@ -283,7 +285,11 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <PermIdentityIcon
+                    fontSize="large"
+                    style={{ backgroundColor: "white", borderRadius: "2vh" }}
+                  />
+                  {/* amugy ha van kepe akkor akkor abban az avatarban tedd ide */}
                 </IconButton>
               </Tooltip>
               <Menu
@@ -302,14 +308,19 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {user.email}
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">Profil</Typography>
+                <MenuItem className="profileOptions">
+                  {user.keresztnev}&ensp;
+                  {user.vezeteknev}
                 </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Button onClick={handleLogout} style={{ color: "black" }}>
-                    <Typography textAlign="center">Kijelentkezés</Typography>
-                  </Button>
+                  <Link to="/profile" className="navbarLink">
+                    <Typography className="profileOptions">Profil</Typography>
+                  </Link>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <Typography className="profileOptions">
+                    Kijelentkezés
+                  </Typography>
                 </MenuItem>
               </Menu>
             </Box>

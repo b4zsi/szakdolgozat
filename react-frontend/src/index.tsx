@@ -22,10 +22,11 @@ import { IsLoadingGlobalState } from "./components/LoadingContextProvider";
 import Login from "./components/User/Login";
 import SignUp from "./components/User/Signup";
 import Calendar, { CalendarLoader } from "./components/Calendar/Calendar";
-import Forum from "./components/Forum/Forum";
+import Forum, { ForumLoader } from "./components/Forum/Forum";
 import Gallery, { GalleryLoader } from "./components/Gallery/Gallery";
-import Profile from "./components/User/Profile";
+import Profile, { ProfilLoader } from "./components/User/Profile";
 import UpdateProfile from "./components/User/UpdateProfile";
+import Comments, { CommentLoader } from "./components/Comments/Comments";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -37,10 +38,15 @@ const router = createBrowserRouter(
       <Route Component={Login} path="/login" />
       <Route Component={SignUp} path="/signup" />
       <Route Component={Calendar} path="/calendar" loader={CalendarLoader} />
-      <Route Component={Forum} path="/forum" />
+      <Route Component={Forum} path="/forum" loader={ForumLoader} />
       <Route Component={Gallery} path="/gallery/" loader={GalleryLoader} />
-      <Route Component={Profile} path="/profile" />
+      <Route Component={Profile} path="/profile" loader={ProfilLoader} />
       <Route Component={UpdateProfile} path="/profile-update" />
+      <Route
+        Component={Comments}
+        path="forum/comment/:id"
+        loader={CommentLoader}
+      />
 
       <Route path="series/:id" Component={Series} loader={SeriesLoader} />
       <Route

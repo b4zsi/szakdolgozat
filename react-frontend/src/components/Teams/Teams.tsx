@@ -39,7 +39,7 @@ const Teams: FC<Team> = (team: Team) => {
               textAlign: "center",
               margin: 0,
               padding: 0,
-              fontSize: "1.3em",
+              fontSize: "0.75em",
               fontFamily: "Monaco",
             }}
           >

@@ -19,8 +19,8 @@ section {
 }
 
 .container{
-    padding-top: 10%;
-    opacity: 0.9;
+    padding-top: 8%;
+    opacity: 0.85;
 }
 
 .link {
@@ -28,11 +28,14 @@ section {
     color: black !important;
     text-align: center;
     margin: auto;
-    margin: auto;
 }
 
 .title {
     text-align: center;
     font-size: 6vh !important;
     font-family: 'Roboto Mono' !important;
+}
+
+.signUpForm{
+    padding-bottom: 10px !important;
 }

@@ -4,16 +4,18 @@ import axios from "axios";
 import "../../styles/loadingAnimation.css";
 import "../../styles/Team_singular.css";
 import hexRgb from "hex-rgb";
-import { Divider, Grid } from "@mui/material";
+import { Button, Divider, Grid } from "@mui/material";
 import Slider from "../imageSlider/imageSlider";
 import { TeamModel } from "../../model/TeamModel";
 import { DriverModel } from "../../model/DriverModel";
 import { ImageModel } from "../../model/ImageModel";
+import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 let allDataType: {
   team: TeamModel;
   drivers: DriverModel[];
   images: ImageModel[];
 };
+const current_user_url = "http://localhost:3000/current_user/";
 const Team_singular = () => {
   const allData: typeof allDataType = useLoaderData() as {
     team: TeamModel;
@@ -24,8 +26,31 @@ const Team_singular = () => {
   const drivers: DriverModel[] = allData.drivers;
   const images: ImageModel[] = allData.images;
 
+  const submitFavTeam = async () => {
+    const jwt = localStorage.getItem("jwt");
+    await fetch(current_user_url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${jwt}`,
+      },
+      body: JSON.stringify({
+        user: {
+          fav_team: team.slug,
+        },
+      }),
+    }).then(async (response) => {
+      if (response.ok) {
+        await response.json().then((data) => {
+          toastNotification(0, data.message);
+        });
+      }
+    });
+  };
+
   return (
     <Fragment>
+      <CustomSnackbar />
       <div className="backgroundStuffTeam">
         <Slider images={images} team_name={team.name} />
       </div>
@@ -34,9 +59,17 @@ const Team_singular = () => {
         style={{
           zIndex: -1,
           marginTop: "42%",
-          height: "125vh",
         }}
       >
+        <Button
+          variant="outlined"
+          className="favTeamButton"
+          onClick={() => {
+            submitFavTeam();
+          }}
+        >
+          Kedvenc csapat
+        </Button>
         <p className="subTitle">Statisztikák</p>
         <Grid
           container

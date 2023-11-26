@@ -116,6 +116,7 @@ const api_url = "http://localhost:3000";
 
 function SignUp() {
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [showPassword, SetShowPassword] = useState(false);
@@ -138,6 +139,7 @@ function SignUp() {
         user: {
           email,
           password,
+          username,
         },
       }),
       headers: { "Content-type": "application/json" },
@@ -213,7 +215,7 @@ function SignUp() {
                   Regisztráció
                 </Typography>
                 <form id="sign_up_form" onSubmit={handleSubmit}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth className="signUpForm">
                     <InputLabel required htmlFor="email" id="email-label">
                       Email cím
                     </InputLabel>
@@ -226,15 +228,29 @@ function SignUp() {
                         setEmail(e.target.value);
                       }}
                     />
-                    <FormHelperText id="email-helper-text">
-                      A jelszavad nem kerül megosztásra
-                    </FormHelperText>
                   </FormControl>
+                  <FormControl fullWidth className="signUpForm">
+                    <InputLabel required htmlFor="username" id="username-label">
+                      Felhasználónév
+                    </InputLabel>
+                    <Input
+                      id="username"
+                      type="text"
+                      value={username}
+                      onChange={(e) => {
+                        setUsername(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+
                   <FormControl fullWidth>
                     <InputLabel required htmlFor="password" id="password-label">
                       Jelszó
                     </InputLabel>
                     {passwordInput}
+                    <FormHelperText id="email-helper-text">
+                      A jelszavad nem kerül megosztásra
+                    </FormHelperText>
                   </FormControl>
                   <FormControl fullWidth>
                     <InputLabel

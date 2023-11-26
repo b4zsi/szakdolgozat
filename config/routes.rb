@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  get 'current_user', to: 'current_user#index'
+  get '/current_user', to: 'current_user#index'
+  put '/current_user', to: 'current_user#update'
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
@@ -20,6 +21,8 @@ Rails.application.routes.draw do
       resources :calendar_events
       resources :teams
       resources :images, param: :team_slug
+      resources :posts
+      resources :comments, param: :post_id
     end
   end
   

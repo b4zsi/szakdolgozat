@@ -16,15 +16,15 @@
 }
 
 .cardContainer {
-    border-radius: 20px;
+    border-radius: 20px !important;
     position: relative;
-    margin: 1;
     height: 40vh;
+    margin-left: 20px;
     width: 250;
     padding: 0;
     color: white;
     z-index: 2;
-    box-shadow: 10px 15px black;
+    box-shadow: 10px 15px black !important;
     transition: transform .5s;
 }
 

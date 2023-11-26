@@ -1,0 +1,70 @@
+.commentMainDiv{
+    background-color: white;
+    height: 1000px;
+}
+
+.mainPostCard{
+    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+    border: 2px solid black;
+    background-color: white !important;
+    width: 70%;
+    height: 20vh;
+    border-radius: 2vh !important;
+    margin: auto;
+    margin-top:5%;
+}
+.commentCard{
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    background-color: white !important;
+    width: 60%;
+    height: 11vh;
+    margin: auto;
+    margin-top: 0.5%;
+}
+.writeComment{
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    background-color: white !important;
+    width: 60%;
+    height: 7vh;
+    margin-top: 0.5%;
+    margin-right:19.9%;
+    border-radius: 5px !important;
+}
+.commentField{
+    height: 2vh !important;
+    width:90%;
+    border-radius: 10px !important;
+}
+
+
+.postContainer{
+    margin-top: 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.postTitle{
+    margin: auto;
+    text-align: center;
+    font-size: 4vh;
+    font-weight: bold;
+}
+.postBody{
+    font-size: 2vh;
+}
+.post{
+    width:90%;
+}
+.postAuthor{
+    float: right;
+}
+.submitButton{
+    float:right;
+    height: 7vh;
+    width: 9vh;
+}

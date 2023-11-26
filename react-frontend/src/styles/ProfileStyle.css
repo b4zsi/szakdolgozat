@@ -1,0 +1,46 @@
+.ProfileMainDiv{
+    background-image: url("../authBack.jpg");
+    /* background-color: white; */
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #000000;
+    height: 720px;
+}
+
+.profileCard{
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+    border: 2px solid black;
+    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+    border-radius: 15px !important;
+    width: 55%;
+    height: 50%;
+    margin: auto;
+    font-weight: bold;
+    font-size: 4vh;
+}
+
+.ProfileCardContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  }
+  .profilHeader{
+    padding-top: 10px !important;
+    padding-bottom: 10px;
+    margin: 0 !important;
+    text-align: center;
+    font-size: 6vh;
+  }
+
+.profileItem{
+    padding: 8px !important;
+    margin-top: 0 !important;
+    text-align: center;
+}
+
+.deleteButton{
+  margin: auto;
+}

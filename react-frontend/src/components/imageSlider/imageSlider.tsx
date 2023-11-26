@@ -62,7 +62,6 @@ const Slider: React.FC<image> = (images: image) => {
             </div>
           );
         })}
-        Információkért görgess lejjebb
       </div>
     </Fragment>
   );

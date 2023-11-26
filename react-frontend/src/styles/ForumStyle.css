@@ -20,3 +20,77 @@
     color: white !important;
     text-decoration: none;
 }
+
+.ForumMainDiv{
+    background-color: white;
+}
+.postCreateDivContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+}
+
+.postCreateDiv{
+    margin-top: 30%;
+    background-color: white;
+    border: 2px solid black;
+    margin-bottom: 10%;
+    width: 35%;
+    border-radius: 10px;
+    align-items: center;
+    padding: 30px;
+    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+}
+
+.postCard{
+    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+    border: 2px solid black;
+    background-color: white !important;
+    width: 70%;
+    height: 20vh;
+    border-radius: 2vh !important;
+    margin: auto;
+    margin-top:5%;
+}
+
+.postTitle{
+    margin: auto;
+    text-align: center;
+    font-size: 4vh;
+    font-weight: bold;
+}
+.postBody{
+    font-size: 2vh;
+}
+.post{
+    width:90%;
+}
+.postContainer{
+    margin-top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.postCreateDivTitle{
+    color:black;
+    margin: 0;
+}
+
+.postByName {
+    text-align: right;
+    color:black;
+}
+.writeComment{
+    float: right;
+    color: black !important;
+    text-decoration: none; 
+}
+
+.uploadButton{
+    background-color: black;
+}
+.tooltip{
+    text-align: right;
+}

@@ -133,6 +133,34 @@ function Calendar() {
                 });
               });
           }}
+          onEventDrop={async (droppedOn, updatedEvent, originalEvent) => {
+            await fetch(`${calendarEventURL}/${originalEvent.event_id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${jwt_token}`,
+              },
+              body: JSON.stringify({
+                calendar_events: {
+                  id: updatedEvent.event_id,
+                  title: updatedEvent.title,
+                  startDate: updatedEvent.start,
+                  endDate: updatedEvent.end,
+                },
+              }),
+            })
+              .then((response) => {
+                response.json().then((data) => {
+                  window.location.reload();
+                  toastNotification(0, data.message);
+                });
+              })
+              .catch((response: Response) => {
+                response.json().then((data) => {
+                  toastNotification(1, data);
+                });
+              });
+          }}
         />
       )}
       <CustomSnackbar />
@@ -146,6 +174,11 @@ export const CalendarLoader: LoaderFunction<UserModel> = async () => {
       id: 0,
       email: "",
       admin: false,
+      username: "",
+      keresztnev: "",
+      vezeteknev: "",
+      fav_team: "",
+      fav_driver: "",
     },
     calendar_events: [],
   };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { ImageModel } from "../../model/ImageModel";
 import axios from "axios";
 import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
@@ -31,7 +31,7 @@ let allDataType: {
   user: UserModel;
 };
 
-function Gallery() {
+const Gallery = () => {
   const imageEventURL = "http://localhost:3000/api/v1/images";
   const jwt_token = localStorage.getItem("jwt");
   const itemData: typeof allDataType = useLoaderData() as {
@@ -123,15 +123,12 @@ function Gallery() {
   ) : (
     <div className="wrapper">
       <div>
-        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-          Kép hozzáadása
-        </Button>
         <Dialog
           open={open}
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Upload Image</DialogTitle>
+          <DialogTitle id="form-dialog-title">Képfeltöltés</DialogTitle>
           <DialogContent>
             <TextField
               required
@@ -164,7 +161,7 @@ function Gallery() {
               onChange={handleTeamChange}
             >
               {itemData.teams.map((team: TeamModel) => (
-                <MenuItem value={team.slug} key={team.id}>
+                <MenuItem value={team.slug} key={team.slug}>
                   {team.name}
                 </MenuItem>
               ))}
@@ -182,11 +179,11 @@ function Gallery() {
               maxRows={2}
             />
             <label htmlFor="raised-button-file">
-              <Button variant="text" component="span">
+              <Button variant="contained" component="span">
                 Kép feltöltés
               </Button>
             </label>
-            {image && <img src={image} alt="Preview" />}
+            {image && <img src={`${image}`} alt="Preview" />}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -198,7 +195,9 @@ function Gallery() {
           </DialogActions>
         </Dialog>
       </div>
-
+      <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        Kép hozzáadása
+      </Button>
       <div className="filterSwitch">
         Szűrők:
         <Switch
@@ -214,9 +213,14 @@ function Gallery() {
           <FormControl>
             <InputLabel id="csapat-select-label">Csapat</InputLabel>
             <Select
-              style={{ color: "white", backgroundColor: "grey" }}
+              style={{
+                color: "black",
+                backgroundColor: "white",
+                width: "220px",
+              }}
               id="csapat-select"
               label="csapat"
+              defaultValue={itemData.teams[0].name}
               value={teamFilter}
               onChange={(data) => {
                 setTeamFilter(data.target.value);
@@ -241,35 +245,14 @@ function Gallery() {
         </div>
       )}
       <div className="root">
-        <ImageList rowHeight={480} className="galleryList" cols={4}>
-          {itemData.images
-            .filter((image: ImageModel) => {
-              if (teamFilter === "all") {
-                return itemData.images.map(
-                  (image2: ImageModel) => image2.team_slug === image.team_slug
-                );
-              } else {
-                return teamFilter === image.team_slug;
-              }
-            })
-            .map((image: ImageModel) => (
-              <ImageListItem key={image.id} className="galleryItem">
-                <img
-                  src={image.image_url}
-                  alt={image.image_name}
-                  className="galleryImage"
-                />
-                <ImageListItemBar
-                  title={image.image_name}
-                  subtitle={<span>{image.description}</span>}
-                />
-              </ImageListItem>
-            ))}
-        </ImageList>
+        <MemoImageList
+          itemDataImages={itemData.images}
+          teamFilter={teamFilter}
+        />
       </div>
     </div>
   );
-}
+};
 
 export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
   const images_url = "http://localhost:3000/api/v1/images/";
@@ -281,6 +264,11 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
       id: 0,
       email: "",
       admin: false,
+      username: "",
+      keresztnev: "",
+      vezeteknev: "",
+      fav_team: "",
+      fav_driver: "",
     },
   };
 
@@ -309,5 +297,41 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
     });
   return allData;
 };
+
+const MemoImageList = memo(function listImages({
+  itemDataImages,
+  teamFilter,
+}: {
+  itemDataImages: ImageModel[];
+  teamFilter: string;
+}) {
+  return (
+    <ImageList rowHeight={480} className="galleryList" cols={4}>
+      {itemDataImages
+        .filter((image: ImageModel) => {
+          if (teamFilter === "all") {
+            return itemDataImages.map(
+              (image2: ImageModel) => image2.team_slug === image.team_slug
+            );
+          } else {
+            return teamFilter === image.team_slug;
+          }
+        })
+        .map((image: ImageModel) => (
+          <ImageListItem key={image.id} className="galleryItem">
+            <img
+              src={`data:image/jpeg;base64, ${image.image_url}`}
+              alt={image.image_name}
+              className="galleryImage"
+            />
+            <ImageListItemBar
+              title={image.image_name}
+              subtitle={<span>{image.description}</span>}
+            />
+          </ImageListItem>
+        ))}
+    </ImageList>
+  );
+});
 
 export default Gallery;

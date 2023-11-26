@@ -39,7 +39,7 @@ const Series = () => {
     teams: TeamModel[];
     images: ImageModel[];
   };
-  //const { id } = useParams<string>();
+
   const series: SeriesModel = allData.series;
   const drivers: DriverModel[] = allData.drivers.sort(
     (a: DriverModel, b: DriverModel) => driverSort(a, b)
@@ -93,7 +93,7 @@ const Series = () => {
             </Grid>
           </Paper>
         </Box>
-        <Box sx={{ margin: 5, zIndex: 3 }}>
+        <Box sx={{ margin: 5 }}>
           <Typography variant="h2" className="title">
             Csapatok
           </Typography>
@@ -110,9 +110,10 @@ const Series = () => {
               alignItems={"center"}
               justifyContent={"center"}
               wrap="nowrap"
+              className="TeamGrid"
             >
-              <div className="oneLineDiv">
-                <ImageList className="imageList">
+              <div className="oneLineDivTeam">
+                <ImageList className="imageListTeam">
                   {teams.map((item: TeamModel) => (
                     <Link
                       to={`/teams/${item.slug}`}

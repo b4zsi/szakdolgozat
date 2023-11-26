@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 
 function ImageAdditionDialog() {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("null");
+  const [open, setOpen] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [image, setImage] = useState<string>("null");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -42,7 +42,7 @@ function ImageAdditionDialog() {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="image-addition-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Upload Image</DialogTitle>
         <DialogContent>

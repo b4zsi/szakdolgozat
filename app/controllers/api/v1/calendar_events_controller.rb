@@ -1,6 +1,6 @@
 class Api::V1::CalendarEventsController < ApplicationController
 
-    before_action :authenticate_user!, only: [:create, :update, :destory]
+    before_action :authenticate_user!, only: [:create, :update, :delete]
     def index
         events = CalendarEvent.all
         render json: events, each_serializer: CalendarEventSerializer

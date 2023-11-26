@@ -40,11 +40,12 @@
 }
 .filterSwitch{
     display: block;
-    border-radius: 10px;
     float: left;
-    background-color: grey;
-    width: 50%;
+    background-color: white;
+    width: 10%;
     clear: left;
+    color:black;
+    font-weight: bold;
 }
 
 .userOnly{

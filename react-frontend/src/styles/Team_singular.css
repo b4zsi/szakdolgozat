@@ -27,7 +27,7 @@
     z-index: -1;
     position: relative;
     top: 2%;
-    background-color: white;
+    background-color: lightgrey !important;
 }
 
 .propertyGridItem {
@@ -62,6 +62,13 @@
     color: black;
     z-index: -1;
     padding-top: 100px;
+}
+
+.favTeamButton{
+    z-index: 1 !important;
+    margin-top: 1% !important;
+    margin-left: 45% !important;
+    background-color: orange !important;
 }
 
 @keyframes fade-in {

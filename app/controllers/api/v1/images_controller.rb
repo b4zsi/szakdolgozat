@@ -26,19 +26,19 @@ class Api::V1::ImagesController < ApplicationController
     def destroy
         @image = Image.find(params[:id])
         if @image.destroy
-            render json: {message: "Kép sikeresen hozzáadva."}, status: 200
+            render json: {message: "Kép sikeresen törölve.."}, status: 200
         else
-            render json: {error: event.errors.message}, status: 422
+            render json: {error: image.errors.message}, status: 422
         end
     end
 
     def update
-        @image = CalendarEvent.find(params[:id])
+        @image = Image.find(params[:id])
 
         if @image.update(image_create_params)
             render json: {message: "Kép sikeresen módosítva."}, status: 200
         else 
-            render json: {message:"Hiba a verseny törlése közben."}, status:422
+            render json: {message:"Hiba a kép módosítása közben."}, status:422
         end
     end
 
