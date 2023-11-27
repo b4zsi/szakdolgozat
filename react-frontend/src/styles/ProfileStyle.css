@@ -14,9 +14,8 @@
     border: 2px solid black;
     box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
     border-radius: 15px !important;
-    width: 55%;
-    height: 50%;
-    margin: auto;
+    width: 60%;
+    height: 65%;
     font-weight: bold;
     font-size: 4vh;
 }
@@ -25,10 +24,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90vh;
+    height: 80vh;
   }
   .profilHeader{
-    padding-top: 10px !important;
+    padding-top: 5px !important;
     padding-bottom: 10px;
     margin: 0 !important;
     text-align: center;
@@ -41,6 +40,7 @@
     text-align: center;
 }
 
-.deleteButton{
-  margin: auto;
+.userDeleteButton{
+  margin: auto !important;
+  float: right !important;
 }

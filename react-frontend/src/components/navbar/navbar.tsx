@@ -40,13 +40,14 @@ function ResponsiveAppBar() {
     { name: "Naptár", url: "/calendar" },
     { name: "Galéria", url: "/gallery" },
   ];
-  // const adminPages = [
-  //   { name: "Főoldal", url: "/" },
-  //   { name: "Szériák", url: "/series" },
-  //   { name: "Fórum", url: "/forum" },
-  //   { name: "Naptár", url: "/calendar" },
-  //   { name: "Fiókok", url: "/fiokok" },
-  // ];
+  const adminPages = [
+    { name: "Főoldal", url: "/" },
+    { name: "Szériák", url: "/series" },
+    { name: "Fórum", url: "/forum" },
+    { name: "Naptár", url: "/calendar" },
+    { name: "Galéria", url: "/gallery" },
+    { name: "Fiókok", url: "/fiokok" },
+  ];
   const [user, setUser] = useState<UserModel | null>(null);
 
   const StyledMenu = styled((props: MenuProps) => (
@@ -108,9 +109,13 @@ function ResponsiveAppBar() {
       },
     })
       .then((response) => {
-        response.json().then((data: UserModel) => {
-          setUser(data);
-          setPages(userPages);
+        response.json().then((user: UserModel) => {
+          setUser(user);
+          if (user.admin) {
+            setPages(adminPages);
+          } else {
+            setPages(userPages);
+          }
         });
       })
       .catch((error) => {

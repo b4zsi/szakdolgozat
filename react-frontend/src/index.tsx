@@ -27,6 +27,7 @@ import Gallery, { GalleryLoader } from "./components/Gallery/Gallery";
 import Profile, { ProfilLoader } from "./components/User/Profile";
 import UpdateProfile from "./components/User/UpdateProfile";
 import Comments, { CommentLoader } from "./components/Comments/Comments";
+import Users, { UsersLoader } from "./components/User/Users";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
       <Route Component={Forum} path="/forum" loader={ForumLoader} />
       <Route Component={Gallery} path="/gallery/" loader={GalleryLoader} />
       <Route Component={Profile} path="/profile" loader={ProfilLoader} />
+      <Route Component={Users} path="fiokok" loader={UsersLoader} />
       <Route Component={UpdateProfile} path="/profile-update" />
       <Route
         Component={Comments}

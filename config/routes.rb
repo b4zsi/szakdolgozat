@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       resources :images, param: :team_slug
       resources :posts
       resources :comments, param: :post_id
+      resources :users
     end
   end
   

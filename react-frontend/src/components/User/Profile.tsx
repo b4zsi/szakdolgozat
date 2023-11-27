@@ -20,15 +20,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import { TeamModel } from "../../model/TeamModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+import { DriverModel } from "../../model/DriverModel";
 
 let allDataType: {
   teams: TeamModel[];
+  drivers: DriverModel[];
   user: UserModel;
 };
 
 function Profile() {
   const itemData: typeof allDataType = useLoaderData() as {
     teams: TeamModel[];
+    drivers: DriverModel[];
     user: UserModel;
   };
 
@@ -43,16 +46,20 @@ function Profile() {
   const [favTeam, setFavTeam] = useState<string>(
     user.fav_team == undefined ? "Oracle Red Bull Racing" : user.fav_team
   );
+  const [favDriver, setFavDriver] = useState<string>();
   const [nameDialogOpen, setNameDialogOpen] = useState<boolean>(false);
   const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);
   const [emailDialogOpen, setEmailDialogOpen] = useState<boolean>(false);
   const [favTeamDialogOpen, setFavTeamDialogOpen] = useState<boolean>(false);
+  const [favDriverDialogOpen, setFavDriverDialogOpen] =
+    useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const handleClose = () => {
     setNameDialogOpen(false);
     setEmailDialogOpen(false);
     setUsernameDialogOpen(false);
     setFavTeamDialogOpen(false);
+    setFavDriverDialogOpen(false);
   };
   const handleNameChangeOpen = () => {
     setNameDialogOpen(true);
@@ -65,6 +72,9 @@ function Profile() {
   };
   const handleFavTeamChangeOpen = () => {
     setFavTeamDialogOpen(true);
+  };
+  const handleFavDriverChangeOpen = () => {
+    setFavDriverDialogOpen(true);
   };
 
   const handleVeznevChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +96,10 @@ function Profile() {
   const handleFavTeamChange = (event: SelectChangeEvent<string>) => {
     event.preventDefault();
     setFavTeam(event.target.value);
+  };
+  const handleFavDriverChange = (event: SelectChangeEvent<string>) => {
+    event.preventDefault();
+    setFavDriver(event.target.value);
   };
   const handleDelete = async () => {
     await fetch(updateUserURL, {
@@ -126,6 +140,7 @@ function Profile() {
           keresztnev: keresztnev,
           vezeteknev: vezeteknev,
           fav_team: favTeam,
+          fav_driver: favDriver,
         },
       }),
     }).then(async (response) => {
@@ -244,6 +259,31 @@ function Profile() {
           <Button onClick={handleSubmit}>Módosítás</Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={favDriverDialogOpen} onClose={handleClose}>
+        <DialogTitle>Kedvenc versenyző</DialogTitle>
+        <DialogContent>
+          <Select
+            required
+            autoFocus
+            margin="dense"
+            id="driver_slug"
+            label="Versenyző"
+            type="text"
+            fullWidth
+            value={favDriver}
+            onChange={handleFavDriverChange}
+          >
+            {itemData.drivers.map((driver: DriverModel) => (
+              <MenuItem value={driver.name} key={driver.slug}>
+                {driver.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSubmit}>Módosítás</Button>
+        </DialogActions>
+      </Dialog>
       ;
       <div className="ProfileCardContainer">
         <Card className="profileCard">
@@ -273,12 +313,18 @@ function Profile() {
               <EditIcon />
             </Button>
           </CardContent>
+          <CardContent className="profileItem">
+            Kedvenc versenyző:&ensp;{user.fav_driver}
+            <Button onClick={handleFavDriverChangeOpen}>
+              <EditIcon />
+            </Button>
+          </CardContent>
           <CardActions className="profileItem">
             <Button
-              variant="outlined"
+              variant="contained"
               color="error"
               onClick={handleDeleteOpen}
-              className="deleteButton"
+              className="userDeleteButton"
             >
               Fiók törlése
             </Button>
@@ -312,9 +358,11 @@ function Profile() {
 export const ProfilLoader: LoaderFunction<UserModel> = async () => {
   const current_user_url = "http://localhost:3000/current_user";
   const teams_url = "http://localhost:3000/api/v1/teams";
+  const driver_url = "http://localhost:3000/api/v1/drivers";
   const jwt_token = localStorage.getItem("jwt");
   const allData: typeof allDataType = {
     teams: [],
+    drivers: [],
     user: {
       id: 0,
       email: "",
@@ -333,9 +381,16 @@ export const ProfilLoader: LoaderFunction<UserModel> = async () => {
     },
   })
     .then(async (response) => {
-      await axios.get(teams_url).then((data) => {
-        allData.teams = data.data;
-      });
+      await axios
+        .get(teams_url)
+        .then((data) => {
+          allData.teams = data.data;
+        })
+        .then(async () => {
+          await axios.get(driver_url).then((data) => {
+            allData.drivers = data.data;
+          });
+        });
       return response;
     })
     .then(async (response) => {

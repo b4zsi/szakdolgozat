@@ -1,7 +1,7 @@
 class Api::V1::DriversController < ApplicationController
 
     def index
-        driver = Driver.all
+        drivers = Driver.all
         render json: drivers, each_serializer: DriverSerializer
     end
 
