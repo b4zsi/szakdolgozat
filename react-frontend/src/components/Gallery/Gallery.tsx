@@ -24,6 +24,7 @@ import "../../styles/GalleryStyle.css";
 import { TeamModel } from "../../model/TeamModel";
 import getUser from "../userManagement";
 import { UserModel } from "../../model/UserModel";
+import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 
 let allDataType: {
   teams: TeamModel[];
@@ -46,9 +47,7 @@ const Gallery = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
-  const [base64Image, setBase64Image] = useState<string | ArrayBuffer | null>(
-    ""
-  );
+  const [base64Image, setBase64Image] = useState<File>();
   const [teamSlug, setTeamSlug] = useState<string>(itemData.teams[0].name);
   const [description, setDescription] = useState<string>("");
 
@@ -64,7 +63,6 @@ const Gallery = () => {
     setName(event.target.value);
   };
   const handleTeamChange = (event: SelectChangeEvent<string>) => {
-    console.log(event.target.value);
     setTeamSlug(event.target.value);
   };
   const handledescriptionChange = (
@@ -74,35 +72,41 @@ const Gallery = () => {
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
+    //const reader = new FileReader();
     setImage(URL.createObjectURL(event.target.files![0]));
-    reader.onloadend = () => {
-      console.log(reader.result);
-      setBase64Image(reader.result);
-    };
-    reader.readAsDataURL(event.target.files![0]);
+    // reader.onload = () => {
+    //   setBase64Image(reader.result);
+    // };
+    // reader.readAsBinaryString(event.target.files![0]);
+    setBase64Image(event.target.files![0]);
+    console.log("geci");
   };
 
-  const handleSubmit = async () => {
-    const imagesForm = new FormData();
-    if (base64Image) {
-      imagesForm.append("imagesForm[image_url]", base64Image.toString());
-    }
-    imagesForm.append("imagesForm[image_name]", name);
-    imagesForm.append("imagesForm[team_slug]", teamSlug);
-    imagesForm.append("imagesForm[description]", description);
+  const handleSubmit = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    const formData = new FormData();
+
+    formData.append("imagesForm[image_name]", name);
+    formData.append("imagesForm[team_slug]", teamSlug);
+    formData.append("imagesForm[description]", description);
+    formData.append("imagesForm[image]", base64Image!);
+
     await fetch(imageEventURL, {
       method: "POST",
       headers: {
         Authorization: `${jwt_token}`,
       },
-      body: imagesForm,
+      body: formData,
     })
-      .then((response) => {
+      .then(async (response) => {
         if (response.ok) {
+          await response.json().then((data) => {
+            toastNotification(0, data.message);
+          });
           setOpen(false);
+        } else {
+          console.log(response);
         }
-        console.log(response);
       })
       .catch((response: Response) => {
         response.json().then((data) => {
@@ -144,8 +148,7 @@ const Gallery = () => {
             <input
               required
               accept="image/*"
-              style={{ display: "none" }}
-              id="raised-button-file"
+              id="upload-image"
               type="file"
               onChange={handleImageChange}
             />
@@ -189,7 +192,12 @@ const Gallery = () => {
             <Button onClick={handleClose} color="primary">
               Mégse
             </Button>
-            <Button onClick={handleSubmit} color="primary">
+            <Button
+              onClick={(e) => {
+                handleSubmit(e);
+              }}
+              color="primary"
+            >
               Feltöltés
             </Button>
           </DialogActions>
@@ -248,6 +256,7 @@ const Gallery = () => {
         <MemoImageList
           itemDataImages={itemData.images}
           teamFilter={teamFilter}
+          user={user}
         />
       </div>
     </div>
@@ -279,11 +288,15 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
       responseType: "json",
     })
     .then((data) => {
-      data.data.map((image: ImageModel) => {
-        if (image.id > 3) {
-          allData.images.push(image);
+      console.log(data.data);
+      data.data.map(
+        (data: { attributes: { image: { record: ImageModel } } }) => {
+          const image = data.attributes.image.record;
+          if (image.id > 0) {
+            allData.images.push(image);
+          }
         }
-      });
+      );
     })
     .then(async () => {
       await axios.get(team_url).then((data) => {
@@ -301,36 +314,75 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
 const MemoImageList = memo(function listImages({
   itemDataImages,
   teamFilter,
+  user,
 }: {
   itemDataImages: ImageModel[];
   teamFilter: string;
+  user: UserModel;
 }) {
+  const jwt_token = localStorage.getItem("jwt");
+  const handleImageDelete = async (imageID: number) => {
+    console.log(user);
+    const imageURL = `http://localhost:3000/api/v1/images/${imageID}`;
+    await fetch(imageURL, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${jwt_token}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        await response.json().then((data) => {
+          toastNotification(0, data.message);
+        });
+        window.location.reload();
+      }
+    });
+  };
+
   return (
-    <ImageList rowHeight={480} className="galleryList" cols={4}>
-      {itemDataImages
-        .filter((image: ImageModel) => {
-          if (teamFilter === "all") {
-            return itemDataImages.map(
-              (image2: ImageModel) => image2.team_slug === image.team_slug
-            );
-          } else {
-            return teamFilter === image.team_slug;
-          }
-        })
-        .map((image: ImageModel) => (
-          <ImageListItem key={image.id} className="galleryItem">
-            <img
-              src={`data:image/jpeg;base64, ${image.image_url}`}
-              alt={image.image_name}
-              className="galleryImage"
-            />
-            <ImageListItemBar
-              title={image.image_name}
-              subtitle={<span>{image.description}</span>}
-            />
-          </ImageListItem>
-        ))}
-    </ImageList>
+    itemDataImages && (
+      <ImageList rowHeight={480} className="galleryList" cols={4}>
+        {itemDataImages
+          .filter((image: ImageModel) => {
+            if (teamFilter === "all") {
+              return itemDataImages.map(
+                (image2: ImageModel) => image2.team_slug === image.team_slug
+              );
+            } else {
+              return teamFilter === image.team_slug;
+            }
+          })
+          .map((image: ImageModel) => (
+            <ImageListItem key={image.id} className="galleryItem">
+              <img
+                src={image.image_url}
+                alt={image.image_name}
+                className="galleryImage"
+              />
+              <ImageListItemBar
+                title={image.image_name}
+                subtitle={
+                  <span>
+                    {image.description}
+                    {!user.admin && (
+                      <Button
+                        variant="text"
+                        color="error"
+                        className="imageDeleteButton"
+                        onClick={() => handleImageDelete(image.id)}
+                      >
+                        törlés
+                      </Button>
+                    )}
+                  </span>
+                }
+              />
+            </ImageListItem>
+          ))}
+        <CustomSnackbar />
+      </ImageList>
+    )
   );
 });
 

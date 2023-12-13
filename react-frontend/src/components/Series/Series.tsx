@@ -30,14 +30,14 @@ let allDataType: {
   series: SeriesModel;
   drivers: DriverModel[];
   teams: TeamModel[];
-  images: ImageModel[];
+  image: ImageModel;
 };
 const Series = () => {
   const allData: typeof allDataType = useLoaderData() as {
     series: SeriesModel;
     drivers: DriverModel[];
     teams: TeamModel[];
-    images: ImageModel[];
+    image: ImageModel;
   };
 
   const series: SeriesModel = allData.series;
@@ -45,15 +45,13 @@ const Series = () => {
     (a: DriverModel, b: DriverModel) => driverSort(a, b)
   );
   const teams: TeamModel[] = allData.teams;
-  const images: ImageModel[] = allData.images;
+  const image: ImageModel = allData.image;
+
+  console.log(image);
   return (
     <Fragment>
       <div className="background">
-        <img
-          src={`data:image/jpeg;base64,${images[0].image_url}`}
-          alt="kep"
-          className="image"
-        />
+        {/* <img src={image.image_url} alt="kep" className="image" /> */}
         <Box sx={{ marginTop: "24.4%", color: "white" }}>
           <SeriesStats properties={series} />
         </Box>
@@ -147,7 +145,13 @@ export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
     },
     drivers: [],
     teams: [],
-    images: [],
+    image: {
+      id: 0,
+      image_name: "",
+      image_url: "",
+      team_slug: "",
+      description: "",
+    },
   };
   const series_url = "http://localhost:3000/api/v1/series/" + params.id;
 
@@ -155,8 +159,10 @@ export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
     returnData.drivers = data.data.drivers;
     returnData.series = data.data;
     returnData.teams = data.data.teams;
-    returnData.images = data.data.images;
+    returnData.image = data.data.image;
+    console.log(data.data);
   });
+  console.log(returnData.drivers);
   return returnData;
 };
 

@@ -42,7 +42,7 @@ function ResponsiveAppBar() {
   ];
   const adminPages = [
     { name: "Főoldal", url: "/" },
-    { name: "Szériák", url: "/series" },
+    { name: "Szeriák", url: "/series" },
     { name: "Fórum", url: "/forum" },
     { name: "Naptár", url: "/calendar" },
     { name: "Galéria", url: "/gallery" },

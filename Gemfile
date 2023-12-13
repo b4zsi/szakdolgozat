@@ -12,6 +12,10 @@ gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
+gem 'sorbet', :group => :development
+gem 'sorbet-runtime'
+gem 'tapioca', require: false, :group => :development
+
 gem 'active_model_serializers'
 gem "devise"
 gem "devise-jwt", "0.10.0"
@@ -47,8 +51,7 @@ group :development, :test do
 end
 
 group :development do
-  
+
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
-

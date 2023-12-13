@@ -1,19 +1,20 @@
 class Api::V1::ImagesController < ApplicationController
 
-    #before_action :authenticate_user!, only: [:create, :update, :destory]
+    before_action :authenticate_user!, only: [:create, :update, :destory]
 
     def index
-        @image = Image.all
-        render json: @image, Serializer: ImageSerializer
+        images = Image.all.order(created_at: :asc)
+        render json: ImageSerializer.new(images).serializable_hash[:data][:attributes]
     end
 
     def show
         images = Image.where(team_slug: params[:team_slug])
-        render json: images, each_serializer: ImageSerializer
+        render ImageSerializer.new(images).serializable_hash[:data][:attributes]
     end
 
     def create
         team = Team.find_by(slug: params[:imagesForm][:team_slug])
+        image_data = params[:imagesForm][:image_url]
         image = Image.new(image_create_params)
         image.team_slug = team.slug
         if image.save
@@ -26,7 +27,7 @@ class Api::V1::ImagesController < ApplicationController
     def destroy
         @image = Image.find(params[:id])
         if @image.destroy
-            render json: {message: "Kép sikeresen törölve.."}, status: 200
+            render json: {message: "Kép sikeresen törölve."}, status: 200
         else
             render json: {error: image.errors.message}, status: 422
         end
@@ -37,7 +38,7 @@ class Api::V1::ImagesController < ApplicationController
 
         if @image.update(image_create_params)
             render json: {message: "Kép sikeresen módosítva."}, status: 200
-        else 
+        else
             render json: {message:"Hiba a kép módosítása közben."}, status:422
         end
     end
@@ -48,6 +49,6 @@ class Api::V1::ImagesController < ApplicationController
             params.require(:images).permit(:team_slug)
         end
         def image_create_params
-            params.require(:imagesForm).permit(:id, :image_url, :image_name, :team_slug, :description)
+            params.require(:imagesForm).permit(:id,:image_name, :team_slug, :description, :image)
         end
 end

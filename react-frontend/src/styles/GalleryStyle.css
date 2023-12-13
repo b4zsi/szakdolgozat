@@ -25,6 +25,7 @@
 }
 .galleryImage{
     border-radius: 10px;
+    image-resolution: 200px !important;
 }
 .teamFilterButton{
     margin: 2px !important;
@@ -73,5 +74,9 @@
 .wrapper {
     display: flex;
     flex-direction: column;
+}
+
+.imageDeleteButton{
+    float:right
 }
 

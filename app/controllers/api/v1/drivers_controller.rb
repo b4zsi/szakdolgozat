@@ -2,7 +2,7 @@ class Api::V1::DriversController < ApplicationController
 
     def index
         drivers = Driver.all
-        render json: drivers, each_serializer: DriverSerializer
+        render json: drivers
     end
 
     def show
@@ -11,7 +11,7 @@ class Api::V1::DriversController < ApplicationController
         else
             drivers = Driver.where(slug: params[:id])
         end
-        render json: drivers, each_serializer: DriverSerializer
+        render json: drivers
     end
 
     private

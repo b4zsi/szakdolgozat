@@ -10,24 +10,22 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
-  root "pages#index"
 
 
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :series, param: :id
       resources :drivers
       resources :cars
       resources :calendar_events
       resources :teams
-      resources :images, param: :team_slug
+      resources :images,only: [:index, :show, :create], param: :team_slug
+      resources :images, only: [:destroy]
       resources :posts
       resources :comments, param: :post_id
       resources :users
     end
   end
-  
-  get "*path", to:"pages#index", via: :all
 
   
 end

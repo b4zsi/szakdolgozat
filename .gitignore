@@ -7,6 +7,7 @@
 # Ignore bundler config.
 /.bundle
 /node-modules
+/sorbet
 
 # Ignore all logfiles and tempfiles.
 /log/*

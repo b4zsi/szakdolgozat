@@ -1,14 +1,13 @@
 class Api::V1::PostsController < ApplicationController
 
     def index
-        @post = Post.includes(:user).all.order(created_at: :desc)
-
-        render json: @post, Serializer: PostSerializer
+        post = Post.includes(:user).all.order(created_at: :desc)
+        render json: post
     end
 
     def show
-        @post = Post.find(params[:id])
-        render json: @post, Serializer: PostSerializer
+        post = Post.find(params[:id])
+        render json: post
     end
 
     def create
@@ -18,10 +17,10 @@ class Api::V1::PostsController < ApplicationController
         else
             render json: {message: "Hiba a poszt feltöltése közben.",errors: post.errors.full_messages}, status: 422
         end
-    end 
+    end
 
     def destroy
-        @post = post.find(params[:id])
+        @post = Post.find(params[:id])
         if @post.destroy
             render json: {message: "Poszt sikeresen törölve."}, status: 200
         else
@@ -34,7 +33,7 @@ class Api::V1::PostsController < ApplicationController
 
         if @post.update(post_params)
             render json: {message: "Poszt sikeresen módosítva."}, status: 200
-        else 
+        else
             render json: {message:"Hiba a poszt módosítása közben."}, status:422
         end
     end

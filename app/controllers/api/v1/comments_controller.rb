@@ -1,12 +1,12 @@
 class Api::V1::CommentsController < ApplicationController
     def index
-        @comments = Comment.all
-        render json: @comments, Serializer: CommentSerializer
+        comments = Comment.all
+        render json: comments
     end
 
     def show
-        @comment = Comment.where(post_id: params[:post_id])
-        render json: @comment, each_serializer: CommentSerializer
+        comment = Comment.where(post_id: params[:post_id])
+        render json: comments
     end
 
     def create
@@ -22,9 +22,9 @@ class Api::V1::CommentsController < ApplicationController
 
     end
 
-    private 
+    private
         def comment_params
             params.require(:comment).permit(:body,:post_id, :author_id)
         end
-        
+
 end

@@ -1,9 +1,9 @@
 class Api::V1::CalendarEventsController < ApplicationController
 
-    before_action :authenticate_user!, only: [:create, :update, :delete]
+    before_action :authenticate_user!, only: [:create, :update, :destroy]
     def index
         events = CalendarEvent.all
-        render json: events, each_serializer: CalendarEventSerializer
+        render json: events
     end
 
     def create
@@ -29,7 +29,7 @@ class Api::V1::CalendarEventsController < ApplicationController
 
         if @event.update(calendar_event_params)
             render json: {message: "Verseny sikeresen módosítva."}, status: 200
-        else 
+        else
             render json: {message:"Hiba a verseny törlése közben."}, status:422
         end
     end

@@ -1,7 +1,7 @@
 class Api::V1::TeamsController < ApplicationController
     def index
-        team = Team.all
-        render json: team, each_serializer: TeamSerializer
+        teams = Team.all
+        render json: teams, each_serializer:TeamSerializer
     end
 
     def show
@@ -10,13 +10,13 @@ class Api::V1::TeamsController < ApplicationController
         else
             teams = Team.where(slug: params[:id])
         end
-        render json: teams, each_serializer: TeamSerializer
+        render json: teams, Serializer:TeamSerializer
     end
 
     def create
-        teams = Teams.new(teams_params)
+        teams = Team.new(teams_params)
         if teams.save
-            render json: @teams, Serializer: TeamSerializer
+            render json: teams, Serializer:TeamSerializer
         else
             render json: {error: teams.errors.message}, status: 422
         end
@@ -26,7 +26,7 @@ class Api::V1::TeamsController < ApplicationController
     private
     # Use callbacks to share common setup or constraints between actions.
         def set_teams
-            @teams = Teams.find_by(params[:id])
+            @teams = Team.find_by(params[:id])
         end
 
     # Only allow a list of trusted parameters through.

@@ -1,8 +1,7 @@
 class Api::V1::SeriesController < ApplicationController
     def index
-        @series = Series.all
-        
-        render json: @series, each_serializer: SeriesSerializer
+        series = Series.all
+        render json: series, each_serializer: SeriesSerializer
     end
 
     def show
@@ -11,13 +10,13 @@ class Api::V1::SeriesController < ApplicationController
         else
             series = Series.where(slug: params[:id])
         end
-        render json: series, serializer: SeriesSerializer
+        render json: series, each_serializer: SeriesSerializer
     end
 
     def create
         series = Series.new(series_params)
         if series.save
-            render json: @series, serializer: SeriesSerializer
+            render json: series
         else
             render json: {error: series.errors.message}, status: 422
         end
@@ -26,7 +25,7 @@ class Api::V1::SeriesController < ApplicationController
     def update
         series = Series.new(series_params)
         if series.save
-            render json: @series, serializer: SeriesSerializer
+            render json: series
         else
             render json: {error: series.errors.message}, status: 422
         end
@@ -35,7 +34,7 @@ class Api::V1::SeriesController < ApplicationController
     def destroy
         series = Series.new(series_params)
         if series.save
-            render json: @series, serializer: SeriesSerializer
+            render json: series
         else
             render json: {error: series.errors.message}, status: 422
         end
