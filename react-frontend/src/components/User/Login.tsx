@@ -162,9 +162,7 @@ function Login() {
       },
     }).then((response: Response) => {
       const jwt = response.headers.get("Authorization");
-      console.log(response.headers);
       localStorage.setItem("jwt", jwt!);
-      console.log(jwt);
       toastNotification(0, "Sikeres bejelentkezés.").then(() => {
         navigate("/");
       });

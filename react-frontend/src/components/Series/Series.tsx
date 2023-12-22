@@ -47,11 +47,10 @@ const Series = () => {
   const teams: TeamModel[] = allData.teams;
   const image: ImageModel = allData.image;
 
-  console.log(image);
   return (
     <Fragment>
       <div className="background">
-        {/* <img src={image.image_url} alt="kep" className="image" /> */}
+        <img src={image.image_url} alt="kep" className="image" />
         <Box sx={{ marginTop: "24.4%", color: "white" }}>
           <SeriesStats properties={series} />
         </Box>
@@ -156,13 +155,12 @@ export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
   const series_url = "http://localhost:3000/api/v1/series/" + params.id;
 
   await axios.get(series_url).then((data) => {
+    console.log(data.data);
     returnData.drivers = data.data.drivers;
     returnData.series = data.data;
     returnData.teams = data.data.teams;
-    returnData.image = data.data.image;
-    console.log(data.data);
+    returnData.image = data.data.images[0];
   });
-  console.log(returnData.drivers);
   return returnData;
 };
 

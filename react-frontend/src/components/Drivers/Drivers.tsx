@@ -14,6 +14,7 @@ type Driver = {
 };
 
 const Drivers: FC<Driver> = (driver: Driver) => {
+  console.log(driver);
   return (
     <div style={{ borderRadius: 100 }}>
       <Card sx={{ border: `2px solid #${driver.team_color}` }} className="card">

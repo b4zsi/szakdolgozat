@@ -43,6 +43,7 @@ const Driver_singular = () => {
       }
     });
   };
+  console.log(driver);
   return (
     <Fragment>
       <div
@@ -160,6 +161,7 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
   await axios
     .get(driver_url)
     .then((data) => {
+      console.log(data);
       allData.driver = data.data[0];
       return data.data[0];
     })
@@ -167,7 +169,6 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
       await axios
         .get("http://localhost:3000/api/v1/teams/" + data.team_slug)
         .then(async (data) => {
-          console.log(data.data[0]);
           allData.team = data.data[0];
         });
     });

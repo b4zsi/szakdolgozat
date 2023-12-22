@@ -72,14 +72,8 @@ const Gallery = () => {
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //const reader = new FileReader();
     setImage(URL.createObjectURL(event.target.files![0]));
-    // reader.onload = () => {
-    //   setBase64Image(reader.result);
-    // };
-    // reader.readAsBinaryString(event.target.files![0]);
     setBase64Image(event.target.files![0]);
-    console.log("geci");
   };
 
   const handleSubmit = async (event: React.MouseEvent) => {
@@ -100,8 +94,23 @@ const Gallery = () => {
     })
       .then(async (response) => {
         if (response.ok) {
-          await response.json().then((data) => {
+          await response.json().then(async (data) => {
             toastNotification(0, data.message);
+            await fetch("http://localhost:3000/api/v1/drivers", {
+              method: "PUT",
+              headers: {
+                Authorization: `${jwt_token}`,
+              },
+              body: JSON.stringify({
+                drivers: {
+                  id: name,
+                  image: base64Image,
+                  slug: teamSlug,
+                },
+              }),
+            }).then((response) => {
+              console.log(response);
+            });
           });
           setOpen(false);
         } else {
@@ -289,14 +298,10 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
     })
     .then((data) => {
       console.log(data.data);
-      data.data.map(
-        (data: { attributes: { image: { record: ImageModel } } }) => {
-          const image = data.attributes.image.record;
-          if (image.id > 0) {
-            allData.images.push(image);
-          }
-        }
-      );
+      data.data.map((data: ImageModel) => {
+        const image = data;
+        allData.images.push(image);
+      });
     })
     .then(async () => {
       await axios.get(team_url).then((data) => {
@@ -322,7 +327,6 @@ const MemoImageList = memo(function listImages({
 }) {
   const jwt_token = localStorage.getItem("jwt");
   const handleImageDelete = async (imageID: number) => {
-    console.log(user);
     const imageURL = `http://localhost:3000/api/v1/images/${imageID}`;
     await fetch(imageURL, {
       method: "DELETE",

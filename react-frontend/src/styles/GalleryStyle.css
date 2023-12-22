@@ -1,13 +1,13 @@
+
 .root{
     display: "block" !important;
     flex-wrap: "wrap" !important;
     justify-content: "space-around" !important;
     overflow: "hidden" !important;
-     background-color: black !important;
+     background-color: white !important;
      width: 98%;
      margin: auto;
      float: left;
-     
 } 
 .galleryList {
     display: flex;
@@ -74,6 +74,7 @@
 .wrapper {
     display: flex;
     flex-direction: column;
+    background-color: white;
 }
 
 .imageDeleteButton{

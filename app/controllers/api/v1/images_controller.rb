@@ -4,12 +4,14 @@ class Api::V1::ImagesController < ApplicationController
 
     def index
         images = Image.all.order(created_at: :asc)
-        render json: ImageSerializer.new(images).serializable_hash[:data][:attributes]
+        images_hash = ImageSerializer.new(images).serializable_hash[:data]
+        images_attributes = images_hash.map { |image| image[:attributes] }
+        render json: images_attributes
     end
 
     def show
         images = Image.where(team_slug: params[:team_slug])
-        render ImageSerializer.new(images).serializable_hash[:data][:attributes]
+        render json:ImageSerializer.new(images).serializable_hash[:data]
     end
 
     def create

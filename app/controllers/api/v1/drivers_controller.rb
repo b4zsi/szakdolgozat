@@ -3,6 +3,7 @@ class Api::V1::DriversController < ApplicationController
     def index
         drivers = Driver.all
         render json: drivers
+        puts "hello"
     end
 
     def show
@@ -11,13 +12,19 @@ class Api::V1::DriversController < ApplicationController
         else
             drivers = Driver.where(slug: params[:id])
         end
-        render json: drivers
+        render json: drivers, Serializer: DriverSerializer
+    end
+
+    def update
+        @driver = Driver.find(params[:id])
+        @driver.image.attach(params[:image])
+        render json: @driver, status: :ok
     end
 
     private
 
     def driver_params
-        params.require(:drivers).permit(:id, :slug)
+        params.require(:drivers).permit(:id, :slug, :image)
     end
 
 end
