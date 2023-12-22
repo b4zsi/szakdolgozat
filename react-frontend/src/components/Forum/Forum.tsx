@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { UserModel } from "../../model/UserModel";
-import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
-import { Card, CardContent, Divider, Tooltip } from "@mui/material";
+import {
+  Link,
+  LoaderFunction,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
+import { Card, CardContent, Tooltip } from "@mui/material";
 import { TextField, Button } from "@mui/material";
 import { PostModel } from "../../model/PostModel";
 import axios from "axios";
@@ -24,6 +29,8 @@ function Forum() {
   const loaderData: typeof allDataType = useLoaderData() as typeof allDataType;
   const user: UserModel = loaderData!.user;
   const posts: PostModel[] = loaderData!.posts;
+
+  const navigate = useNavigate();
 
   const handleTitleChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -116,30 +123,25 @@ function Forum() {
               <p className="postTitle">{post.title}</p>
               <CardContent className="postBody">{post.body}</CardContent>
               <CardContent className="postByName">
-                <div style={{ display: "flex" }}>
-                  <Tooltip
-                    className="tooltip"
-                    placement="top-end"
-                    title={`Felhasználónév: ${user.username} \nKedvenc csapat: ${user.fav_team}`}
-                  >
-                    <p>
-                      {post.user.vezeteknev}&ensp;{post.user.keresztnev}
-                    </p>
-                  </Tooltip>
-                  <Link to={`comment/${post.id}`} className="writeComment">
-                    Komment
-                  </Link>
-                </div>
+                <Tooltip
+                  className="tooltip"
+                  placement="top-end"
+                  title={`Felhasználónév: ${user.username} \nKedvenc csapat: ${user.fav_team}`}
+                >
+                  <p>
+                    {post.user.vezeteknev}&ensp;{post.user.keresztnev}
+                  </p>
+                </Tooltip>
+
+                <Button
+                  onClick={() => {
+                    navigate(`comment/${post.id}`);
+                  }}
+                  className="writeComment"
+                >
+                  Komment
+                </Button>
               </CardContent>
-              <Divider
-                variant="middle"
-                style={{
-                  width: "50%",
-                  alignContent: "center",
-                  alignSelf: "center",
-                }}
-              />
-              <CardContent></CardContent>
             </Card>
           ))}
         </div>

@@ -6,7 +6,7 @@ class Api::V1::CommentsController < ApplicationController
 
     def show
         comment = Comment.where(post_id: params[:post_id])
-        render json: comments
+        render json: comment
     end
 
     def create

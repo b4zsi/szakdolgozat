@@ -1,5 +1,5 @@
 .commentMainDiv{
-    background-color: white;
+    background-color: #BCD2BE;
     height: 1000px;
 }
 
@@ -18,25 +18,25 @@
     border-left: 2px solid black;
     border-right: 2px solid black;
     background-color: white !important;
-    width: 60%;
-    height: 11vh;
-    margin: auto;
-    margin-top: 0.5%;
+    width: 60% !important;
+    height: 11vh !important;
+    margin: auto !important;
+    margin-top: 0.5% !important;
 }
-.writeComment{
+.writeCommentonPage{
     border-bottom: 2px solid black;
     border-left: 2px solid black;
     border-right: 2px solid black;
     background-color: white !important;
-    width: 60%;
-    height: 7vh;
-    margin-top: 0.5%;
-    margin-right:19.9%;
+    width: 60% !important; 
+    height: 6.5vh !important;
+    margin-top: 0.5% !important;
     border-radius: 5px !important;
+    margin-left: 19.9%;
 }
 .commentField{
     height: 2vh !important;
-    width:90%;
+    width:90% !important;
     border-radius: 10px !important;
 }
 
@@ -66,5 +66,5 @@
 .submitButton{
     float:right;
     height: 7vh;
-    width: 9vh;
+    width: 4vh;
 }

@@ -22,13 +22,15 @@
 }
 
 .ForumMainDiv{
-    background-color: white;
+    background-color: #BCD2BE !important;
 }
 .postCreateDivContainer{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 10vh;
+    padding-bottom: 15%;
+    z-index: 99;
 }
 
 .postCreateDiv{
@@ -40,11 +42,11 @@
     border-radius: 10px;
     align-items: center;
     padding: 30px;
-    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+    box-shadow: 10px 15px rgba(255,255, 255, 0.7) !important;
 }
 
 .postCard{
-    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+    box-shadow: 10px 15px rgba(255,255, 255, 0.7) !important;
     border: 2px solid black;
     background-color: white !important;
     width: 70%;
@@ -62,6 +64,8 @@
 }
 .postBody{
     font-size: 2vh;
+    padding: 3px !important;
+    min-height: 55px;
 }
 .post{
     width:90%;
@@ -81,16 +85,20 @@
 .postByName {
     text-align: right;
     color:black;
+    display: flex;
 }
 .writeComment{
-    float: right;
+    border: none !important;
+    margin-left: 75% !important;
     color: black !important;
-    text-decoration: none; 
+    text-decoration: none !important; 
+    width: 30px !important;
 }
 
 .uploadButton{
     background-color: black;
 }
 .tooltip{
-    text-align: right;
+    text-align: left;
+    width:100px;
 }

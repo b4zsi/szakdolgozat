@@ -47,10 +47,7 @@ function Comments() {
       }
     });
   };
-
-  console.log(user);
-  console.log(post);
-  console.log(comments);
+  console.log(comments[0].user.keresztnev);
 
   return (
     <div className="commentMainDiv">
@@ -65,10 +62,10 @@ function Comments() {
               {post.user.keresztnev}
             </CardContent>
           </Card>
-          <Card className="writeComment">
+          <Card className="writeCommentonPage">
             <TextField
               className="commentField"
-              placeholder="Ide tudsz irni megjegyzést"
+              placeholder="Komment"
               autoFocus
               multiline
               id="comment"
@@ -88,7 +85,9 @@ function Comments() {
             <Card className="commentCard" key={comment.id}>
               <CardContent>{comment.body}</CardContent>
               <CardContent className="postAuthor">
-                {comment.author_id}
+                {comment.user.vezeteknev}
+                &nbsp;
+                {comment.user.keresztnev}
               </CardContent>
             </Card>
           ))}
@@ -150,6 +149,7 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
   await axios.get(CommentsURL + params.id).then((data) => {
     allData.comments = data.data;
   });
+
   return allData;
 };
 export default Comments;
