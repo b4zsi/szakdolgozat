@@ -1,13 +1,13 @@
 import axios from "axios";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import { Button, Divider, Grid, Paper } from "@mui/material";
 import "../../styles/Driver_singular.css";
-import "../../styles/loadingAnimation.css";
 import { DriverModel } from "../../model/DriverModel";
 import hexRgb from "hex-rgb";
 import { TeamModel } from "../../model/TeamModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+import ReactCardFlip from "react-card-flip";
 
 let allDataType: {
   driver: DriverModel;
@@ -21,6 +21,16 @@ const Driver_singular = () => {
   };
   const driver = allData.driver;
   const team = allData.team;
+  const [isFlipped, setIsFlipped] = useState<boolean>(false);
+  const [isFlipped2, setIsFlipped2] = useState<boolean>(false);
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setIsFlipped(!isFlipped);
+  };
+  const handleClick2 = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setIsFlipped2(!isFlipped2);
+  };
 
   const submitFavDriver = async () => {
     const jwt = localStorage.getItem("jwt");
@@ -43,7 +53,8 @@ const Driver_singular = () => {
       }
     });
   };
-  console.log(driver);
+
+  console.log(team);
   return (
     <Fragment>
       <div
@@ -64,11 +75,28 @@ const Driver_singular = () => {
       >
         <Grid container spacing={3} className="mainGrid">
           <Grid item xs={4}>
-            <img
-              src={`data:image/jpeg;base64,${driver.profile_picture}`}
-              alt="kep"
-              className="kep"
-            />
+            <ReactCardFlip isFlipped={isFlipped2} flipDirection="vertical">
+              <div onClick={handleClick2}>
+                <img
+                  src={driver.images[0].image_url}
+                  alt="kep"
+                  className="kep"
+                />
+                <figcaption className="infoText">
+                  kattints a sisakhoz
+                </figcaption>
+              </div>
+              <div onClick={handleClick2}>
+                <img
+                  src={driver.images[1].image_url}
+                  alt="sisak"
+                  className="kep"
+                />
+                <figcaption className="infoText">
+                  kattints a versenyzőhöz
+                </figcaption>
+              </div>
+            </ReactCardFlip>
           </Grid>
           <CustomSnackbar />
           <Grid item xs={8} container className="propertiesGrid">
@@ -115,9 +143,24 @@ const Driver_singular = () => {
         >
           Kedvenc versenyző
         </Button>
-        <div>
-          <Paper className="driverDescripition">{driver.description}</Paper>
-        </div>
+
+        <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
+          <div className="helmetImage" onClick={handleClick}>
+            <img
+              src={team.cars[0].images[0].image_url}
+              alt="kep"
+              width={1080}
+              style={{ marginTop: "5%", marginLeft: "10%" }}
+            />
+            <figcaption className="infoText">
+              kattints a részletes leírásért
+            </figcaption>
+          </div>
+
+          <div onClick={handleClick}>
+            <Paper className="driverDescripition">{driver.description}</Paper>
+          </div>
+        </ReactCardFlip>
       </div>
     </Fragment>
   );
@@ -141,6 +184,7 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
       team_id: 0,
       team_slug: "",
       slug: "",
+      images: [],
     },
     team: {
       id: 0,
@@ -156,13 +200,16 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
       last_championship_win: 0,
       team_color: "",
       slug: "",
+      images: [],
+      cars: [],
     },
   };
   await axios
     .get(driver_url)
     .then((data) => {
-      console.log(data);
+      console.log(data.data);
       allData.driver = data.data[0];
+      allData.driver.images[0] = data.data[0].images[0];
       return data.data[0];
     })
     .then(async (data) => {
