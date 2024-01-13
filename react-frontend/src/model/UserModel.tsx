@@ -7,4 +7,5 @@ export interface UserModel {
   vezeteknev: string;
   fav_team: string;
   fav_driver: string;
+  banned: boolean;
 }

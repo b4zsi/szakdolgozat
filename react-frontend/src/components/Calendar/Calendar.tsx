@@ -179,6 +179,7 @@ export const CalendarLoader: LoaderFunction<UserModel> = async () => {
       vezeteknev: "",
       fav_team: "",
       fav_driver: "",
+      banned: false,
     },
     calendar_events: [],
   };

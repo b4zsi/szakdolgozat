@@ -372,6 +372,7 @@ export const ProfilLoader: LoaderFunction<UserModel> = async () => {
       vezeteknev: "",
       fav_team: "",
       fav_driver: "",
+      banned: false,
     },
   };
   await fetch(`${current_user_url}`, {

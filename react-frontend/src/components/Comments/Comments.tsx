@@ -112,6 +112,7 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
       vezeteknev: "",
       fav_team: "",
       fav_driver: "",
+      banned: false,
     },
     post: {
       id: 0,
@@ -129,6 +130,7 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
         vezeteknev: "",
         fav_team: "",
         fav_driver: "",
+        banned: false,
       },
     },
     comments: [],

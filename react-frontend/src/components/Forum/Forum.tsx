@@ -164,6 +164,7 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
       vezeteknev: "",
       fav_team: "",
       fav_driver: "",
+      banned: false,
     },
     posts: [],
     comments: [],
