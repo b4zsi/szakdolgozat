@@ -4,12 +4,12 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import { TeamModel } from "../../model/TeamModel";
 import hexRgb from "hex-rgb";
 import "../../styles/teamsStyle.css";
+import { TeamSeriesModel } from "../../model/TeamModel";
 
 type Team = {
-  properties: TeamModel;
+  properties: TeamSeriesModel;
 };
 
 const Teams: FC<Team> = (team: Team) => {
@@ -25,7 +25,7 @@ const Teams: FC<Team> = (team: Team) => {
       >
         <CardMedia className="card-media" title="drivers">
           <img
-            src={`data:image/jpeg;base64,${team.properties.team_picture}`}
+            src={`${team.properties.first_image.image_url}`}
             alt="kep"
             className="card-image"
           />
