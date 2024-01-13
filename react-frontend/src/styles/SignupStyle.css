@@ -1,21 +1,21 @@
 section {
-    height: 85vh;
+    height: 92vh !important;
     background-image: url("../authBack.jpg");
     background-size: cover;
     align-items: center;
 }
 
 .backgroundStuff {
-    background-color: black;
+    /* background-color: black;
     background-size: cover;
     background-position: center;
     width: 100vw;
-    height:10vh;
+    height:100%;
     top: 0;
     left: 0;
     background-repeat: no-repeat;
     position: absolute;
-    z-index:-1;
+    z-index:-1; */
 }
 
 .container{
@@ -34,6 +34,7 @@ section {
     text-align: center;
     font-size: 6vh !important;
     font-family: 'Roboto Mono' !important;
+    font-weight: bold !important;
 }
 
 .signUpForm{

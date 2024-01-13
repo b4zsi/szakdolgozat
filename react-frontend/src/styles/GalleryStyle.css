@@ -8,15 +8,17 @@
      width: 98%;
      margin: auto;
      float: left;
+     min-height: 1000px;
 } 
 .galleryList {
     display: flex;
     width: 500 !important;
     height: 450 !important;
+    min-height: 1000 !important;
 }
 .galleryItem{
     margin: 5px !important;
-    width: 350px;
+    width: 350px !important;
     height: 300px !important;
     
 }
@@ -25,7 +27,6 @@
 }
 .galleryImage{
     border-radius: 10px;
-    image-resolution: 200px !important;
 }
 .teamFilterButton{
     margin: 2px !important;

@@ -7,3 +7,9 @@
     margin: auto;
     text-align: center;
 }
+
+.searchField{
+    margin-top: 5px !important;
+    border: none !important;
+    color: white !important;
+}

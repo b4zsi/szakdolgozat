@@ -3,7 +3,7 @@
 }
 
 .kep {
-    width: 30vw !important;
+    width: 32vw !important;
     border: 1px solid white;
     border-radius: 5%;
     background-color: white;
@@ -11,6 +11,7 @@
     align-content: flex-end;
     display: flex;
     box-shadow: 10px 15px black;
+    min-height: 250px;
 }
 
 .propertiesGrid {
@@ -67,5 +68,12 @@
     float: right;
     margin-bottom: 5px !important;
     margin-right: 5% !important;
-    background-color: orange !important;
+    background-color: white !important;
+    color:black !important;
+    z-index: 999;
+}
+.infoText{
+    font-weight: bold;
+    margin: auto;
+    text-align: center;
 }
