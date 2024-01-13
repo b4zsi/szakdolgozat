@@ -2,25 +2,25 @@ module Api
   module V1
       class CarsController < ApplicationController
         def index
-          @cars = Car.all
-
-          render json: @cars
+          @cars = Car.include(:images).all
+          render json: @cars, Serializer: CarSerializer
         end
 
         def show
-          #ide kell a serailizer
-          #airline = Airline.find_by
-          #render json: szerializernev.new(airline).serialized_json
+          @car = Car.where(id: params[:id])
+          render json: @car, Serializer: CarSerializer
         end
 
         def create
         end
 
-        private
+        def destroy
+        end
 
-        def cars_params
-        #whitelist of parameters that we want to allow
-        params.require(:car).permit(:brand, :loero)
+
+        private
+        def car_params
+          params.require(:car).permit(:id)
         end
       end
   end

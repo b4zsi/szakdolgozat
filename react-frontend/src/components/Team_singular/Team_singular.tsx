@@ -1,7 +1,6 @@
 import { Fragment } from "react";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import axios from "axios";
-import "../../styles/loadingAnimation.css";
 import "../../styles/Team_singular.css";
 import hexRgb from "hex-rgb";
 import { Button, Divider, Grid } from "@mui/material";
@@ -51,16 +50,10 @@ const Team_singular = () => {
   return (
     <Fragment>
       <CustomSnackbar />
-      <div className="backgroundStuffTeam">
+      <div>
         <Slider images={images} team_name={team.name} />
       </div>
-      <div
-        className="mainDivTeam"
-        style={{
-          zIndex: -1,
-          marginTop: "42%",
-        }}
-      >
+      <div className="mainDivTeam">
         <Button
           variant="outlined"
           className="favTeamButton"
@@ -70,7 +63,12 @@ const Team_singular = () => {
         >
           Kedvenc csapat
         </Button>
+        <hr style={{ width: "60%" }} />
+        <Link to={`/cars/${team.cars[0].id}`} className="carLink">
+          tekintsd meg az autót
+        </Link>
         <p className="subTitle">Statisztikák</p>
+
         <Grid
           container
           spacing={3}
@@ -113,6 +111,7 @@ const Team_singular = () => {
           </Grid>
         </Grid>
         <p className="subTitle">Versenyzők</p>
+
         <Grid
           container
           spacing={3}
@@ -127,7 +126,7 @@ const Team_singular = () => {
             {drivers[0].name}
             <Divider variant="middle" className="dividerTeam" />
             <img
-              src={`data:image/jpeg;base64,${drivers[0].profile_picture}`}
+              src={drivers[0].images[1].image_url}
               alt="kep"
               style={{ height: "200px" }}
             />
@@ -136,7 +135,7 @@ const Team_singular = () => {
             {drivers[1].name}
             <Divider variant="middle" className="dividerTeam" />
             <img
-              src={`data:image/jpeg;base64,${drivers[1].profile_picture}`}
+              src={drivers[1].images[0].image_url}
               alt="kep"
               style={{ height: "200px" }}
             />
@@ -167,6 +166,8 @@ export const TeamLoader: LoaderFunction<typeof allDataType> = async ({
       last_championship_win: 0,
       team_color: "",
       slug: "",
+      images: [],
+      cars: [],
     },
     drivers: [],
     images: [],
@@ -179,10 +180,19 @@ export const TeamLoader: LoaderFunction<typeof allDataType> = async ({
       return data.data[0];
     })
     .then(async (data) => {
+      let index = 0;
       await axios.get(images_url + data.slug).then((data) => {
-        allData.images = data.data;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data.data.map((image: any) => {
+          if (
+            image.attributes.image_name.length > 2 &&
+            !image.attributes.image_url.includes("profile")
+          ) {
+            allData.images[index] = image.attributes;
+            index++;
+          }
+        });
       });
-      return data;
     });
   return allData;
 };

@@ -28,6 +28,9 @@ import Profile, { ProfilLoader } from "./components/User/Profile";
 import UpdateProfile from "./components/User/UpdateProfile";
 import Comments, { CommentLoader } from "./components/Comments/Comments";
 import Users, { UsersLoader } from "./components/User/Users";
+import Car_singular, {
+  CarLoader,
+} from "./components/Car_singular.tsx/Car_singular";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -36,13 +39,16 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" Component={rootLayout}>
       <Route index Component={HomePage} />
+      <Route Component={Series} path="/series/:id" loader={SeriesLoader} />
       <Route Component={Login} path="/login" />
       <Route Component={SignUp} path="/signup" />
       <Route Component={Calendar} path="/calendar" loader={CalendarLoader} />
       <Route Component={Forum} path="/forum" loader={ForumLoader} />
+      <Route path="teams/:slug" Component={Team_singular} loader={TeamLoader} />
       <Route Component={Gallery} path="/gallery/" loader={GalleryLoader} />
       <Route Component={Profile} path="/profile" loader={ProfilLoader} />
       <Route Component={Users} path="fiokok" loader={UsersLoader} />
+      <Route Component={Car_singular} path="cars/:id" loader={CarLoader} />
       <Route Component={UpdateProfile} path="/profile-update" />
       <Route
         Component={Comments}
@@ -50,13 +56,11 @@ const router = createBrowserRouter(
         loader={CommentLoader}
       />
 
-      <Route path="series/:id" Component={Series} loader={SeriesLoader} />
       <Route
         path="drivers/:slug"
         Component={Driver_singular}
         loader={DriverLoader}
       />
-      <Route path="teams/:slug" Component={Team_singular} loader={TeamLoader} />
 
       <Route path="*" Component={NotFound} />
     </Route>

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :series, param: :id
       resources :drivers
-      resources :cars
+      resources :cars, param: :id
       resources :calendar_events
       resources :teams
       resources :images,only: [:index, :show, :create], param: :team_slug
@@ -27,5 +27,5 @@ Rails.application.routes.draw do
     end
   end
 
-  
+
 end
