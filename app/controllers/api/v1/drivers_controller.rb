@@ -2,13 +2,12 @@ class Api::V1::DriversController < ApplicationController
 
     def index
         drivers = Driver.all
-        render json: drivers
-        puts "hello"
+        render json: drivers, Serializer: DriverSerializer
     end
 
     def show
         if (1..9).include?(params[:id].to_i)
-            drivers = Driver.where(series_id: params[:id]).order(:id)
+            drivers = Driver.include(:images).(series_id: params[:id]).order(:id)
         else
             drivers = Driver.where(slug: params[:id])
         end

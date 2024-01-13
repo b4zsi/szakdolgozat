@@ -1,7 +1,12 @@
-import React, { useState, memo } from "react";
+import React, { useState } from "react";
 import { ImageModel } from "../../model/ImageModel";
 import axios from "axios";
-import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
+import {
+  Link,
+  LoaderFunction,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 import {
   Button,
   Card,
@@ -50,6 +55,7 @@ const Gallery = () => {
   const [base64Image, setBase64Image] = useState<File>();
   const [teamSlug, setTeamSlug] = useState<string>(itemData.teams[0].name);
   const [description, setDescription] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,7 +102,7 @@ const Gallery = () => {
         if (response.ok) {
           await response.json().then(async (data) => {
             toastNotification(0, data.message);
-            await fetch("http://localhost:3000/api/v1/drivers", {
+            await fetch("http://localhost:3000/api/v1/teams", {
               method: "PUT",
               headers: {
                 Authorization: `${jwt_token}`,
@@ -113,6 +119,8 @@ const Gallery = () => {
             });
           });
           setOpen(false);
+          navigate("/gallery");
+          window.location.reload();
         } else {
           console.log(response);
         }
@@ -122,6 +130,23 @@ const Gallery = () => {
           console.log(data);
         });
       });
+  };
+  const handleImageDelete = async (imageID: number) => {
+    const imageURL = `http://localhost:3000/api/v1/images/${imageID}`;
+    await fetch(imageURL, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${jwt_token}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        await response.json().then((data) => {
+          toastNotification(0, data.message);
+        });
+        window.location.reload();
+      }
+    });
   };
 
   return !user ? (
@@ -190,11 +215,7 @@ const Gallery = () => {
               onChange={handledescriptionChange}
               maxRows={2}
             />
-            <label htmlFor="raised-button-file">
-              <Button variant="contained" component="span">
-                Kép feltöltés
-              </Button>
-            </label>
+            <label htmlFor="raised-button-file"></label>
             {image && <img src={`${image}`} alt="Preview" />}
           </DialogContent>
           <DialogActions>
@@ -212,9 +233,15 @@ const Gallery = () => {
           </DialogActions>
         </Dialog>
       </div>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Kép hozzáadása
-      </Button>
+      {!user.admin && (
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#5C8E5E", borderRadius: 0 }}
+          onClick={handleClickOpen}
+        >
+          Kép hozzáadása
+        </Button>
+      )}
       <div className="filterSwitch">
         Szűrők:
         <Switch
@@ -262,11 +289,45 @@ const Gallery = () => {
         </div>
       )}
       <div className="root">
-        <MemoImageList
-          itemDataImages={itemData.images}
-          teamFilter={teamFilter}
-          user={user}
-        />
+        <ImageList rowHeight={480} className="galleryList" cols={4}>
+          {itemData.images
+            .filter((image: ImageModel) => {
+              if (teamFilter === "all") {
+                return itemData.images.map(
+                  (image2: ImageModel) => image2.team_slug === image.team_slug
+                );
+              } else {
+                return teamFilter === image.team_slug;
+              }
+            })
+            .map((image: ImageModel) => (
+              <ImageListItem key={image.id} className="galleryItem">
+                <img
+                  src={image.image_url}
+                  className="galleryImage"
+                  loading="lazy"
+                />
+                <ImageListItemBar
+                  title={image.description}
+                  subtitle={
+                    <span>
+                      {!user.admin && (
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          className="imageDeleteButton"
+                          onClick={() => handleImageDelete(image.id)}
+                        >
+                          törlés
+                        </Button>
+                      )}
+                    </span>
+                  }
+                />
+              </ImageListItem>
+            ))}
+          <CustomSnackbar />
+        </ImageList>
       </div>
     </div>
   );
@@ -287,6 +348,7 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
       vezeteknev: "",
       fav_team: "",
       fav_driver: "",
+      banned: false,
     },
   };
 
@@ -315,79 +377,5 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
     });
   return allData;
 };
-
-const MemoImageList = memo(function listImages({
-  itemDataImages,
-  teamFilter,
-  user,
-}: {
-  itemDataImages: ImageModel[];
-  teamFilter: string;
-  user: UserModel;
-}) {
-  const jwt_token = localStorage.getItem("jwt");
-  const handleImageDelete = async (imageID: number) => {
-    const imageURL = `http://localhost:3000/api/v1/images/${imageID}`;
-    await fetch(imageURL, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${jwt_token}`,
-      },
-    }).then(async (response) => {
-      if (response.ok) {
-        await response.json().then((data) => {
-          toastNotification(0, data.message);
-        });
-        window.location.reload();
-      }
-    });
-  };
-
-  return (
-    itemDataImages && (
-      <ImageList rowHeight={480} className="galleryList" cols={4}>
-        {itemDataImages
-          .filter((image: ImageModel) => {
-            if (teamFilter === "all") {
-              return itemDataImages.map(
-                (image2: ImageModel) => image2.team_slug === image.team_slug
-              );
-            } else {
-              return teamFilter === image.team_slug;
-            }
-          })
-          .map((image: ImageModel) => (
-            <ImageListItem key={image.id} className="galleryItem">
-              <img
-                src={image.image_url}
-                alt={image.image_name}
-                className="galleryImage"
-              />
-              <ImageListItemBar
-                title={image.image_name}
-                subtitle={
-                  <span>
-                    {image.description}
-                    {!user.admin && (
-                      <Button
-                        variant="text"
-                        color="error"
-                        className="imageDeleteButton"
-                        onClick={() => handleImageDelete(image.id)}
-                      >
-                        törlés
-                      </Button>
-                    )}
-                  </span>
-                }
-              />
-            </ImageListItem>
-          ))}
-        <CustomSnackbar />
-      </ImageList>
-    )
-  );
-});
 
 export default Gallery;

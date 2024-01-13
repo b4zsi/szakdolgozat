@@ -6,11 +6,11 @@ class Api::V1::SeriesController < ApplicationController
 
     def show
         if (1..9).include?(params[:id].to_i)
-            series = Series.find_by(id: params[:id])
+            @series = Series.includes(drivers: :images).find_by(id: params[:id])
         else
-            series = Series.where(slug: params[:id])
+            @series = Series.includes(drivers: :images).where(slug: params[:id])
         end
-        render json: series, each_serializer: SeriesSerializer
+        render json: @series, Serializer: SeriesSerializer
     end
 
     def create
@@ -41,6 +41,8 @@ class Api::V1::SeriesController < ApplicationController
     end
 
     private
+
+
     # Use callbacks to share common setup or constraints between actions.
         def set_series
             @series = Series.find_by(params[:id])

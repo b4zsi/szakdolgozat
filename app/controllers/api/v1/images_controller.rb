@@ -3,15 +3,17 @@ class Api::V1::ImagesController < ApplicationController
     before_action :authenticate_user!, only: [:create, :update, :destory]
 
     def index
-        images = Image.all.order(created_at: :asc)
+        images = Image.all
         images_hash = ImageSerializer.new(images).serializable_hash[:data]
         images_attributes = images_hash.map { |image| image[:attributes] }
         render json: images_attributes
+        puts "LOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOL".red
     end
 
     def show
         images = Image.where(team_slug: params[:team_slug])
         render json:ImageSerializer.new(images).serializable_hash[:data]
+        puts "alsdkjhfalsjkdhflakjsdhflkajsdhf".red
     end
 
     def create

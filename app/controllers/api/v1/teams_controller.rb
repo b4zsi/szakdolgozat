@@ -1,16 +1,18 @@
 class Api::V1::TeamsController < ApplicationController
+
     def index
-        teams = Team.all
-        render json: teams, each_serializer:TeamSerializer
+        @teams = Team.all
+        render json: @teams, each_serializer:TeamSeriesSerializer
     end
 
     def show
         if (1..9).include?(params[:id].to_i)
-            teams = Team.where(series_id: params[:id]).order(:id)
+            @teams = Team.where(series_id: params[:id]).order(id: :asc)
         else
-            teams = Team.where(slug: params[:id])
+            @teams = Team.where(slug: params[:id]).order(id: :asc)
+
         end
-        render json: teams, Serializer:TeamSerializer
+        render json: @teams, Serializer:TeamSeriesSerializer
     end
 
     def create
@@ -22,8 +24,15 @@ class Api::V1::TeamsController < ApplicationController
         end
     end
 
+    def update
+        @team = Team.find(params[:id])
+        @team.image.attach(params[:image])
+        render json: @team, status: :ok
+    end
+
 
     private
+
     # Use callbacks to share common setup or constraints between actions.
         def set_teams
             @teams = Team.find_by(params[:id])

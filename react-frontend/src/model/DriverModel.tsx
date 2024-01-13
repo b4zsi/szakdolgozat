@@ -1,3 +1,5 @@
+import { ImageModel } from "./ImageModel";
+
 export interface DriverModel {
   id: number;
   name: string;
@@ -11,4 +13,5 @@ export interface DriverModel {
   team_slug: string;
   team_id: number;
   slug: "";
+  images: ImageModel[];
 }

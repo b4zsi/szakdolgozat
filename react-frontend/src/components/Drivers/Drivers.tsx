@@ -6,6 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import "../../styles/DriverStyle.css";
+import { ImageModel } from "../../model/ImageModel";
 
 type Driver = {
   properties: DriverModel;
@@ -14,12 +15,14 @@ type Driver = {
 };
 
 const Drivers: FC<Driver> = (driver: Driver) => {
-  console.log(driver);
+  driver.properties.images.sort((a: ImageModel, b: ImageModel) => {
+    return a.id - b.id;
+  });
   return (
     <div style={{ borderRadius: 100 }}>
       <Card sx={{ border: `2px solid #${driver.team_color}` }} className="card">
         <CardMedia
-          image={`data:image/jpeg;base64,${driver.properties.profile_picture}`}
+          image={`${driver.properties.images[0].image_url}`}
           title="drivers"
           className="cardMedia"
         />

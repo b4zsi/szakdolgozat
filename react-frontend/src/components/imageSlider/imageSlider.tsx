@@ -19,10 +19,6 @@ const Slider: React.FC<image> = (images: image) => {
     setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
   };
 
-  // const prevSlide = () => {
-  //   setCurrentSlide(currentSlide === 0 ? slideLength - 1 : currentSlide - 1);
-  // };
-
   function auto() {
     slideInterval = setInterval(nextSlide, intervalTime);
   }
@@ -49,11 +45,7 @@ const Slider: React.FC<image> = (images: image) => {
             >
               {index === currentSlide && (
                 <div>
-                  <img
-                    src={`data:image/jpeg;base64, ${image.image_url}`}
-                    alt="slide"
-                    className="image"
-                  />
+                  <img src={image.image_url} alt="slide" className="image" />
                   <div className="content">
                     <h2>{images.team_name}</h2>
                   </div>
