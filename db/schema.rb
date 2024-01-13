@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_04_130453) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_09_090025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,10 +52,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_04_130453) do
   end
 
   create_table "cars", force: :cascade do |t|
-    t.string "brand"
-    t.string "color"
+    t.string "name"
+    t.integer "year"
+    t.string "engine"
+    t.string "chassis"
+    t.integer "races_won"
+    t.integer "pole_positions"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "podiums"
+    t.string "championship_place"
+    t.string "battery"
+    t.integer "horsepower"
+    t.integer "weight"
+    t.string "fuel"
+    t.string "lubricants"
+    t.string "description"
+    t.string "team_slug"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -95,26 +108,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_04_130453) do
     t.integer "number_of_podiums"
     t.integer "series_id"
     t.text "description"
-    t.binary "profile_picture"
     t.integer "team_id"
     t.string "slug"
     t.string "team_slug"
   end
 
-  create_table "examples", force: :cascade do |t|
-    t.string "name"
-    t.string "gender"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "images", force: :cascade do |t|
-    t.binary "image_url"
     t.string "image_name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "team_slug"
     t.string "description"
+    t.string "image_url"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -148,7 +153,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_04_130453) do
     t.integer "last_championship_win"
     t.integer "date_of_establishment"
     t.integer "series_id"
-    t.binary "team_picture"
     t.string "team_color"
     t.string "slug"
     t.text "description"
@@ -167,6 +171,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_04_130453) do
     t.string "vezeteknev"
     t.string "fav_team"
     t.string "fav_driver"
+    t.boolean "banned", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
