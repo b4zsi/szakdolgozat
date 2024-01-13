@@ -21,124 +21,6 @@ import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 
 const api_url = "http://localhost:3000";
 
-//#region faszsag
-// async function userSession() {
-//   await refreshToken();
-//   await requestNewAccessToken();
-
-//   if (nullOrUndefined(access_token)) {
-//     console.log("access token is null or undefined");
-//   } else {
-//     console.log(access_token);
-//   }
-//   getUser();
-// }
-
-// function getUser() {
-//   const stored_resource = localStorage.getItem("resource_owner");
-//   if (nullOrUndefined(stored_resource)) {
-//     console.log("stored resource empty");
-//     return;
-//   } else {
-//     resource_owner = JSON.parse(stored_resource!);
-//   }
-// }
-
-// async function refreshToken() {
-//   refresh_token = localStorage.getItem("refresh_token");
-//   if (nullOrUndefined(refresh_token)) {
-//     return;
-//   }
-//   console.log(refresh_token);
-//   console.log("first");
-
-//   try {
-//     const response = await fetch(`${api_url}/refresh`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${refresh_token}`,
-//       },
-//     });
-//     if (!response.ok) {
-//       if (response.status === 401) {
-//         console.log("response no good");
-//       } else {
-//         throw new Error(response.statusText);
-//       }
-//     }
-//     const data = await response.json();
-//     console.log("Setting access token to: ", data.token);
-//     localStorage.setItem("resource_owner", JSON.stringify(data.resource_owner));
-//     localStorage.setItem("refresh_token", data.refresh_token);
-//     access_token = data.token;
-//     refresh_token = data.refresh_token;
-//     resource_owner = data.resource_owner;
-//   } catch (err) {
-//     console.log("Error refreshing token: ", err);
-//     resetTokens();
-//     userSession();
-//   }
-// }
-
-// function resetTokens() {
-//   localStorage.removeItem("refresh_token");
-//   localStorage.removeItem("resource_owner");
-//   access_token = null;
-//   refresh_token = null;
-//   resource_owner = null;
-// }
-
-// async function requestNewAccessToken() {
-//   if (nullOrUndefined(refresh_token)) {
-//     return;
-//   }
-//   if (access_token) {
-//     return;
-//   }
-//   try {
-//     const response = await fetch(`${api_url}/refresh`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${refresh_token}`,
-//       },
-//     });
-//     handleAuthResponse(response);
-//   } catch (err) {
-//     console.log("Error refreshing token: ", err);
-//     resetTokens();
-//     userSession();
-//   }
-// }
-
-// async function userCanAccess() {
-//   if (nullOrUndefined(access_token)) {
-//     return;
-//   }
-//   const response = await fetch(`http://localhost:3000/pages/restricted`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${access_token}`,
-//     },
-//   });
-//   const data = await response.json();
-
-//   console.log("%c" + data.message, "color: cyan");
-//   if (data.error) {
-//     console.log("Error: ", data.error);
-//     resetTokens();
-//     userSession();
-//   }
-// }
-
-// function nullOrUndefined(itemToCheck: string | null) {
-//   return itemToCheck == null || itemToCheck === "undefined";
-// }
-
-//#endregion
-
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -160,22 +42,17 @@ function Login() {
       headers: {
         "Content-type": "application/json",
       },
-    }).then((response: Response) => {
-      const jwt = response.headers.get("Authorization");
-      localStorage.setItem("jwt", jwt!);
-      toastNotification(0, "Sikeres bejelentkezés.").then(() => {
-        navigate("/");
-      });
+    }).then(async (response: Response) => {
+      if (response.ok) {
+        const jwt = response.headers.get("Authorization");
+        localStorage.setItem("jwt", jwt!);
+        toastNotification(0, "Sikeres bejelentkezés.").then(() => {
+          navigate("/");
+        });
+      } else {
+        toastNotification(1, "Helytelen email cím vagy jelszó.");
+      }
     });
-
-    // await handleAuthResponse().then(async (data) => {
-    //   if (response!.ok) {
-    //     toastNotification(0, "Sikeres bejelentkezés.").then(() => {});
-    //   } else {
-    //     console.log(data);
-    //     toastNotification(1, "data.error_description[0]");
-    //   }
-    // });
   };
 
   const passwordInput = (
@@ -204,9 +81,8 @@ function Login() {
 
   return (
     <Fragment>
-      <div className="backgroundStuff"></div>
+      {/* <div className="backgroundStuff"></div> */}
       <CustomSnackbar />
-
       <section>
         <Container maxWidth="md" className="container">
           <Card sx={{ boxShadow: 1, maxWidth: "md" }}>
