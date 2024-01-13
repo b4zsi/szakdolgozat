@@ -17,17 +17,11 @@
     margin-bottom: 150px;
 }
 
-.backgroundStuffTeam{
-   width: 100%;
-   height: 7vh;
-   margin: 0;
-}
-
 .mainDivTeam{
-    z-index: -1;
     position: relative;
-    top: 2%;
-    background-color: lightgrey !important;
+    margin-top: 60%;
+    background-color: #BCD2BE !important;
+    text-align: center;
 }
 
 .propertyGridItem {
@@ -65,10 +59,13 @@
 }
 
 .favTeamButton{
-    z-index: 1 !important;
+    z-index: 999 !important;
     margin-top: 1% !important;
-    margin-left: 45% !important;
     background-color: orange !important;
+}
+
+.carLink{
+    margin: auto !important;
 }
 
 @keyframes fade-in {

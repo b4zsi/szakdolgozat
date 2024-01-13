@@ -109,14 +109,18 @@ function ResponsiveAppBar() {
       },
     })
       .then((response) => {
-        response.json().then((user: UserModel) => {
-          setUser(user);
-          if (user.admin) {
-            setPages(adminPages);
-          } else {
-            setPages(userPages);
-          }
-        });
+        if (response.ok) {
+          response.json().then((user: UserModel) => {
+            setUser(user);
+            if (user.admin) {
+              setPages(adminPages);
+            } else {
+              setPages(userPages);
+            }
+          });
+        } else {
+          console.log("Nincs bejelentkezve felhasználó.");
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -185,7 +189,7 @@ function ResponsiveAppBar() {
       position="static"
       style={{ background: "inherit", boxShadow: "none", zIndex: 1 }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="sm">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -294,7 +298,6 @@ function ResponsiveAppBar() {
                     fontSize="large"
                     style={{ backgroundColor: "white", borderRadius: "2vh" }}
                   />
-                  {/* amugy ha van kepe akkor akkor abban az avatarban tedd ide */}
                 </IconButton>
               </Tooltip>
               <Menu
