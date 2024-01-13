@@ -1,8 +1,7 @@
 class Series < ApplicationRecord
     has_many :teams
-    has_many :drivers
+    has_many :drivers, class_name:"Driver", foreign_key:"series_id"
     has_many :images, class_name:"Image", foreign_key:"team_slug"
-    has_one_attached :image
 
     before_create :slugify
 

@@ -1,7 +1,6 @@
 class Driver < ApplicationRecord
-    has_one :car, class_name: "Car", foreign_key: "driver_id"
-    belongs_to :series, class_name: "Series", foreign_key:"series_id"
     has_one_attached :image
+    has_many :images, class_name: "Image", foreign_key: "image_name",primary_key: "slug"
 
     before_create :slugify
 
@@ -10,6 +9,6 @@ class Driver < ApplicationRecord
     end
 
     def image_url
-        Rails.application.routes.url_helpers.url_for(image)
+        Rails.application.routes.url_helpers.url_for(image) if self.image.attached?
     end
 end
