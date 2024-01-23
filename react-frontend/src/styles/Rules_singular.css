@@ -1,0 +1,33 @@
+.Rules_singularMainDiv{
+    display: flex !important;
+    flex-direction: column;
+    background-color: white;
+    min-height: 50em;
+    text-align: center;
+}
+.rulesTitle{
+    color: black;
+    letter-spacing: .4em;
+    font-size: 5em;
+    font-weight: bold;
+}
+.bookmarkButton{
+    color: black !important;
+}
+.rulesDivider{
+    margin-left:22em !important;
+    width: 50%;
+    color: black;
+    min-height: 1em;
+}
+.seriesRulesCard{
+    width: 90%;
+    border: .2em solid black;
+    margin: auto;
+    border-radius: .5em !important;
+    min-height: 35em !important;
+    margin-bottom: 1em;
+}
+.seriesCardContainer{
+    min-width: none;
+}

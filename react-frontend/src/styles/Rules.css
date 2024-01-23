@@ -1,0 +1,41 @@
+.rulesMainDiv{
+    background-color: white;
+    min-height: 50em;
+    display: flex !important;
+    flex-direction: column;
+}
+.rulesCard{
+    background-position: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    width: 75%;
+    height: 12vw;
+    min-height: 12vw;
+    border-radius: 1em !important;
+    margin: auto;
+    justify-content: center;
+    color: white !important;
+    font-weight: bold;
+    border: 2px solid black;
+    margin-bottom: 1em;
+
+}
+.formula1Image{
+    background-image: url('../images/formula1back.png');
+}
+.formula2Image{
+    background-image: url('../images/formula2back.png');
+}
+.formula3Image{
+    background-image: url('../images/formula3back.png');
+}
+.formula1EsportImage{
+    background-image: url('../images/formula1esportBack.png');
+}
+.rulesCardTitle{
+    margin: auto;
+    text-align: center;
+    font-size: 5em;
+}
+
