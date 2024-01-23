@@ -349,6 +349,7 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
       fav_team: "",
       fav_driver: "",
       banned: false,
+      images: [],
     },
   };
 

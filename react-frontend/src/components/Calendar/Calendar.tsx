@@ -180,6 +180,7 @@ export const CalendarLoader: LoaderFunction<UserModel> = async () => {
       fav_team: "",
       fav_driver: "",
       banned: false,
+      images: [],
     },
     calendar_events: [],
   };

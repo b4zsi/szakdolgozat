@@ -1,3 +1,5 @@
+import { ImageModel } from "./ImageModel";
+
 export interface UserModel {
   id: number;
   email: string;
@@ -8,4 +10,5 @@ export interface UserModel {
   fav_team: string;
   fav_driver: string;
   banned: boolean;
+  images: ImageModel[];
 }

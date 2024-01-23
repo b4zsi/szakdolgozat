@@ -34,7 +34,7 @@ function Profile() {
     drivers: DriverModel[];
     user: UserModel;
   };
-
+  const imageEventURL = "http://localhost:3000/api/v1/images";
   const user: UserModel = itemData.user;
   const teams: TeamModel[] = itemData.teams;
   const updateUserURL = "http://localhost:3000/current_user";
@@ -46,7 +46,10 @@ function Profile() {
   const [favTeam, setFavTeam] = useState<string>(
     user.fav_team == undefined ? "Oracle Red Bull Racing" : user.fav_team
   );
+  const [image, setImage] = useState("");
+  const [base64Image, setBase64Image] = useState<File>();
   const [favDriver, setFavDriver] = useState<string>();
+  const [open, setOpen] = useState(false);
   const [nameDialogOpen, setNameDialogOpen] = useState<boolean>(false);
   const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);
   const [emailDialogOpen, setEmailDialogOpen] = useState<boolean>(false);
@@ -76,6 +79,14 @@ function Profile() {
   const handleFavDriverChangeOpen = () => {
     setFavDriverDialogOpen(true);
   };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleImageClose = () => {
+    setOpen(false);
+  };
+  console.log(user);
 
   const handleVeznevChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -124,6 +135,11 @@ function Profile() {
     });
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImage(URL.createObjectURL(event.target.files![0]));
+    setBase64Image(event.target.files![0]);
+  };
+
   const handleSubmit = async () => {
     await fetch(updateUserURL, {
       method: "PUT",
@@ -158,6 +174,69 @@ function Profile() {
       }
     });
   };
+  const handleImageSubmit = async (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("imagesForm[image_name]", email);
+    formData.append("imagesForm[image]", base64Image!);
+    formData.append("imagesForm[team_slug]", "none");
+
+    if (user.images.length > 0) {
+      await fetch(imageEventURL + "/" + user.images[0].id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${jwt_token}`,
+        },
+        body: JSON.stringify({
+          images: {
+            id: user.images[0].id,
+          },
+        }),
+      });
+    }
+
+    await fetch(imageEventURL, {
+      method: "POST",
+      headers: {
+        Authorization: `${jwt_token}`,
+      },
+      body: formData,
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          await response.json().then(async (data) => {
+            toastNotification(0, data.message);
+            await fetch("http://localhost:3000/api/v1/teams", {
+              method: "PUT",
+              headers: {
+                Authorization: `${jwt_token}`,
+              },
+              body: JSON.stringify({
+                drivers: {
+                  id: email,
+                  image: base64Image,
+                },
+              }),
+            }).then((response) => {
+              console.log(response);
+            });
+          });
+          setOpen(false);
+          //window.location.reload();
+        } else {
+          console.log(response);
+        }
+      })
+      .catch((response: Response) => {
+        response.json().then((data) => {
+          console.log(data);
+        });
+      });
+  };
+
   const handleDeleteOpen = () => {
     setDeleteOpen(true);
   };
@@ -175,7 +254,7 @@ function Profile() {
             autoFocus
             margin="dense"
             id="vezeteknev"
-            label="Keresztnév"
+            label="Vezetéknév"
             type="text"
             fullWidth
             value={vezeteknev}
@@ -185,7 +264,7 @@ function Profile() {
             autoFocus
             margin="dense"
             id="keresztnev"
-            label="Vezetéknév"
+            label="Keresztnév"
             type="text"
             fullWidth
             value={keresztnev}
@@ -289,7 +368,7 @@ function Profile() {
         <Card className="profileCard">
           <p className="profilHeader">Profilom</p>
           <CardContent className="profileItem">
-            Név:&ensp;{user.keresztnev}&ensp;{user.vezeteknev}
+            Név:&ensp;{user.vezeteknev}&ensp;{user.keresztnev}
             <Button onClick={handleNameChangeOpen}>
               <EditIcon />
             </Button>
@@ -317,6 +396,19 @@ function Profile() {
             Kedvenc versenyző:&ensp;{user.fav_driver}
             <Button onClick={handleFavDriverChangeOpen}>
               <EditIcon />
+            </Button>
+          </CardContent>
+          <CardContent className="profileItem">
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "#5C8E5E",
+                borderRadius: 0,
+                margin: "auto",
+              }}
+              onClick={handleClickOpen}
+            >
+              Profilkép feltöltése
             </Button>
           </CardContent>
           <CardActions className="profileItem">
@@ -348,6 +440,37 @@ function Profile() {
                 </Button>
               </DialogContent>
             </Dialog>
+            <Dialog
+              open={open}
+              onClose={handleImageClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title">Képfeltöltés</DialogTitle>
+              <DialogContent>
+                <input
+                  required
+                  accept="image/*"
+                  id="upload-image"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+                <label htmlFor="raised-button-file"></label>
+                {image && <img src={`${image}`} alt="Preview" />}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleImageClose} color="primary">
+                  Mégse
+                </Button>
+                <Button
+                  onClick={(e) => {
+                    handleImageSubmit(e);
+                  }}
+                  color="primary"
+                >
+                  Feltöltés
+                </Button>
+              </DialogActions>
+            </Dialog>
           </CardActions>
         </Card>
       </div>
@@ -373,6 +496,7 @@ export const ProfilLoader: LoaderFunction<UserModel> = async () => {
       fav_team: "",
       fav_driver: "",
       banned: false,
+      images: [],
     },
   };
   await fetch(`${current_user_url}`, {
