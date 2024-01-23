@@ -15,6 +15,7 @@ let allDataType: {
   images: ImageModel[];
 };
 const current_user_url = "http://localhost:3000/current_user/";
+
 const Team_singular = () => {
   const allData: typeof allDataType = useLoaderData() as {
     team: TeamModel;
@@ -24,6 +25,7 @@ const Team_singular = () => {
   const team: TeamModel = allData.team;
   const drivers: DriverModel[] = allData.drivers;
   const images: ImageModel[] = allData.images;
+  console.log(images);
 
   const submitFavTeam = async () => {
     const jwt = localStorage.getItem("jwt");
@@ -63,9 +65,9 @@ const Team_singular = () => {
         >
           Kedvenc csapat
         </Button>
-        <hr style={{ width: "60%" }} />
+        <Divider variant={"middle"} className="divider" />
         <Link to={`/cars/${team.cars[0].id}`} className="carLink">
-          tekintsd meg az autót
+          <Button>nézd meg a csapat autóját</Button>
         </Link>
         <p className="subTitle">Statisztikák</p>
 
@@ -185,8 +187,9 @@ export const TeamLoader: LoaderFunction<typeof allDataType> = async ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data.data.map((image: any) => {
           if (
-            image.attributes.image_name.length > 2 &&
-            !image.attributes.image_url.includes("profile")
+            !image.attributes.image_url.includes("profile") &&
+            !image.attributes.image_name.includes("car") &&
+            !image.attributes.image_url.includes("helmet")
           ) {
             allData.images[index] = image.attributes;
             index++;

@@ -19,7 +19,7 @@
 
 .mainDivTeam{
     position: relative;
-    margin-top: 60%;
+    margin-top: 40%;
     background-color: #BCD2BE !important;
     text-align: center;
 }
@@ -66,6 +66,12 @@
 
 .carLink{
     margin: auto !important;
+}
+
+.divider{
+    color:white;
+    margin-top:0.5% !important;
+    width:20%
 }
 
 @keyframes fade-in {
