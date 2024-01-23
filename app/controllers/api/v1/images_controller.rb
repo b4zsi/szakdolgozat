@@ -7,13 +7,11 @@ class Api::V1::ImagesController < ApplicationController
         images_hash = ImageSerializer.new(images).serializable_hash[:data]
         images_attributes = images_hash.map { |image| image[:attributes] }
         render json: images_attributes
-        puts "LOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOL".red
     end
 
     def show
         images = Image.where(team_slug: params[:team_slug])
         render json:ImageSerializer.new(images).serializable_hash[:data]
-        puts "alsdkjhfalsjkdhflakjsdhflkajsdhf".red
     end
 
     def create
@@ -50,7 +48,7 @@ class Api::V1::ImagesController < ApplicationController
 
     private
         def image_params
-            params.require(:images).permit(:team_slug)
+            params.require(:images).permit(:id,:team_slug)
         end
         def image_create_params
             params.require(:imagesForm).permit(:id,:image_name, :team_slug, :description, :image)
