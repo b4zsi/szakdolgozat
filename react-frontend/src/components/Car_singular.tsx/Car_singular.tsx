@@ -21,28 +21,28 @@ function Car_singular() {
         <Grid item xs={3}>
           <Grid container direction="column" spacing={3} maxHeight={900}>
             <Grid item>
-              <Card className="carCard">
+              <Card className="carCard left">
                 <p className="cardTitle">Motor</p>
                 <CardContent className="cardContent">{car.engine}</CardContent>
               </Card>
             </Grid>
             <Grid item>
-              <Card className="carCard">
+              <Card className="carCard left">
                 <p className="cardTitle">Lóerő</p>
-                <CardContent className="cardContent">
+                <CardContent className="cardContent number">
                   {car.horsepower} HP
                 </CardContent>
               </Card>
             </Grid>
             <Grid item>
-              <Card className="carCard">
+              <Card className="carCard left">
                 <p className="cardTitle">Üzemanyag</p>
                 <CardContent className="cardContent">{car.fuel}</CardContent>
               </Card>
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={6} direction="column" spacing={3}>
+        <Grid xs={6}>
           <Grid item>
             <img
               src={`${car.images[0].image_url}`}
@@ -51,35 +51,30 @@ function Car_singular() {
               className="carImage"
             />
           </Grid>
-          <Grid item style={{}}>
-            <Card className="carCard" style={{ width: "80%" }}>
-              <p className="cardTitle">Leírás</p>
-              <CardContent className="cardContent">
-                {car.description}
-              </CardContent>
-            </Card>
-          </Grid>
+          <Grid item></Grid>
         </Grid>
         <Grid item xs={3}>
           <Grid container direction="column" spacing={3} minHeight={600}>
             <Grid item>
-              <Card className="carCard">
+              <Card className="carCard right">
                 <p className="cardTitle">Győzelmek</p>
-                <CardContent className="cardContent">
+                <CardContent className="cardContent number">
                   {car.races_won}
                 </CardContent>
               </Card>
             </Grid>
             <Grid item>
-              <Card className="carCard">
+              <Card className="carCard right">
                 <p className="cardTitle">Pódiumok</p>
-                <CardContent className="cardContent">{car.podiums}</CardContent>
+                <CardContent className="cardContent number">
+                  {car.podiums}
+                </CardContent>
               </Card>
             </Grid>
             <Grid item>
-              <Card className="carCard">
+              <Card className="carCard right">
                 <p className="cardTitle">Pole pozíciók</p>
-                <CardContent className="cardContent">
+                <CardContent className="cardContent number">
                   {car.pole_positions}
                 </CardContent>
               </Card>
@@ -87,6 +82,9 @@ function Car_singular() {
           </Grid>
         </Grid>
       </Grid>
+      <Card className="carCard description">
+        <CardContent className="cardContent">{car.description}</CardContent>
+      </Card>
     </div>
   );
 }
@@ -119,16 +117,3 @@ export const CarLoader: LoaderFunction<typeof allDataType> = async ({
 };
 
 export default Car_singular;
-
-//racetracks database
-//id
-//name
-//country
-//city
-//length
-//turns
-//description
-//lap_record
-//lap_record_driver
-//first_gp
-//street_circuit
