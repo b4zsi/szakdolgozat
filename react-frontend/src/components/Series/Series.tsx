@@ -66,7 +66,7 @@ const Series = () => {
     <Fragment>
       <div className="background">
         <img src={image.image_url} alt="kep" className="image" />
-        <Box sx={{ marginTop: "24.4%", color: "white" }}>
+        <Box sx={{ marginTop: "23.5%", color: "white" }}>
           <SeriesStats properties={series} />
         </Box>
         <div className="search-bar-container">
@@ -84,7 +84,8 @@ const Series = () => {
           </Typography>
           <Paper
             variant="outlined"
-            style={{ background: "transparent", marginTop: 15 }}
+            style={{ background: "transparent", marginTop: "3%" }}
+            className="driverPaper"
           >
             <Grid
               container
@@ -122,16 +123,16 @@ const Series = () => {
             variant="outlined"
             style={{
               background: "transparent",
-              marginTop: 15,
+              marginTop: "3%",
             }}
+            className="teamPaper"
           >
             <Grid
               container
               spacing={2}
               alignItems={"center"}
-              justifyContent={"center"}
               wrap="nowrap"
-              className="TeamGrid"
+              className="teamGrid"
             >
               <div className="oneLineDivTeam">
                 <ImageList className="imageListTeam">

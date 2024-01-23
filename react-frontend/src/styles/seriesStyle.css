@@ -18,7 +18,7 @@ body {
     background-size: cover;
     background-position: center;
     width: 100vw;
-    height: 54vh;
+    height: 27vw;
     top: 0;
     left: 0;
 }
@@ -33,46 +33,60 @@ body {
     justify-content: space-around !important;
     overflow: hidden !important;
     color: white !important;
+    height: 24vw;
 }
 .oneLineDivTeam{
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: space-around !important;
     overflow: hidden !important;
-    color: white !important;
-    height: 500px;
+    height: 30vw;
 }
 
 .imageList{
     display: flex !important;
     flex-wrap: nowrap !important;
     transform: translateZ(0) !important;
-    height: 35vh;
+    padding-top: 2% !important;
+    height: 65%;
 }
 .imageListTeam{
     display: flex !important;
     flex-wrap: nowrap !important;
+    padding-top: 2% !important;
     transform: translateZ(0) !important;
-    height: 66vh;
+    height: 24vw;
 }
 
 .driverGrid{
-    height: 35vh;
+    height: 15vw;
     padding-left: 1%;
 }
 .teamGrid{
-    height: 50vh !important;
-    font-size: 15px !important;
+    height: 20vw;
+    padding-left: 1%;
 }
 
 .background{
     background: #BCD2BE  !important;
     width: 100%;
-    height: 140vh !important;
+    height: 100% !important;
     margin: 0;
     color: black !important;
 }
 
 .driverLink,  :visited, :active, :focus{
     text-decoration: none !important;
+}
+
+.search-bar-container{
+    margin-top: 5%;
+}
+.teamPaper{
+    height: 25vw;
+    border: none !important;
+}
+.driverPaper{
+    height: 20vw;
+    border: none !important;
 }

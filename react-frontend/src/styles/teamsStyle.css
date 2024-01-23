@@ -4,7 +4,6 @@
     align-content: center;
     position: relative;
     object-fit: cover;
-    
 }
 
 .card-image{
@@ -25,7 +24,7 @@
     color: white;
     z-index: 2;
     box-shadow: 10px 15px black !important;
-    transition: transform .5s;
+    transition: transform 1s !important;
 }
 
 .cardContainer:hover {
