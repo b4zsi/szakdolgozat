@@ -13,13 +13,14 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const usersURL = "http://localhost:3000/api/v1/users";
+const usersURL = "http://localhost:3000/api/v1/users/";
 
 function Users() {
   const users = useLoaderData() as UserModel[];
   async function moderateUser(banned: boolean, userid: number) {
     const jwt_token = localStorage.getItem("jwt");
-    await fetch(usersURL, {
+    console.log(banned);
+    await fetch(usersURL + userid, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -31,6 +32,8 @@ function Users() {
           banned: banned,
         },
       }),
+    }).then((response) => {
+      console.log(response);
     });
   }
 
@@ -65,7 +68,7 @@ function Users() {
                   <Switch
                     defaultChecked={user.banned}
                     onClick={() => {
-                      moderateUser(user.banned, user.id);
+                      moderateUser(!user.banned, user.id);
                     }}
                   />
                 </TableCell>
