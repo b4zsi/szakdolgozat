@@ -1,0 +1,28 @@
+.tracksMainDiv{
+    background-color: #BCD2BE;
+}
+.AllTrackCard{
+    box-shadow: 10px 15px rgba(150,150, 150, 0.9) !important;
+    border: 2px solid black;
+    background-color: white !important;
+    width: 70%;
+    height: 12vw;
+    border-radius: 1vw !important;
+    margin-bottom:2%;
+    font-size: 1.5vw;
+    font-weight: bolder;
+    margin-top: 1vw;
+    text-align: center;
+}
+
+.divider{
+    color: black !important;
+}
+
+.textTrack{
+    margin-top: 0.5vw;
+    font-size: 1.7vw;
+    font-weight: bolder;
+    margin-bottom: 0.5vw; 
+
+}
