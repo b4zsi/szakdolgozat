@@ -2,8 +2,7 @@ function Footer() {
   return (
     <div
       style={{
-        background:
-          " linear-gradient(to left, rgba(0,0,0,1), rgba(55,55,55, 1))",
+        backgroundColor: "black",
         position: "absolute",
         width: "100%",
         height: "10%",
@@ -12,8 +11,11 @@ function Footer() {
         fontSize: 25,
       }}
     >
-      <footer>
-        <div>2023 | Minden jog fenntartva.</div>
+      <footer style={{ textAlign: "center" }}>
+        <div style={{ margin: "auto" }}>Facebook</div>
+        <div style={{ margin: "auto" }}>Instagram</div>
+        <div style={{ margin: "auto" }}>Twitter</div>
+        <div style={{ margin: "auto" }}>2023 | Minden jog fenntartva.</div>
       </footer>
     </div>
   );
