@@ -5,6 +5,8 @@ import BackgroundVideo from "../../components/backgroundvideo/backgroundVideo";
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import { Card, CardContent } from "@mui/material";
+import maxHelmet from "../../images/homePageHelmet.png";
 
 const CustomButton = styled(Button)({
   margin: "20px",
@@ -19,11 +21,9 @@ const HomePage = () => {
     <>
       <div className="App">
         <Typeanimation />
-
         <div style={{ width: "90%" }}>
           <BackgroundVideo />
         </div>
-
         <div>
           <CustomButton variant="contained" className="button1">
             <Link
@@ -41,6 +41,30 @@ const HomePage = () => {
               Naptár
             </Link>
           </CustomButton>
+        </div>
+
+        <div className="afterVideo">
+          <Card className="homePageCard">
+            <img
+              src={maxHelmet}
+              alt="homePageHelmet"
+              className="homePageHelmet"
+            />
+            <CardContent className="text">
+              Nézz szét az oldalon, ismerdd meg a versenyzőket, csapatokat,
+              pályákat, ha esetleg kérdésed támad, bátran tedd fel a&nbsp;
+              <Link to="/forum">fórum</Link>on!
+            </CardContent>
+          </Card>
+          <Card className="homePageCard">
+            <CardContent className="text">
+              Ha még nem vagy tagja a csapatnak, akkor regisztrálj itt, és
+              csatlakozz a forumunkhoz!
+              <hr style={{ width: "50%" }} />
+              Ha még nem ismered a szabályokat, akkor itt mindent megtalálsz:{" "}
+              <Link to="/rules">Szabályok</Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </>

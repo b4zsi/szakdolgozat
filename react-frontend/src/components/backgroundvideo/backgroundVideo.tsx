@@ -5,7 +5,6 @@ function BackgroundVideo() {
     <div
       style={{
         objectFit: "cover",
-        width: "100%",
         height: "100%",
         position: "fixed",
         top: 0,
@@ -13,7 +12,7 @@ function BackgroundVideo() {
         zIndex: -1,
       }}
     >
-      <video src={videobg} autoPlay loop muted></video>
+      <video src={videobg} autoPlay loop muted width={"1470em"}></video>
     </div>
   );
 }
