@@ -3,21 +3,20 @@
 }
 
 .kep {
-    width: 32vw !important;
-    border: 1px solid white;
-    border-radius: 5%;
+    width: 70% !important;
+    border-radius: 4%;
     background-color: white;
     margin: auto;
-    align-content: flex-end;
     display: flex;
-    box-shadow: 10px 15px black;
-    min-height: 250px;
+    box-shadow: 10px 15px darkgrey;
+    max-height: 17vw !important;
+    min-height: 17vw !important;
 }
 
 .propertiesGrid {
     text-align: center;
     color: white;
-    font-size: 3vh;
+    font-size: 2vw;
     font-weight: bold;
     padding-right: 5%;
 }
@@ -76,4 +75,14 @@
     font-weight: bold;
     margin: auto;
     text-align: center;
+}
+.driversCarImage{
+    margin-top: 5%;
+    margin-left: 15%;
+}
+.flip-card {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
 }

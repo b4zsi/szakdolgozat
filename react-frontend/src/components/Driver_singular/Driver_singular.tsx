@@ -8,6 +8,8 @@ import hexRgb from "hex-rgb";
 import { TeamModel } from "../../model/TeamModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import ReactCardFlip from "react-card-flip";
+import noCar from "../../images/nocar.png";
+import noHelmet from "../../images/nohelmet.png";
 
 let allDataType: {
   driver: DriverModel;
@@ -87,11 +89,16 @@ const Driver_singular = () => {
                 </figcaption>
               </div>
               <div onClick={handleClick2}>
-                <img
-                  src={driver.images[1].image_url}
-                  alt="sisak"
-                  className="kep"
-                />
+                {driver.images[1] !== undefined ? (
+                  <img
+                    src={driver.images[1].image_url}
+                    alt="sisak"
+                    className="kep"
+                  />
+                ) : (
+                  <img src={noHelmet} alt="sisak" className="kep" />
+                )}
+
                 <figcaption className="infoText">
                   kattints a versenyzőhöz
                 </figcaption>
@@ -145,13 +152,23 @@ const Driver_singular = () => {
         </Button>
 
         <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
-          <div className="helmetImage" onClick={handleClick}>
-            <img
-              src={team.cars[0].images[0].image_url}
-              alt="kep"
-              width={1080}
-              style={{ marginTop: "5%", marginLeft: "10%" }}
-            />
+          <div className="flip-card" onClick={handleClick}>
+            {team.cars[0].images[0] !== undefined ? (
+              <img
+                src={team.cars[0].images[0].image_url}
+                alt="kep"
+                width={1080}
+                className="driversCarImage"
+              />
+            ) : (
+              <img
+                src={noCar}
+                alt="kep"
+                width={1080}
+                style={{ marginTop: "5%", marginLeft: "10%" }}
+              />
+            )}
+
             <figcaption className="infoText">
               kattints a részletes leírásért
             </figcaption>
