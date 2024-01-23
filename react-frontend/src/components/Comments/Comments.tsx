@@ -7,6 +7,8 @@ import { PostModel } from "../../model/PostModel";
 import { Button, Card, CardContent, TextField } from "@mui/material";
 import { KommentModel } from "../../model/KommentModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+//import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+//import FavoriteIcon from "@mui/icons-material/Favorite";
 
 let allDataType: {
   user: UserModel;
@@ -47,51 +49,53 @@ function Comments() {
       }
     });
   };
-  console.log(comments[0].user.keresztnev);
 
   return (
     <div className="commentMainDiv">
-      <CustomSnackbar />
-      <div className="postContainer">
-        <div className="post">
-          <Card className="mainPostCard">
-            <p className="postTitle">{post.title}</p>
-            <CardContent className="postBody">{post.body}</CardContent>
+      <div className="post">
+        <Card className="mainPostCard">
+          <CustomSnackbar />
+          <p className="postTitle">{post.title}</p>
+          <CardContent className="postBody">{post.body}</CardContent>
+          {post.like} kedvelés
+          <CardContent className="postAuthor">
+            {post.user.vezeteknev}&nbsp;
+            {post.user.keresztnev}
+          </CardContent>
+        </Card>
+        <Card className="writeCommentonPage">
+          <TextField
+            className="commentField"
+            placeholder="Komment"
+            autoFocus
+            multiline
+            minRows={4}
+            maxRows={5}
+            inputProps={{ maxLength: 400 }}
+            id="comment"
+            type="text"
+            value={comment}
+            onChange={handleCommentChange}
+          />
+          <Button
+            variant="contained"
+            color="success"
+            className="submitButton"
+            onClick={submitComment}
+          >
+            Válasz
+          </Button>
+        </Card>
+        {comments.map((comment) => (
+          <Card className="commentCard" key={comment.id}>
+            <CardContent className="commentBody">{comment.body}</CardContent>
             <CardContent className="postAuthor">
-              {post.user.vezeteknev}&nbsp;
-              {post.user.keresztnev}
+              {comment.user.vezeteknev}
+              &nbsp;
+              {comment.user.keresztnev}
             </CardContent>
           </Card>
-          <Card className="writeCommentonPage">
-            <TextField
-              className="commentField"
-              placeholder="Komment"
-              autoFocus
-              multiline
-              id="comment"
-              type="text"
-              value={comment}
-              onChange={handleCommentChange}
-            />
-            <Button
-              variant="outlined"
-              className="submitButton"
-              onClick={submitComment}
-            >
-              OK
-            </Button>
-          </Card>
-          {comments.map((comment) => (
-            <Card className="commentCard" key={comment.id}>
-              <CardContent>{comment.body}</CardContent>
-              <CardContent className="postAuthor">
-                {comment.user.vezeteknev}
-                &nbsp;
-                {comment.user.keresztnev}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
@@ -113,6 +117,7 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
       fav_team: "",
       fav_driver: "",
       banned: false,
+      images: [],
     },
     post: {
       id: 0,
@@ -131,6 +136,7 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
         fav_team: "",
         fav_driver: "",
         banned: false,
+        images: [],
       },
     },
     comments: [],
@@ -142,7 +148,9 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
     },
   }).then(async (response) => {
     if (response.ok) {
-      allData.user = await response.json();
+      const data = await response.json();
+      console.log(data);
+      allData.user = data;
     }
   });
   await axios.get(PostURL + params.id).then((data) => {

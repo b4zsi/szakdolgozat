@@ -1,70 +1,75 @@
 .commentMainDiv{
     background-color: #BCD2BE;
-    height: 1000px;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .mainPostCard{
-    box-shadow: 10px 15px rgba(200,200, 200, 0.5) !important;
+    box-shadow: 10px 15px rgba(100,100, 100, 0.9) !important;
     border: 2px solid black;
-    background-color: white !important;
-    width: 70%;
-    height: 20vh;
-    border-radius: 2vh !important;
+    background-color: white;
+    width: 75%;
+    height: 12vw;
+    min-height: 12vw;
+    border-radius: 1vw;
+    margin-top: 2em !important;
     margin: auto;
-    margin-top:5%;
+    justify-content: center;
 }
 .commentCard{
-    border-bottom: 2px solid black;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    background-color: white !important;
-    width: 60% !important;
-    height: 11vh !important;
-    margin: auto !important;
-    margin-top: 0.5% !important;
+    background-color: white;
+    width: 70%;
+    height: 15vh !important; 
+    margin: auto;
+    margin-top: 0.5%; 
+    margin-bottom: 2%;
+}
+
+.commentBody{
+    max-height: 3em;
+    min-height: 3em;
 }
 .writeCommentonPage{
-    border-bottom: 2px solid black;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    background-color: white !important;
-    width: 60% !important; 
-    height: 6.5vh !important;
-    margin-top: 0.5% !important;
-    border-radius: 5px !important;
-    margin-left: 19.9%;
-}
-.commentField{
-    height: 2vh !important;
-    width:90% !important;
-    border-radius: 10px !important;
-}
-
-
-.postContainer{
-    margin-top: 0%;
+    background-color: white;
+    width: 75%;
+    height: 10em;
+    margin-top: 1%;
+    margin-left: 11vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    border-radius: 5px;
+}
+.commentField{
+    width:100%;
+    border-radius: 10px;
 }
 
 .postTitle{
     margin: auto;
     text-align: center;
-    font-size: 4vh;
+    font-size: 2vw;
     font-weight: bold;
-}
-.postBody{
-    font-size: 2vh;
+    max-height: 4.5vw !important;
+    min-height: 5vw ;
 }
 .post{
     width:90%;
+    margin: auto;
+    align-items: center;
 }
 .postAuthor{
     float: right;
 }
 .submitButton{
-    float:right;
-    height: 7vh;
-    width: 4vh;
+    height: 2vw;
+    width: 100%;
+}
+.postBody{
+    min-height: 7vw;
+    font-size: 2vh;
+}
+.commentName{
+    float: right;
 }

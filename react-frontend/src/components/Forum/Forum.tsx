@@ -13,22 +13,30 @@ import axios from "axios";
 import "../../styles/ForumStyle.css";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import { KommentModel } from "../../model/KommentModel";
+import CommentIcon from "@mui/icons-material/Comment";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { LikeModel } from "../../model/LikeModel";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 let allDataType: {
   user: UserModel;
   posts: PostModel[];
   comments: KommentModel[];
+  likes: LikeModel[];
 };
 const PostURL = "http://localhost:3000/api/v1/posts";
+const LikeURL = "http://localhost:3000/api/v1/likes";
 const CommentsURL = "http://localhost:3000/api/v1/comments";
 
 function Forum() {
   const [title, setTitle] = useState<string>();
   const [body, setBody] = useState<string>();
+  const [like, setLike] = useState<number>(0);
 
   const loaderData: typeof allDataType = useLoaderData() as typeof allDataType;
   const user: UserModel = loaderData!.user;
   const posts: PostModel[] = loaderData!.posts;
+  const likes: LikeModel[] = loaderData!.likes;
 
   const navigate = useNavigate();
 
@@ -42,6 +50,7 @@ function Forum() {
   ): void => {
     setBody(event.target.value);
   };
+  console.log(posts[0].like);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await fetch(PostURL, {
@@ -69,7 +78,57 @@ function Forum() {
     });
   };
 
-  console.log(posts);
+  console.log(likes);
+
+  function findId(post_id: number): number {
+    let id = 0;
+    likes.map((like) => {
+      if (like.user_id === user.id && post_id === like.post_id) {
+        id = like.id;
+      }
+    });
+    return id;
+  }
+
+  async function switchLike(id: number, like: number) {
+    if (likedByUser(id)) {
+      await axios.delete(LikeURL + `/${findId(id)}`);
+      await axios
+        .put(PostURL + `/${id}`, {
+          post: {
+            id: id,
+            like: like - 1,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        });
+      return;
+    } else {
+      await axios.post(LikeURL, {
+        like: {
+          post_id: id,
+          user_id: user.id,
+        },
+      });
+      await axios.put(PostURL + `/${id}`, {
+        post: {
+          id: id,
+          like: like + 1,
+        },
+      });
+    }
+  }
+
+  function likedByUser(post_id: number): boolean {
+    let counter = 0;
+    likes.map((like) => {
+      if (like.user_id === user.id && post_id === like.post_id) {
+        ++counter;
+      }
+    });
+    return counter > 0 ? true : false;
+  }
 
   return !user ? (
     <div className="userOnly">
@@ -87,32 +146,50 @@ function Forum() {
         <div className="postCreateDiv">
           <form onSubmit={handleSubmit}>
             <h2 className="postCreateDivTitle">
-              Ha van kérdésed, tedd fel itt:
+              {user.banned ? (
+                <p>
+                  Sajnos a fiókod tiltva lett, ezért nem tudsz ide posztolni.
+                </p>
+              ) : (
+                <p>Ha van kérdésed, tedd fel itt:</p>
+              )}
             </h2>
-            <TextField
-              style={{ margin: 10, width: "80%" }}
-              fullWidth
-              label="Cím"
-              variant="outlined"
-              onChange={handleTitleChange}
-            />
-            <TextField
-              multiline
-              style={{ margin: 10, width: "80%", height: "80%" }}
-              fullWidth
-              label="Szöveg"
-              variant="outlined"
-              onChange={handleBodyChange}
-            />
-            <br />
-            <Button
-              type="submit"
-              variant="contained"
-              color="success"
-              className="uploadButton"
-            >
-              Poszt
-            </Button>
+            {user.banned ? (
+              <div></div>
+            ) : (
+              <div>
+                <TextField
+                  style={{ margin: 10, width: "90%" }}
+                  fullWidth
+                  label="Adj címet a kérdésednek"
+                  variant="outlined"
+                  maxRows={2}
+                  inputProps={{ maxLength: 55 }}
+                  onChange={handleTitleChange}
+                />
+                <TextField
+                  multiline
+                  style={{ margin: 10, width: "90%", height: "7vw" }}
+                  fullWidth
+                  label="Fejtsd ki a kérdésed vagy véleményed"
+                  inputMode="text"
+                  maxRows={5}
+                  minRows={4}
+                  variant="outlined"
+                  inputProps={{ maxLength: 400 }}
+                  onChange={handleBodyChange}
+                />
+                <br />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="success"
+                  className="uploadButton"
+                >
+                  Poszt
+                </Button>
+              </div>
+            )}
           </form>
         </div>
       </div>
@@ -128,19 +205,40 @@ function Forum() {
                   placement="top-end"
                   title={`Felhasználónév: ${user.username} \nKedvenc csapat: ${user.fav_team}`}
                 >
-                  <p>
+                  <div>
                     {post.user.vezeteknev}&ensp;{post.user.keresztnev}
-                  </p>
+                  </div>
                 </Tooltip>
-
                 <Button
                   onClick={() => {
                     navigate(`comment/${post.id}`);
                   }}
                   className="writeComment"
                 >
-                  Komment
+                  <CommentIcon />
                 </Button>
+                <div className="postLike">{post.like}</div>
+                {likedByUser(post.id) ? (
+                  <Button
+                    onClick={() => {
+                      setLike(like - 1);
+                      switchLike(post.id, post.like);
+                    }}
+                    className="like"
+                  >
+                    <FavoriteIcon />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setLike(like + 1);
+                      switchLike(post.id, post.like);
+                    }}
+                    className="like"
+                  >
+                    <FavoriteBorderIcon />
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -165,9 +263,11 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
       fav_team: "",
       fav_driver: "",
       banned: false,
+      images: [],
     },
     posts: [],
     comments: [],
+    likes: [],
   };
   await fetch(`${current_user_url}`, {
     method: "GET",
@@ -184,6 +284,9 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
   });
   await axios.get(CommentsURL).then((data) => {
     allData.comments = data.data;
+  });
+  await axios.get(LikeURL + `/${allData.user.id}`).then((data) => {
+    allData.likes = data.data;
   });
   return allData;
 };
