@@ -39,6 +39,8 @@ function ResponsiveAppBar() {
     { name: "Fórum", url: "/forum" },
     { name: "Naptár", url: "/calendar" },
     { name: "Galéria", url: "/gallery" },
+    { name: "Szabálykönyv", url: "/rules" },
+    { name: "Pályák", url: "/tracks" },
   ];
   const adminPages = [
     { name: "Főoldal", url: "/" },
@@ -292,12 +294,21 @@ function ResponsiveAppBar() {
           <CustomSnackbar />
           {user && (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="Fiók">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <PermIdentityIcon
-                    fontSize="large"
-                    style={{ backgroundColor: "white", borderRadius: "2vh" }}
-                  />
+                  {user.images.length > 0 ? (
+                    <img
+                      src={user.images[0].image_url}
+                      alt="profilkep"
+                      width={65}
+                      style={{ borderRadius: "3vh" }}
+                    />
+                  ) : (
+                    <PermIdentityIcon
+                      fontSize="large"
+                      style={{ backgroundColor: "white", borderRadius: "2vh" }}
+                    />
+                  )}
                 </IconButton>
               </Tooltip>
               <Menu

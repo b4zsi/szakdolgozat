@@ -31,6 +31,14 @@ import Users, { UsersLoader } from "./components/User/Users";
 import Car_singular, {
   CarLoader,
 } from "./components/Car_singular.tsx/Car_singular";
+import { AllTrackLoader } from "./components/Track/AllTrack";
+import AllTrack from "./components/Track/AllTrack";
+import Track, { TrackLoader } from "./components/Track/Track";
+import Rules from "./components/Rules/Rules";
+import FormulaEsport from "./components/Rules/FormulaEsport/FormulaEsport";
+import Formula1 from "./components/Rules/Formula1/Formula1";
+import Formula2 from "./components/Rules/Formula2/Formula2";
+import Formula3 from "./components/Rules/Formula3/Formula3";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -44,12 +52,19 @@ const router = createBrowserRouter(
       <Route Component={SignUp} path="/signup" />
       <Route Component={Calendar} path="/calendar" loader={CalendarLoader} />
       <Route Component={Forum} path="/forum" loader={ForumLoader} />
-      <Route path="teams/:slug" Component={Team_singular} loader={TeamLoader} />
+      <Route Component={Team_singular} path="teams/:slug" loader={TeamLoader} />
       <Route Component={Gallery} path="/gallery/" loader={GalleryLoader} />
       <Route Component={Profile} path="/profile" loader={ProfilLoader} />
       <Route Component={Users} path="fiokok" loader={UsersLoader} />
       <Route Component={Car_singular} path="cars/:id" loader={CarLoader} />
+      <Route Component={AllTrack} path="/tracks" loader={AllTrackLoader} />
+      <Route Component={Track} path="tracks/:id" loader={TrackLoader} />
       <Route Component={UpdateProfile} path="/profile-update" />
+      <Route Component={Rules} path="/rules" />
+      <Route Component={FormulaEsport} path="/rules/formula-esport" />
+      <Route Component={Formula1} path="/rules/formula-1" />
+      <Route Component={Formula2} path="/rules/formula-2" />
+      <Route Component={Formula3} path="/rules/formula-3" />
       <Route
         Component={Comments}
         path="forum/comment/:id"
