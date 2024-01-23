@@ -1,23 +1,9 @@
 section {
     height: 92vh !important;
-    background-image: url("../authBack.jpg");
+    background-image: url("../images/authBack.jpg");
     background-size: cover;
     align-items: center;
 }
-
-.backgroundStuff {
-    /* background-color: black;
-    background-size: cover;
-    background-position: center;
-    width: 100vw;
-    height:100%;
-    top: 0;
-    left: 0;
-    background-repeat: no-repeat;
-    position: absolute;
-    z-index:-1; */
-}
-
 .container{
     padding-top: 8%;
     opacity: 0.85;
