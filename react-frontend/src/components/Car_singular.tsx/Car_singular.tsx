@@ -1,9 +1,10 @@
-import React from "react";
 import "./Car_singular.css";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { CarModel } from "../../model/CarModel";
 import axios from "axios";
-import { Card, CardContent, Grid } from "@mui/material";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import { getCars } from "../../api_links";
+import { carInterface } from "../../interface/carInterface";
 
 let allDataType: {
   car: CarModel;
@@ -19,16 +20,18 @@ function Car_singular() {
     <div className="mainCarDiv">
       <Grid container spacing={3}>
         <Grid item xs={3}>
-          <Grid container direction="column" spacing={3} maxHeight={900}>
+          <Grid container direction="column" spacing={3} minHeight={600}>
             <Grid item>
               <Card className="carCard left">
                 <p className="cardTitle">Motor</p>
+                <Divider variant="middle" className="divider" />
                 <CardContent className="cardContent">{car.engine}</CardContent>
               </Card>
             </Grid>
             <Grid item>
               <Card className="carCard left">
                 <p className="cardTitle">Lóerő</p>
+                <Divider variant="middle" className="divider" />
                 <CardContent className="cardContent number">
                   {car.horsepower} HP
                 </CardContent>
@@ -37,6 +40,7 @@ function Car_singular() {
             <Grid item>
               <Card className="carCard left">
                 <p className="cardTitle">Üzemanyag</p>
+                <Divider variant="middle" className="divider" />
                 <CardContent className="cardContent">{car.fuel}</CardContent>
               </Card>
             </Grid>
@@ -51,13 +55,13 @@ function Car_singular() {
               className="carImage"
             />
           </Grid>
-          <Grid item></Grid>
         </Grid>
         <Grid item xs={3}>
           <Grid container direction="column" spacing={3} minHeight={600}>
             <Grid item>
               <Card className="carCard right">
                 <p className="cardTitle">Győzelmek</p>
+                <Divider variant="middle" className="divider" />
                 <CardContent className="cardContent number">
                   {car.races_won}
                 </CardContent>
@@ -66,6 +70,7 @@ function Car_singular() {
             <Grid item>
               <Card className="carCard right">
                 <p className="cardTitle">Pódiumok</p>
+                <Divider variant="middle" className="divider" />
                 <CardContent className="cardContent number">
                   {car.podiums}
                 </CardContent>
@@ -74,6 +79,7 @@ function Car_singular() {
             <Grid item>
               <Card className="carCard right">
                 <p className="cardTitle">Pole pozíciók</p>
+                <Divider variant="middle" className="divider" />
                 <CardContent className="cardContent number">
                   {car.pole_positions}
                 </CardContent>
@@ -82,7 +88,7 @@ function Car_singular() {
           </Grid>
         </Grid>
       </Grid>
-      <Card className="carCard description">
+      <Card className="carCard carDescription">
         <CardContent className="cardContent">{car.description}</CardContent>
       </Card>
     </div>
@@ -93,26 +99,11 @@ export const CarLoader: LoaderFunction<typeof allDataType> = async ({
   params,
 }) => {
   const allData: typeof allDataType = {
-    car: {
-      id: 0,
-      team_slug: "",
-      images: [],
-      engine: "",
-      battery: "",
-      chassis: "",
-      races_won: 0,
-      pole_positions: 0,
-      podiums: 0,
-      horsepower: 0,
-      fuel: "",
-      description: "",
-    },
+    car: carInterface,
   };
-  await axios
-    .get("http://localhost:3000/api/v1/cars/" + params.id)
-    .then((data) => {
-      allData.car = data.data[0];
-    });
+  await axios.get(getCars + params.id).then((data) => {
+    allData.car = data.data[0];
+  });
   return allData;
 };
 

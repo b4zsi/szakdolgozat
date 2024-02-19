@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-import "../../styles/sliderStyle.css";
+import styles from "../../styles/SliderStyle.module.css";
 import { ImageModel } from "../../model/ImageModel";
 
 type image = {
@@ -36,17 +36,25 @@ const Slider: React.FC<image> = (images: image) => {
 
   return (
     <Fragment>
-      <div className="slider">
+      <div className={styles.slider}>
         {images.images.map((image: ImageModel, index: number) => {
           return (
             <div
-              className={index === currentSlide ? "slide current" : "slide"}
+              className={
+                index === currentSlide
+                  ? `${styles.slide} ${styles.current}`
+                  : `${styles.slide}`
+              }
               key={index}
             >
               {index === currentSlide && (
                 <div>
-                  <img src={image.image_url} alt="slide" className="image" />
-                  <div className="content">
+                  <img
+                    src={image.image_url}
+                    alt="slide"
+                    className={styles.image}
+                  />
+                  <div className={styles.content}>
                     <h2>{images.team_name}</h2>
                   </div>
                 </div>

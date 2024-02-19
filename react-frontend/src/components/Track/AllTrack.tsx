@@ -3,7 +3,8 @@ import React from "react";
 import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import { TrackModel } from "../../model/TrackModel";
 import { Card, Divider, Grid } from "@mui/material";
-import "../../styles/AllTrackStyle.css";
+import styles from "../../styles/AllTrackStyle.module.css";
+import { getTracks } from "../../api_links";
 
 let allDataType: {
   tracks: TrackModel[];
@@ -15,7 +16,7 @@ function AllTrack() {
   };
   const tracks: TrackModel[] = data.tracks;
   return (
-    <div className="tracksMainDiv">
+    <div className={styles.tracksMainDiv}>
       <Grid
         container
         direction="row"
@@ -26,13 +27,13 @@ function AllTrack() {
         {tracks.map((track: TrackModel) => {
           return (
             <Grid key={track.id} item xs={4}>
-              <Card className="AllTrackCard">
+              <Card className={styles.AllTrackCard}>
                 <Link to={`/tracks/${track.id}`}>
-                  <div className="textTrack">{track.name}</div>
-                  <Divider variant="middle" className="divider" />
-                  <div className="textTrack">{track.city}</div>
-                  <Divider variant="middle" className="divider" />
-                  <div className="textTrack">{track.country}</div>
+                  <div className={styles.textTrack}>{track.name}</div>
+                  <Divider variant="middle" className={styles.divider} />
+                  <div className={styles.textTrack}>{track.city}</div>
+                  <Divider variant="middle" className={styles.divider} />
+                  <div className={styles.textTrack}>{track.country}</div>
                 </Link>
               </Card>
             </Grid>
@@ -47,7 +48,7 @@ export const AllTrackLoader: LoaderFunction<typeof allDataType> = async () => {
   const allData: typeof allDataType = {
     tracks: [],
   };
-  await axios.get("http://localhost:3000/api/v1/tracks").then((data) => {
+  await axios.get(getTracks).then((data) => {
     allData.tracks = data.data;
   });
   return allData;

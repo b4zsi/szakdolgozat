@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { UserModel } from "../../model/UserModel";
-import "../../styles/CommentStyle.css";
+import styles from "../../styles/CommentStyle.module.css";
 import axios from "axios";
 import { PostModel } from "../../model/PostModel";
 import { Button, Card, CardContent, TextField } from "@mui/material";
 import { KommentModel } from "../../model/KommentModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+import { getComments, getCurrentUser, getPosts } from "../../api_links";
+import { userInterface } from "../../interface/userInterface";
+import { postInterface } from "../../interface/postInterface";
 //import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 //import FavoriteIcon from "@mui/icons-material/Favorite";
 
@@ -15,8 +18,6 @@ let allDataType: {
   post: PostModel;
   comments: KommentModel[];
 };
-const CommentsURL = "http://localhost:3000/api/v1/comments/";
-const PostURL = "http://localhost:3000/api/v1/posts/";
 
 function Comments() {
   const loaderData: typeof allDataType = useLoaderData() as typeof allDataType;
@@ -30,7 +31,7 @@ function Comments() {
   };
 
   const submitComment = async () => {
-    await fetch(CommentsURL, {
+    await fetch(getComments, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -51,21 +52,21 @@ function Comments() {
   };
 
   return (
-    <div className="commentMainDiv">
-      <div className="post">
-        <Card className="mainPostCard">
+    <div className={styles.commentMainDiv}>
+      <div className={styles.post}>
+        <Card className={styles.mainPostCard}>
           <CustomSnackbar />
-          <p className="postTitle">{post.title}</p>
-          <CardContent className="postBody">{post.body}</CardContent>
+          <p className={styles.postTitle}>{post.title}</p>
+          <CardContent className={styles.postBody}>{post.body}</CardContent>
           {post.like} kedvelés
-          <CardContent className="postAuthor">
+          <CardContent className={styles.postAuthor}>
             {post.user.vezeteknev}&nbsp;
             {post.user.keresztnev}
           </CardContent>
         </Card>
-        <Card className="writeCommentonPage">
+        <Card className={styles.writeCommentonPage}>
           <TextField
-            className="commentField"
+            className={styles.commentField}
             placeholder="Komment"
             autoFocus
             multiline
@@ -80,16 +81,18 @@ function Comments() {
           <Button
             variant="contained"
             color="success"
-            className="submitButton"
+            className={styles.submitButton}
             onClick={submitComment}
           >
             Válasz
           </Button>
         </Card>
         {comments.map((comment) => (
-          <Card className="commentCard" key={comment.id}>
-            <CardContent className="commentBody">{comment.body}</CardContent>
-            <CardContent className="postAuthor">
+          <Card className={styles.commentCard} key={comment.id}>
+            <CardContent className={styles.commentBody}>
+              {comment.body}
+            </CardContent>
+            <CardContent className={styles.postAuthor}>
               {comment.user.vezeteknev}
               &nbsp;
               {comment.user.keresztnev}
@@ -103,45 +106,14 @@ function Comments() {
 
 export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
   console.log(params);
-  const current_user_url = "http://localhost:3000/current_user";
   const jwt_token = localStorage.getItem("jwt");
 
   const allData: typeof allDataType = {
-    user: {
-      id: 0,
-      email: "",
-      admin: false,
-      username: "",
-      keresztnev: "",
-      vezeteknev: "",
-      fav_team: "",
-      fav_driver: "",
-      banned: false,
-      images: [],
-    },
-    post: {
-      id: 0,
-      title: "",
-      body: "",
-      author_id: 0,
-      author_name: "",
-      like: 0,
-      user: {
-        id: 0,
-        email: "",
-        admin: false,
-        username: "",
-        keresztnev: "",
-        vezeteknev: "",
-        fav_team: "",
-        fav_driver: "",
-        banned: false,
-        images: [],
-      },
-    },
+    user: userInterface,
+    post: postInterface,
     comments: [],
   };
-  await fetch(`${current_user_url}`, {
+  await fetch(getCurrentUser, {
     method: "GET",
     headers: {
       Authorization: `${jwt_token}`,
@@ -149,14 +121,13 @@ export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
   }).then(async (response) => {
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       allData.user = data;
     }
   });
-  await axios.get(PostURL + params.id).then((data) => {
+  await axios.get(getPosts + params.id).then((data) => {
     allData.post = data.data;
   });
-  await axios.get(CommentsURL + params.id).then((data) => {
+  await axios.get(getComments + params.id).then((data) => {
     allData.comments = data.data;
   });
 

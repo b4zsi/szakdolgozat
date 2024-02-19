@@ -1,13 +1,13 @@
 import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
-import "../../styles/PageNotFound.css";
+import styles from "../../styles/PageNotFound.module.css";
 
 export default function NotFound() {
   return (
-    <div className="background">
-      <Card className="notFoundCard">
+    <div className={styles.background}>
+      <Card className={styles.notFoundCard}>
         Ez az oldal nem létezik. Vissza a&ensp;
-        <Link to="/" className="link">
+        <Link to="/" className={styles.link}>
           Főoldalra
         </Link>
         .

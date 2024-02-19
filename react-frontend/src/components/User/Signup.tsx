@@ -16,103 +16,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, { Fragment, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../../styles/SignupStyle.css";
+import { Link } from "react-router-dom";
+import styles from "../../styles/SignupStyle.module.css";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
-
-const api_url = "http://localhost:3000";
-
-//#region faszsag
-// async function userSession() {
-//   await refreshToken();
-//   await requestNewAccessToken();
-
-//   if (nullOrUndefined(access_token)) {
-//     console.log("access token is null or undefined");
-//   } else {
-//     console.log(access_token);
-//   }
-//   getUser();
-// }
-
-// function getUser() {
-//   let stored_resource = localStorage.getItem("resource_owner");
-//   if (nullOrUndefined(stored_resource)) {
-//     console.log("stored resource empty");
-//     return;
-//   }
-//   stored_resource = "";
-//   resource_owner = JSON.parse(stored_resource);
-// }
-
-// async function refreshToken() {
-//   refresh_token = localStorage.getItem("refresh_token");
-//   if (nullOrUndefined(refresh_token)) {
-//     return;
-//   }
-//   console.log(refresh_token);
-
-//   try {
-//     const response = await fetch(`${api_url}/refresh`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${refresh_token}`,
-//       },
-//     });
-//     if (!response.ok) {
-//       if (response.status === 401) {
-//         console.log("hello");
-//       } else {
-//         throw new Error(response.statusText);
-//       }
-//     }
-//     const data = await response.json();
-//     console.log("Setting access token to: ", data.token);
-//     localStorage.setItem("resource_owner", JSON.stringify(data.resource_owner));
-//     localStorage.setItem("refresh_token", data.refresh_token);
-//     access_token = data.token;
-//     refresh_token = data.refresh_token;
-//     resource_owner = data.resource_owner;
-//   } catch (err) {
-//     console.log("Error refreshing token: ", err);
-//     resetTokens();
-//     userSession();
-//   }
-// }
-
-// function resetTokens() {
-//   localStorage.removeItem("refresh_token");
-//   localStorage.removeItem("resource_owner");
-//   access_token = null;
-//   refresh_token = null;
-//   resource_owner = null;
-// }
-
-// async function requestNewAccessToken() {
-//   if (nullOrUndefined(refresh_token)) {
-//     return;
-//   }
-//   if (access_token) {
-//     return;
-//   }
-//   try {
-//     const response = await fetch(`${api_url}/refresh`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${refresh_token}`,
-//       },
-//     });
-//     handleAuthResponse(response);
-//   } catch (err) {
-//     console.log("Error refreshing token: ", err);
-//     resetTokens();
-//     userSession();
-//   }
-// }
-
-//#endregion
+import { signup } from "../../api_links";
 
 function SignUp() {
   const [email, setEmail] = useState<string>("");
@@ -120,7 +27,6 @@ function SignUp() {
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [showPassword, SetShowPassword] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -133,7 +39,7 @@ function SignUp() {
       toastNotification(1, "Hiányzó jelszó.");
       return;
     }
-    const response = await fetch(`${api_url}/signup`, {
+    const response = await fetch(signup, {
       method: "POST",
       body: JSON.stringify({
         user: {
@@ -146,8 +52,8 @@ function SignUp() {
     });
 
     if (response.ok) {
-      navigate("/");
       toastNotification(0, "Sikeres regisztráció");
+      location.href = "/";
     } else {
       toastNotification(1, response.statusText);
     }
@@ -205,17 +111,17 @@ function SignUp() {
 
   return (
     <Fragment>
-      <div className="backgroundStuff"></div>
+      <div className={styles.backgroundStuff}></div>
       <section>
-        <Container maxWidth="md" className="container">
+        <Container maxWidth="md" className={styles.container}>
           <Card sx={{ boxShadow: 1, maxWidth: "md" }}>
             <CardContent>
               <Container maxWidth="sm">
-                <Typography className="title" gutterBottom>
+                <Typography className={styles.title} gutterBottom>
                   Regisztráció
                 </Typography>
                 <form id="sign_up_form" onSubmit={handleSubmit}>
-                  <FormControl fullWidth className="signUpForm">
+                  <FormControl fullWidth className={styles.signUpForm}>
                     <InputLabel required htmlFor="email" id="email-label">
                       Email cím
                     </InputLabel>
@@ -229,7 +135,7 @@ function SignUp() {
                       }}
                     />
                   </FormControl>
-                  <FormControl fullWidth className="signUpForm">
+                  <FormControl fullWidth className={styles.signUpForm}>
                     <InputLabel required htmlFor="username" id="username-label">
                       Felhasználónév
                     </InputLabel>
@@ -281,7 +187,7 @@ function SignUp() {
               disableSpacing
             >
               <Box>
-                <Link className="link" to="/login">
+                <Link className={styles.link} to="/login">
                   Ha van már fiókod, <br />
                   ide kattinta bejelentkezhetsz
                 </Link>

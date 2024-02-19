@@ -25,11 +25,13 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
-import "../../styles/GalleryStyle.css";
+import styles from "../../styles/GalleryStyle.module.css";
 import { TeamModel } from "../../model/TeamModel";
 import getUser from "../userManagement";
 import { UserModel } from "../../model/UserModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+import { getImages, getTeams } from "../../api_links";
+import { userInterface } from "../../interface/userInterface";
 
 let allDataType: {
   teams: TeamModel[];
@@ -38,7 +40,6 @@ let allDataType: {
 };
 
 const Gallery = () => {
-  const imageEventURL = "http://localhost:3000/api/v1/images";
   const jwt_token = localStorage.getItem("jwt");
   const itemData: typeof allDataType = useLoaderData() as {
     teams: TeamModel[];
@@ -91,7 +92,7 @@ const Gallery = () => {
     formData.append("imagesForm[description]", description);
     formData.append("imagesForm[image]", base64Image!);
 
-    await fetch(imageEventURL, {
+    await fetch(getImages, {
       method: "POST",
       headers: {
         Authorization: `${jwt_token}`,
@@ -102,7 +103,7 @@ const Gallery = () => {
         if (response.ok) {
           await response.json().then(async (data) => {
             toastNotification(0, data.message);
-            await fetch("http://localhost:3000/api/v1/teams", {
+            await fetch(getTeams, {
               method: "PUT",
               headers: {
                 Authorization: `${jwt_token}`,
@@ -132,8 +133,7 @@ const Gallery = () => {
       });
   };
   const handleImageDelete = async (imageID: number) => {
-    const imageURL = `http://localhost:3000/api/v1/images/${imageID}`;
-    await fetch(imageURL, {
+    await fetch(getImages + imageID, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -150,8 +150,8 @@ const Gallery = () => {
   };
 
   return !user ? (
-    <div className="userOnly">
-      <Card className="userOnlyCard">
+    <div className={styles.userOnly}>
+      <Card className={styles.userOnlyCard}>
         A galéria csak felhasználóknak elérhető.&emsp;
         <Link to="/login">Jelentkezz be</Link>&ensp;vagy ha még nincs fiókod,
         akkor&emsp;
@@ -159,7 +159,7 @@ const Gallery = () => {
       </Card>
     </div>
   ) : (
-    <div className="wrapper">
+    <div className={styles.wrapper}>
       <div>
         <Dialog
           open={open}
@@ -242,7 +242,7 @@ const Gallery = () => {
           Kép hozzáadása
         </Button>
       )}
-      <div className="filterSwitch">
+      <div className={styles.filterSwitch}>
         Szűrők:
         <Switch
           defaultChecked={false}
@@ -278,7 +278,7 @@ const Gallery = () => {
             </Select>
           </FormControl>
           <Button
-            className="filterRemoveButton"
+            className={styles.filterRemoveButton}
             variant="text"
             onClick={() => {
               setTeamFilter("all");
@@ -289,7 +289,7 @@ const Gallery = () => {
         </div>
       )}
       <div className="root">
-        <ImageList rowHeight={480} className="galleryList" cols={4}>
+        <ImageList rowHeight={480} className={styles.galleryList} cols={4}>
           {itemData.images
             .filter((image: ImageModel) => {
               if (teamFilter === "all") {
@@ -301,10 +301,10 @@ const Gallery = () => {
               }
             })
             .map((image: ImageModel) => (
-              <ImageListItem key={image.id} className="galleryItem">
+              <ImageListItem key={image.id} className={styles.galleryItem}>
                 <img
                   src={image.image_url}
-                  className="galleryImage"
+                  className={styles.galleryImage}
                   loading="lazy"
                 />
                 <ImageListItemBar
@@ -315,7 +315,7 @@ const Gallery = () => {
                         <Button
                           variant="outlined"
                           color="error"
-                          className="imageDeleteButton"
+                          className={styles.imageDeleteButton}
                           onClick={() => handleImageDelete(image.id)}
                         >
                           törlés
@@ -334,27 +334,14 @@ const Gallery = () => {
 };
 
 export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
-  const images_url = "http://localhost:3000/api/v1/images/";
-  const team_url = "http://localhost:3000/api/v1/teams/";
   const allData: typeof allDataType = {
     teams: [],
     images: [],
-    user: {
-      id: 0,
-      email: "",
-      admin: false,
-      username: "",
-      keresztnev: "",
-      vezeteknev: "",
-      fav_team: "",
-      fav_driver: "",
-      banned: false,
-      images: [],
-    },
+    user: userInterface,
   };
 
   await axios
-    .get(images_url, {
+    .get(getImages, {
       maxContentLength: 10000,
       maxBodyLength: 10000,
       responseType: "json",
@@ -367,7 +354,7 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
       });
     })
     .then(async () => {
-      await axios.get(team_url).then((data) => {
+      await axios.get(getTeams).then((data) => {
         allData.teams = data.data;
       });
     })
