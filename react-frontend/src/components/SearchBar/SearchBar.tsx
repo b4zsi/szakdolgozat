@@ -1,24 +1,19 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-
 import "./SearchBar.css";
-import { DriverModel } from "../../model/DriverModel";
-import { TeamSeriesModel } from "../../model/TeamModel";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SearchBar = ({ setResults }: any) => {
+  type searchType = {
+    driverNames: string[];
+    driverSlugs: string[];
+    teamNames: string[];
+    teamSlugs: string[];
+  };
   const [input, setInput] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
-  const drivers = localStorage.getItem("drivers");
-  const teams = localStorage.getItem("teams");
-  const resultDrivers: DriverModel[] = JSON.parse(drivers!);
-  const resultTeams: TeamSeriesModel[] = JSON.parse(teams!);
-
-  type Result = {
-    drivers: DriverModel[];
-    teams: TeamSeriesModel[];
-    //ide majd hozzá lehet adni az autokat, versenyket stb..
-  };
+  const searchItems = localStorage.getItem("searchItems");
+  const searchResults: searchType = JSON.parse(searchItems!);
 
   useEffect(() => {
     if (input !== "") {
@@ -26,17 +21,18 @@ export const SearchBar = ({ setResults }: any) => {
     }
   }, [input]);
 
-  function matchesWithInputDriver(driver: DriverModel) {
-    return driver.name.toLowerCase().includes(searchValue);
+  function matchesWithInputDriver(driverName: string) {
+    return driverName.toLowerCase().includes(searchValue);
   }
-  function matchesWithInputTeam(team: TeamSeriesModel) {
-    return team.name.toLowerCase().includes(searchValue);
+  function matchesWithInputTeam(teamName: string) {
+    return teamName.toLowerCase().includes(searchValue);
   }
 
   const fetchData = async () => {
-    const returnArray: Result = { drivers: [], teams: [] };
-    returnArray.drivers = resultDrivers.filter(matchesWithInputDriver);
-    returnArray.teams = resultTeams.filter(matchesWithInputTeam);
+    let returnArray: string[] = [];
+    returnArray = searchResults.driverNames.filter(matchesWithInputDriver);
+    const teamResults = searchResults.teamNames.filter(matchesWithInputTeam);
+    returnArray.push(...teamResults);
     setResults(returnArray);
   };
 
