@@ -1,7 +1,6 @@
-import React from "react";
 import { UserModel } from "../../model/UserModel";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
-import "../../styles/UsersStyle.css";
+import styles from "../../styles/UsersStyle.module.css";
 import {
   Switch,
   Table,
@@ -12,15 +11,13 @@ import {
   TableRow,
 } from "@mui/material";
 import axios from "axios";
-
-const usersURL = "http://localhost:3000/api/v1/users/";
+import { getUsers } from "../../api_links";
 
 function Users() {
   const users = useLoaderData() as UserModel[];
   async function moderateUser(banned: boolean, userid: number) {
     const jwt_token = localStorage.getItem("jwt");
-    console.log(banned);
-    await fetch(usersURL + userid, {
+    await fetch(getUsers + userid, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +35,7 @@ function Users() {
   }
 
   return (
-    <div className="usersMainDiv">
+    <div className={styles.usersMainDiv}>
       <TableContainer>
         <Table>
           <TableHead>
@@ -83,7 +80,7 @@ function Users() {
 
 export const UsersLoader: LoaderFunction<UserModel[]> = async () => {
   let users: UserModel[] = [];
-  await axios.get(usersURL).then((data) => {
+  await axios.get(getUsers).then((data) => {
     users = data.data;
   });
   return users;
