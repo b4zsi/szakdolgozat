@@ -5,7 +5,7 @@ function Footer() {
         backgroundColor: "black",
         position: "absolute",
         width: "100%",
-        height: "10%",
+        height: "6em",
         left: 0,
         color: "white",
         fontSize: 25,

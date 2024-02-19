@@ -1,12 +1,13 @@
 .mainCarDiv{
     background-color: #BCD2BE;
-    min-height: 90vh;
+    min-height: 85em;
     margin-top: 1.5%;
     text-align: center;
 }
 .carCard{
     margin: auto;
-    min-height: 21vh;
+    min-height: 14em;
+    max-height: 14em;
     border-radius: 20px !important;
     box-shadow: 10px 10px 5px grey !important;
     background-color: #013220 !important;
@@ -18,32 +19,30 @@
 .right{
     margin-right: 10%;
 }
-.description{
+.right > .number{
+    font-size: 5em !important;
+    font-weight: bold;
+}
+.carDescription{
+    margin-top: 4%;
     border-radius: 20px !important;
-    box-shadow: 15px 15px 15px grey !important;
     background-color: #013220 !important;
     color: white !important;
     font-weight: bold;
+    min-height: 32em;
     text-align: left;
-    margin-right: 15px !important;
-}
-.number{
-    margin: 0;
-    padding: 0;
-    font-size: 4vh !important;
-    font-weight: bold;
+    margin-bottom: 2.5em;
 }
 .carImage{
     margin-top: 30%;
     margin-bottom: 12%;
 }
-.cardTitle{
+.carCard > .cardTitle{
     font-size: 2.5rem;
     font-weight: bold;
-    margin: 1%;
+    margin-top: 0 !important;
 }
 .cardContent{
-    font-size: 1.5rem !important;
-    margin: 1% ;
+    font-size: 1.5rem ;
     font-weight: bold;
 }
