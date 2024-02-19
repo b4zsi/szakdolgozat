@@ -11,12 +11,8 @@ module SzakdolgozatProject
     Rails.application.config.session_store :disabled
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
-
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
+    config.active_storage.content_types_to_serve_as_binary -= ['image/svg+xml']
+    config.i18n.default_locale = :hu
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.api_only = true

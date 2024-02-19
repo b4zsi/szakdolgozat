@@ -13,7 +13,7 @@ module.exports = {
       env: {
         node: true,
       },
-      files: [".eslintrc.{ts,tsx}"],
+      files: [".eslintrc.{ts,tsx,css}"],
       parserOptions: {
         sourceType: "script",
       },

@@ -1,5 +1,4 @@
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import {
   Route,
@@ -25,7 +24,6 @@ import Calendar, { CalendarLoader } from "./components/Calendar/Calendar";
 import Forum, { ForumLoader } from "./components/Forum/Forum";
 import Gallery, { GalleryLoader } from "./components/Gallery/Gallery";
 import Profile, { ProfilLoader } from "./components/User/Profile";
-import UpdateProfile from "./components/User/UpdateProfile";
 import Comments, { CommentLoader } from "./components/Comments/Comments";
 import Users, { UsersLoader } from "./components/User/Users";
 import Car_singular, {
@@ -59,7 +57,6 @@ const router = createBrowserRouter(
       <Route Component={Car_singular} path="cars/:id" loader={CarLoader} />
       <Route Component={AllTrack} path="/tracks" loader={AllTrackLoader} />
       <Route Component={Track} path="tracks/:id" loader={TrackLoader} />
-      <Route Component={UpdateProfile} path="/profile-update" />
       <Route Component={Rules} path="/rules" />
       <Route Component={FormulaEsport} path="/rules/formula-esport" />
       <Route Component={Formula1} path="/rules/formula-1" />
