@@ -6,12 +6,19 @@ import { CalendarEventModel } from "../../model/CalendarEventModel";
 import { ProcessedEvent } from "@aldabil/react-scheduler/types";
 import moment from "moment";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
+import { registerLocale } from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import hu from "date-fns/locale/hu";
+import { getCalendarEvents, getCurrentUser } from "../../api_links";
+import { userInterface } from "../../interface/userInterface";
+
+registerLocale("hu", hu);
 
 let allDataType: {
   user: UserModel;
   calendar_events: CalendarEventModel[];
 };
-const calendarEventURL = "http://localhost:3000/api/v1/calendar_events";
 const jwt_token = localStorage.getItem("jwt");
 
 function Calendar() {
@@ -36,22 +43,23 @@ function Calendar() {
   const calendar_events: CalendarEventModel[] = loaderData!.calendar_events;
 
   return (
-    <div style={{ height: "1800px", backgroundColor: "white", color: "black" }}>
+    <div style={{ backgroundColor: "white", color: "black" }}>
       {user && (
         <Scheduler
-          view="week"
-          navigation={false}
-          height={400}
+          view="month"
+          navigation={true}
+          height={600}
           editable={user.admin}
           draggable={user.admin}
           deletable={user.admin}
-          disableViewNavigator={true}
+          locale={hu}
+          disableViewNavigator={false}
           hourFormat="24"
           month={{
             weekDays: [0, 1, 2, 3, 4, 5, 6],
             weekStartOn: 0,
             startHour: 0,
-            endHour: 23,
+            endHour: 24,
           }}
           day={{
             startHour: 0,
@@ -59,10 +67,48 @@ function Calendar() {
             step: 60,
             navigation: true,
           }}
+          week={{
+            weekDays: [0, 1, 2, 3, 4, 5, 6],
+            weekStartOn: 0,
+            startHour: 0,
+            endHour: 24,
+            step: 60,
+            navigation: true,
+          }}
+          translations={{
+            navigation: {
+              month: "Hónap",
+              week: "Hét",
+              day: "Nap",
+              today: "Ma",
+            },
+            form: {
+              addTitle: "Esemény hozzáadása",
+              editTitle: "Esemény szerkesztése",
+              confirm: "Kiválaszt",
+              delete: "Törlés",
+              cancel: "Mégse",
+            },
+            event: {
+              title: "Esemény neve",
+              start: "Start dátum",
+              end: "Vég dátum",
+              allDay: "Egész nap",
+            },
+            validation: {
+              required: "Kötelező",
+              invalidEmail: "Helytelen email cím",
+              onlyNumbers: "Csak számok megengedettek",
+              min: "Minimum {{min}} karakter",
+              max: "Maximum {{max}} karakter",
+            },
+            moreEvents: "További események",
+            loading: "Töltés...",
+          }}
           events={calendarTypeConversion(calendar_events)}
           onConfirm={async (event, action) => {
             if (action === "create") {
-              await fetch(`${calendarEventURL}`, {
+              await fetch(getCalendarEvents, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -87,7 +133,7 @@ function Calendar() {
                   console.log(error);
                 });
             } else if (action === "edit") {
-              await fetch(`${calendarEventURL}/${event.event_id}`, {
+              await fetch(getCalendarEvents + event.event_id, {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
@@ -114,7 +160,7 @@ function Calendar() {
             return event;
           }}
           onDelete={async (deletedEventId) => {
-            await fetch(`${calendarEventURL}/${deletedEventId}`, {
+            await fetch(getCalendarEvents + deletedEventId, {
               method: "DELETE",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -134,7 +180,7 @@ function Calendar() {
               });
           }}
           onEventDrop={async (droppedOn, updatedEvent, originalEvent) => {
-            await fetch(`${calendarEventURL}/${originalEvent.event_id}`, {
+            await fetch(getCalendarEvents + originalEvent.event_id, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
@@ -170,35 +216,22 @@ function Calendar() {
 
 export const CalendarLoader: LoaderFunction<UserModel> = async () => {
   const allData: typeof allDataType = {
-    user: {
-      id: 0,
-      email: "",
-      admin: false,
-      username: "",
-      keresztnev: "",
-      vezeteknev: "",
-      fav_team: "",
-      fav_driver: "",
-      banned: false,
-      images: [],
-    },
+    user: userInterface,
     calendar_events: [],
   };
-  const current_user_url = "http://localhost:3000/current_user";
-  const calendarEventUrl = "http://localhost:3000/api/v1/calendar_events";
   const jwt_token = localStorage.getItem("jwt");
 
-  await fetch(`${current_user_url}`, {
+  await axios<UserModel>(getCurrentUser, {
     method: "GET",
     headers: {
       Authorization: `${jwt_token}`,
     },
   }).then(async (response) => {
-    if (response.ok) {
-      allData.user = await response.json();
+    if (response.status === 200) {
+      allData.user = response.data;
     }
   });
-  await axios.get(calendarEventUrl).then((data) => {
+  await axios.get(getCalendarEvents).then((data) => {
     allData.calendar_events = data.data;
   });
   return allData;
