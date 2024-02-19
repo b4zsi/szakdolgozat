@@ -1,8 +1,15 @@
 class Api::V1::TeamsController < ApplicationController
+    before_action :set_teams, only: [:nameAndSlug]
+    before_action :permit_all_parameters
 
     def index
-        @teams = Team.all
-        render json: @teams, each_serializer:TeamSeriesSerializer
+        @team = Team.all
+        render json: @team, each_serializer:TeamSeriesSerializer
+    end
+
+    def nameAndSlug
+        @teamsName = Team.select(:name, :slug).each
+        render json: @teamsName
     end
 
     def show
@@ -16,7 +23,7 @@ class Api::V1::TeamsController < ApplicationController
     end
 
     def create
-        teams = Team.new(teams_params)
+        teams = Team.new(teams_create_params)
         if teams.save
             render json: teams, Serializer:TeamSerializer
         else
@@ -26,16 +33,22 @@ class Api::V1::TeamsController < ApplicationController
 
     def update
         @team = Team.find(params[:id])
-        @team.image.attach(params[:image])
+        @team.update(teams_create_params)
+        #@team.image.attach(params[:image])
         render json: @team, status: :ok
     end
 
+    def destroy
+        @team = Team.find(params[:id])
+        @team.destroy
+        render json: {message: "Csapat sikeresen törölve."}, status: :ok
+    end
 
     private
 
     # Use callbacks to share common setup or constraints between actions.
         def set_teams
-            @teams = Team.find_by(params[:id])
+            @teamsName = Team.select(:name, :slug, :id, :series_id)
         end
 
     # Only allow a list of trusted parameters through.
@@ -43,8 +56,14 @@ class Api::V1::TeamsController < ApplicationController
              params.require(:teams).permit(:id, :series_id)
          end
 
+         def teams_create_params
+            params.require(:team).permit(:id, :name, :slug, :series_id, :number_of_championships, :number_of_races, :headquarters_city, :technical_director, :first_win, :last_championship_win, :date_of_establishment, :team_color, :slug, :images)
+         end
+         def permit_all_parameters
+            params.permit!
+          end
+
          def options
             #@options []= {inckude: %i[drivers]}
-            #ez majd kesobb lesz joxd
          end
 end
