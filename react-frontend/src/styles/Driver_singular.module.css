@@ -11,6 +11,7 @@
     box-shadow: 10px 15px darkgrey;
     max-height: 17vw !important;
     min-height: 17vw !important;
+    object-fit: cover;
 }
 
 .propertiesGrid {
@@ -80,7 +81,7 @@
     margin-top: 5%;
     margin-left: 15%;
 }
-.flip-card {
+.flipCard {
     display: flex;
     align-items: center;
     flex-direction: column;

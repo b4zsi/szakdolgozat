@@ -2,7 +2,7 @@
     display: flex !important;
     flex-direction: column;
     background-color: white;
-    min-height: 50em;
+    min-height: 10em;
     text-align: center;
 }
 .rulesTitle{
@@ -25,7 +25,6 @@
     border: .2em solid black;
     margin: auto;
     border-radius: .5em !important;
-    min-height: 35em !important;
     margin-bottom: 1em;
 }
 .seriesCardContainer{

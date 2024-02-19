@@ -1,14 +1,14 @@
 .mainTrackDiv{
-    background-color: #BCD2BE !important;
-    min-height: 100vh;
-
+    background-color: #BCD2BE;
+    min-height: 75em;
     margin-top: 1.5%;
     text-align: center;
 }
 
 .trackCard{
     margin: auto;
-    min-height: 22vh;
+    min-height: 14em !important;
+    max-height: 14em !important;
     border-radius: 20px !important;
     box-shadow: 15px 15px 15px grey !important;
     background-color: #013220 !important;
@@ -16,16 +16,10 @@
     font-weight: bold;
 }
 .left{ 
-    margin-left: 2vw;
+    margin-left: 2em;
 }
 .right{
-    margin-right: 2vw;
-}
-.number{
-    margin: 0;
-    padding: 0;
-    font-size: 4vh !important;
-    font-weight: bold;
+    margin-right: 2em;
 }
 .trackImage{
     margin-top: 5% !important;
@@ -33,23 +27,19 @@
 .description{
     margin-top: 4%;
     border-radius: 20px !important;
-    box-shadow: 15px 15px 15px grey !important;
     background-color: #013220 !important;
     color: white !important;
     font-weight: bold;
     text-align: left;
 }
 .cardTitle{
-    margin-top: 1vw !important;
+    margin-top: 0.5em !important;
     font-size: 3vw;
     font-weight: bold;
     margin: 1%;
 }
 .cardContent{
-    font-size: 2vw !important;
-}
-.imageContainer{
-    margin : auto;
+    font-size: 2em !important;
 }
 .divider{
     color: white !important;

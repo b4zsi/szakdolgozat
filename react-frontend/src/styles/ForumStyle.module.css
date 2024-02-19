@@ -110,4 +110,5 @@
 .tooltip{
     text-align: left;
     width:100px;
+    white-space: pre-wrap;
 }

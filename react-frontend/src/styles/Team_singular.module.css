@@ -27,7 +27,7 @@
 .propertyGridItem {
     padding-bottom: 25px;
     font-weight: bold;
-    animation: fade-in 2s forwards;
+    animation: fade-in 2s forwards;;
 }
 
 .propertyGrid {
@@ -72,6 +72,10 @@
     color:white;
     margin-top:0.5% !important;
     width:20%
+}
+.driverImage{
+    object-fit: cover;
+    height:5em;
 }
 
 @keyframes fade-in {

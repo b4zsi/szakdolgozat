@@ -1,5 +1,3 @@
-import React from "react";
-import "../../App.css";
 import Typeanimation from "../../components/typeAnimation/typeanimation";
 import BackgroundVideo from "../../components/backgroundvideo/backgroundVideo";
 import Button from "@mui/material/Button";
@@ -7,6 +5,7 @@ import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
 import maxHelmet from "../../images/homePageHelmet.png";
+import styles from "../../App.module.css";
 
 const CustomButton = styled(Button)({
   margin: "20px",
@@ -19,13 +18,13 @@ const CustomButton = styled(Button)({
 const HomePage = () => {
   return (
     <>
-      <div className="App">
+      <div className={styles.App}>
         <Typeanimation />
         <div style={{ width: "90%" }}>
           <BackgroundVideo />
         </div>
         <div>
-          <CustomButton variant="contained" className="button1">
+          <CustomButton variant="contained" className={styles.button1}>
             <Link
               to="/gallery"
               style={{ textDecoration: "none", color: "white" }}
@@ -43,21 +42,21 @@ const HomePage = () => {
           </CustomButton>
         </div>
 
-        <div className="afterVideo">
-          <Card className="homePageCard">
+        <div className={styles.afterVideo}>
+          <Card className={styles.homePageCard}>
             <img
               src={maxHelmet}
               alt="homePageHelmet"
-              className="homePageHelmet"
+              className={styles.homePageHelmet}
             />
-            <CardContent className="text">
+            <CardContent className={styles.text}>
               Nézz szét az oldalon, ismerdd meg a versenyzőket, csapatokat,
               pályákat, ha esetleg kérdésed támad, bátran tedd fel a&nbsp;
               <Link to="/forum">fórum</Link>on!
             </CardContent>
           </Card>
-          <Card className="homePageCard">
-            <CardContent className="text">
+          <Card className={styles.homePageCard}>
+            <CardContent className={styles.text}>
               Ha még nem vagy tagja a csapatnak, akkor regisztrálj itt, és
               csatlakozz a forumunkhoz!
               <hr style={{ width: "50%" }} />
