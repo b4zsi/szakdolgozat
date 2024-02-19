@@ -15,16 +15,14 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import axios from "axios";
 import { SeriesModel } from "../../model/SeriesModel";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserModel } from "../../model/UserModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
-import "../../styles/navBarStyle.css";
+import styles from "../../styles/NavBarStyle.module.css";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import { getCurrentUser, getSeriesNames, logout } from "../../api_links";
 
 function ResponsiveAppBar() {
-  const API_URL = "http://localhost:3000/api/v1/series";
-  const current_user_url = "http://localhost:3000/current_user";
-
   const noUserPages = [
     { name: "Főoldal", url: "/" },
     { name: "Szeriák", url: "/series" },
@@ -96,51 +94,46 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  const location = useLocation();
   const navigate = useNavigate();
   async function getAPIData() {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(getSeriesNames);
     return response.data;
   }
   async function getUser() {
     const jwt_token = localStorage.getItem("jwt");
-    await fetch(`${current_user_url}`, {
+    await axios(getCurrentUser, {
       method: "GET",
       headers: {
         Authorization: `${jwt_token}`,
       },
     })
       .then((response) => {
-        if (response.ok) {
-          response.json().then((user: UserModel) => {
-            setUser(user);
-            if (user.admin) {
-              setPages(adminPages);
-            } else {
-              setPages(userPages);
-            }
-          });
-        } else {
-          console.log("Nincs bejelentkezve felhasználó.");
+        if (response.status === 200) {
+          console.log(response.data);
+          setUser(response.data);
+          if (response.data.admin) {
+            setPages(adminPages);
+          } else {
+            setPages(userPages);
+          }
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data.message);
       });
   }
-
   React.useEffect(() => {
     let mounted = true;
-    getAPIData().then((items: SeriesModel[]) => {
+    getAPIData().then((series) => {
       if (mounted) {
-        setSeries(items);
+        setSeries(series);
       }
     });
     getUser();
     return () => {
       mounted = false;
     };
-  }, [location.pathname, navigate]);
+  }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -149,6 +142,10 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
+  const navigateAndCloseMenu = (url: string) => {
+    navigate(url);
+    setAnchorElNav(null);
+  };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -168,7 +165,7 @@ function ResponsiveAppBar() {
   async function handleLogout(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault();
     const jwt = localStorage.getItem("jwt");
-    await fetch("http://localhost:3000/logout", {
+    await fetch(logout, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
@@ -178,7 +175,7 @@ function ResponsiveAppBar() {
       if (response.status === 200) {
         setUser(null);
         toastNotification(0, "Sikeres kijelentkezés").then(() => {
-          navigate("/");
+          location.href = "/";
         });
       } else {
         toastNotification(1, "Hiba a kijelentkezés során");
@@ -223,11 +220,11 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Typography
-                    textAlign="center"
-                    style={{ textDecoration: "none", color: "white" }}
-                  >
+                <MenuItem
+                  key={index}
+                  onClick={() => navigateAndCloseMenu(page.url)}
+                >
+                  <Typography className={styles.navbarLink}>
                     {page.name}
                   </Typography>
                 </MenuItem>
@@ -239,16 +236,11 @@ function ResponsiveAppBar() {
               !page.name.match("Szeriák") ? (
                 <Button
                   key={index}
-                  className="navItem"
-                  onClick={handleCloseNavMenu}
+                  className={styles.navItem}
+                  onClick={() => navigateAndCloseMenu(page.url)}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  <Link
-                    to={page.url}
-                    style={{ textDecoration: "none", color: "white" }}
-                  >
-                    {page.name}
-                  </Link>
+                  {page.name}
                 </Button>
               ) : (
                 <div key={index}>
@@ -278,7 +270,7 @@ function ResponsiveAppBar() {
                       <div key={index}>
                         <MenuItem onClick={handleClose} disableRipple>
                           <Link
-                            style={{ textDecoration: "none", color: "black" }}
+                            className={styles.navbarLink}
                             to={"/series/" + series.id}
                           >
                             {series.name}
@@ -327,17 +319,19 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem className="profileOptions">
-                  {user.keresztnev}&ensp;
-                  {user.vezeteknev}
+                <MenuItem className={styles.profileOptions}>
+                  {user.vezeteknev}&ensp;
+                  {user.keresztnev}
                 </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Link to="/profile" className="navbarLink">
-                    <Typography className="profileOptions">Profil</Typography>
+                  <Link to="/profile" className={styles.navbarLink}>
+                    <Typography className={styles.profileOptions}>
+                      Profil
+                    </Typography>
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
-                  <Typography className="profileOptions">
+                  <Typography className={styles.profileOptions}>
                     Kijelentkezés
                   </Typography>
                 </MenuItem>

@@ -1,14 +1,18 @@
 class CurrentUserController < ApplicationController
   before_action :authenticate_user!
   def index
-    render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
+    if !current_user
+      render json: {message: "Nincs bejelentkezve felhasználó."}, status: 301
+    else
+      render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
+    end
   end
 
   def update
     @user = current_user
     if @user.update(user_params)
       render json: {message: "Adatok sikeresen módosítva."}, status: 200
-    else 
+    else
       render json: {message:"Hiba az adatok módosítása közben."}, status:422
     end
   end
@@ -18,14 +22,20 @@ class CurrentUserController < ApplicationController
 
     if @user.destroy(user_params)
       render json: {message: "Fiók sikeresen törölve."}, status: 200
-    else 
+    else
       render json: {message:"Hiba a fiók törlése közben."}, status:422
     end
   end
 
-  private 
+  private
   def user_params
     params.require(:user).permit(:id, :email, :admin, :username, :keresztnev, :vezeteknev, :fav_team, :fav_driver)
+  end
+
+  def authenticate_user!
+    if !current_user
+      render json: {message: "Nincs bejelentkezve felhasználó."}, status: 301
+    end
   end
 
 end

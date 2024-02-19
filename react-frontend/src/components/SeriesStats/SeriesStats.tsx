@@ -1,5 +1,5 @@
 import { Divider, Grid } from "@mui/material";
-import React, { FC } from "react";
+import { FC } from "react";
 import { SeriesModel } from "../../model/SeriesModel";
 
 type SeriesType = {

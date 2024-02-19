@@ -10,13 +10,20 @@ import { Card, CardContent, Tooltip } from "@mui/material";
 import { TextField, Button } from "@mui/material";
 import { PostModel } from "../../model/PostModel";
 import axios from "axios";
-import "../../styles/ForumStyle.css";
+import styles from "../../styles/ForumStyle.module.css";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import { KommentModel } from "../../model/KommentModel";
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { LikeModel } from "../../model/LikeModel";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {
+  getComments,
+  getCurrentUser,
+  getLikes,
+  getPosts,
+} from "../../api_links";
+import { userInterface } from "../../interface/userInterface";
 
 let allDataType: {
   user: UserModel;
@@ -24,9 +31,6 @@ let allDataType: {
   comments: KommentModel[];
   likes: LikeModel[];
 };
-const PostURL = "http://localhost:3000/api/v1/posts";
-const LikeURL = "http://localhost:3000/api/v1/likes";
-const CommentsURL = "http://localhost:3000/api/v1/comments";
 
 function Forum() {
   const [title, setTitle] = useState<string>();
@@ -53,7 +57,7 @@ function Forum() {
   console.log(posts[0].like);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await fetch(PostURL, {
+    await fetch(getPosts, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +75,7 @@ function Forum() {
         await response.json().then((data) => {
           window.location.reload;
           toastNotification(0, data.message).then(() => {
-            window.location.reload;
+            window.location.reload();
           });
         });
       }
@@ -92,31 +96,39 @@ function Forum() {
 
   async function switchLike(id: number, like: number) {
     if (likedByUser(id)) {
-      await axios.delete(LikeURL + `/${findId(id)}`);
+      await axios.delete(getLikes + `/${findId(id)}`);
       await axios
-        .put(PostURL + `/${id}`, {
+        .put(getPosts + `/${id}`, {
           post: {
             id: id,
             like: like - 1,
           },
         })
         .then((response) => {
-          console.log(response);
+          if (response.status === 200) {
+            window.location.reload();
+          }
         });
       return;
     } else {
-      await axios.post(LikeURL, {
+      await axios.post(getLikes, {
         like: {
           post_id: id,
           user_id: user.id,
         },
       });
-      await axios.put(PostURL + `/${id}`, {
-        post: {
-          id: id,
-          like: like + 1,
-        },
-      });
+      await axios
+        .put(getPosts + id, {
+          post: {
+            id: id,
+            like: like + 1,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            window.location.reload();
+          }
+        });
     }
   }
 
@@ -131,8 +143,8 @@ function Forum() {
   }
 
   return !user ? (
-    <div className="userOnly">
-      <Card className="userOnlyCard">
+    <div className={styles.userOnly}>
+      <Card className={styles.userOnlyCard}>
         A Fórum csak felhasználóknak elérhető.&emsp;
         <Link to="/login">Jelentkezz be</Link>&ensp;vagy ha még nincs fiókod,
         akkor&emsp;
@@ -140,12 +152,12 @@ function Forum() {
       </Card>
     </div>
   ) : (
-    <div className="ForumMainDiv">
+    <div className={styles.ForumMainDiv}>
       <CustomSnackbar />
-      <div className="postCreateDivContainer">
-        <div className="postCreateDiv">
+      <div className={styles.postCreateDivContainer}>
+        <div className={styles.postCreateDiv}>
           <form onSubmit={handleSubmit}>
-            <h2 className="postCreateDivTitle">
+            <h2 className={styles.postCreateDivTitle}>
               {user.banned ? (
                 <p>
                   Sajnos a fiókod tiltva lett, ezért nem tudsz ide posztolni.
@@ -159,16 +171,18 @@ function Forum() {
             ) : (
               <div>
                 <TextField
+                  required
                   style={{ margin: 10, width: "90%" }}
                   fullWidth
                   label="Adj címet a kérdésednek"
                   variant="outlined"
                   maxRows={2}
-                  inputProps={{ maxLength: 55 }}
+                  inputProps={{ maxLength: 55, minLength: 10 }}
                   onChange={handleTitleChange}
                 />
                 <TextField
                   multiline
+                  required
                   style={{ margin: 10, width: "90%", height: "7vw" }}
                   fullWidth
                   label="Fejtsd ki a kérdésed vagy véleményed"
@@ -176,7 +190,7 @@ function Forum() {
                   maxRows={5}
                   minRows={4}
                   variant="outlined"
-                  inputProps={{ maxLength: 400 }}
+                  inputProps={{ maxLength: 400, minLength: 20 }}
                   onChange={handleBodyChange}
                 />
                 <br />
@@ -184,7 +198,7 @@ function Forum() {
                   type="submit"
                   variant="contained"
                   color="success"
-                  className="uploadButton"
+                  className={styles.uploadButton}
                 >
                   Poszt
                 </Button>
@@ -193,17 +207,17 @@ function Forum() {
           </form>
         </div>
       </div>
-      <div className="postContainer">
-        <div className="post">
+      <div className={styles.postContainer}>
+        <div className={styles.post}>
           {posts.map((post) => (
-            <Card key={post.id} className="postCard">
-              <p className="postTitle">{post.title}</p>
-              <CardContent className="postBody">{post.body}</CardContent>
-              <CardContent className="postByName">
+            <Card key={post.id} className={styles.postCard}>
+              <p className={styles.postTitle}>{post.title}</p>
+              <CardContent className={styles.postBody}>{post.body}</CardContent>
+              <CardContent className={styles.postByName}>
                 <Tooltip
-                  className="tooltip"
+                  className={styles.tooltip}
                   placement="top-end"
-                  title={`Felhasználónév: ${user.username} \nKedvenc csapat: ${user.fav_team}`}
+                  title={`Felhasználónév: ${user.username} Kedvenc csapat: ${user.fav_team}`}
                 >
                   <div>
                     {post.user.vezeteknev}&ensp;{post.user.keresztnev}
@@ -213,18 +227,18 @@ function Forum() {
                   onClick={() => {
                     navigate(`comment/${post.id}`);
                   }}
-                  className="writeComment"
+                  className={styles.writeComment}
                 >
                   <CommentIcon />
                 </Button>
-                <div className="postLike">{post.like}</div>
+                <div className={styles.postLike}>{post.like}</div>
                 {likedByUser(post.id) ? (
                   <Button
                     onClick={() => {
                       setLike(like - 1);
                       switchLike(post.id, post.like);
                     }}
-                    className="like"
+                    className={styles.like}
                   >
                     <FavoriteIcon />
                   </Button>
@@ -234,7 +248,7 @@ function Forum() {
                       setLike(like + 1);
                       switchLike(post.id, post.like);
                     }}
-                    className="like"
+                    className={styles.like}
                   >
                     <FavoriteBorderIcon />
                   </Button>
@@ -249,27 +263,15 @@ function Forum() {
 }
 
 export const ForumLoader: LoaderFunction<UserModel> = async () => {
-  const current_user_url = "http://localhost:3000/current_user";
   const jwt_token = localStorage.getItem("jwt");
 
   const allData: typeof allDataType = {
-    user: {
-      id: 0,
-      email: "",
-      admin: false,
-      username: "",
-      keresztnev: "",
-      vezeteknev: "",
-      fav_team: "",
-      fav_driver: "",
-      banned: false,
-      images: [],
-    },
+    user: userInterface,
     posts: [],
     comments: [],
     likes: [],
   };
-  await fetch(`${current_user_url}`, {
+  await fetch(getCurrentUser, {
     method: "GET",
     headers: {
       Authorization: `${jwt_token}`,
@@ -279,13 +281,13 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
       allData.user = await response.json();
     }
   });
-  await axios.get(PostURL).then((data) => {
+  await axios.get(getPosts).then((data) => {
     allData.posts = data.data;
   });
-  await axios.get(CommentsURL).then((data) => {
+  await axios.get(getComments).then((data) => {
     allData.comments = data.data;
   });
-  await axios.get(LikeURL + `/${allData.user.id}`).then((data) => {
+  await axios.get(getLikes + allData.user.id).then((data) => {
     allData.likes = data.data;
   });
   return allData;
