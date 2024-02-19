@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_21_112906) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_25_175533) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -152,19 +152,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_21_112906) do
 
   create_table "teams", force: :cascade do |t|
     t.string "name"
-    t.integer "number_of_championships"
-    t.integer "number_of_races"
-    t.string "headquarters_city"
+    t.integer "number_of_championships", default: 0
+    t.integer "number_of_races", default: 0
+    t.string "headquarters_city", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "technical_director"
-    t.integer "first_win"
-    t.integer "last_championship_win"
-    t.integer "date_of_establishment"
+    t.string "technical_director", default: ""
+    t.integer "first_win", default: 0
+    t.integer "last_championship_win", default: 0
+    t.integer "date_of_establishment", default: 0
     t.integer "series_id"
-    t.string "team_color"
-    t.string "slug"
-    t.text "description"
+    t.string "team_color", default: ""
+    t.string "slug", default: ""
+    t.text "description", default: ""
   end
 
   create_table "tracks", force: :cascade do |t|

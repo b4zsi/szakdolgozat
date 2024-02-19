@@ -40,6 +40,11 @@ class Api::V1::SeriesController < ApplicationController
         end
     end
 
+    def nameAndId
+        @seriesName = Series.select(:name, :id).each
+        render json: @seriesName
+    end
+
     private
 
 

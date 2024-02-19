@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   put '/api/v1/users/:id', to: 'api/v1/users#update'
   delete 'api/v1/images/:id', to: 'api/v1/images#destroy'
   delete 'api/v1/likes/:id', to: 'api/v1/likes#destroy'
+  get 'api/v1/teams/nameAndSlug', to: 'api/v1/teams#nameAndSlug'
+  get 'api/v1/drivers/nameAndSlug', to: 'api/v1/drivers#nameAndSlug'
+  get 'api/v1/series/nameAndId', to: 'api/v1/series#nameAndId'
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
