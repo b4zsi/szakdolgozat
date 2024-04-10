@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { UserModel } from "../../model/UserModel";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
-import "../../styles/ProfileStyle.css";
+import styles from "../../styles/ProfileStyle.module.css";
 import {
   Button,
   Card,
@@ -21,6 +21,13 @@ import axios from "axios";
 import { TeamModel } from "../../model/TeamModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import { DriverModel } from "../../model/DriverModel";
+import {
+  getCurrentUser,
+  getDriverNames,
+  getImages,
+  getTeamNames,
+} from "../../api_links";
+import { userInterface } from "../../interface/userInterface";
 
 let allDataType: {
   teams: TeamModel[];
@@ -34,10 +41,8 @@ function Profile() {
     drivers: DriverModel[];
     user: UserModel;
   };
-  const imageEventURL = "http://localhost:3000/api/v1/images";
   const user: UserModel = itemData.user;
   const teams: TeamModel[] = itemData.teams;
-  const updateUserURL = "http://localhost:3000/current_user";
   const jwt_token = localStorage.getItem("jwt");
   const [email, setEmail] = useState<string>(user.email);
   const [vezeteknev, setVezeteknev] = useState<string>(user.keresztnev);
@@ -64,6 +69,7 @@ function Profile() {
     setFavTeamDialogOpen(false);
     setFavDriverDialogOpen(false);
   };
+  //#region handleFunctions
   const handleNameChangeOpen = () => {
     setNameDialogOpen(true);
   };
@@ -82,12 +88,9 @@ function Profile() {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleImageClose = () => {
     setOpen(false);
   };
-  console.log(user);
-
   const handleVeznevChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setVezeteknev(event.target.value);
@@ -112,8 +115,9 @@ function Profile() {
     event.preventDefault();
     setFavDriver(event.target.value);
   };
+  //#endregion
   const handleDelete = async () => {
-    await fetch(updateUserURL, {
+    await fetch(getCurrentUser, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -141,7 +145,7 @@ function Profile() {
   };
 
   const handleSubmit = async () => {
-    await fetch(updateUserURL, {
+    await fetch(getCurrentUser, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -184,7 +188,7 @@ function Profile() {
     formData.append("imagesForm[team_slug]", "none");
 
     if (user.images.length > 0) {
-      await fetch(imageEventURL + "/" + user.images[0].id, {
+      await fetch(getImages + user.images[0].id, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -198,7 +202,7 @@ function Profile() {
       });
     }
 
-    await fetch(imageEventURL, {
+    await fetch(getImages, {
       method: "POST",
       headers: {
         Authorization: `${jwt_token}`,
@@ -209,7 +213,7 @@ function Profile() {
         if (response.ok) {
           await response.json().then(async (data) => {
             toastNotification(0, data.message);
-            await fetch("http://localhost:3000/api/v1/teams", {
+            await fetch(getTeamNames, {
               method: "PUT",
               headers: {
                 Authorization: `${jwt_token}`,
@@ -244,8 +248,18 @@ function Profile() {
     setDeleteOpen(false);
   };
 
+  function searchFavoriteDriver(fav_driver: string): React.ReactNode {
+    let favDriverName: string = "";
+    itemData.drivers.forEach((driver) => {
+      if (driver.slug === fav_driver) {
+        favDriverName = driver.name;
+      }
+    });
+    return favDriverName;
+  }
+
   return (
-    <div className="ProfileMainDiv">
+    <div className={styles.ProfileMainDiv}>
       <CustomSnackbar />
       <Dialog open={nameDialogOpen} onClose={handleClose}>
         <DialogTitle>Név módosítása</DialogTitle>
@@ -364,41 +378,41 @@ function Profile() {
         </DialogActions>
       </Dialog>
       ;
-      <div className="ProfileCardContainer">
-        <Card className="profileCard">
-          <p className="profilHeader">Profilom</p>
-          <CardContent className="profileItem">
+      <div className={styles.ProfileCardContainer}>
+        <Card className={styles.profileCard}>
+          <p className={styles.profilHeader}>Profilom</p>
+          <CardContent className={styles.profileItem}>
             Név:&ensp;{user.vezeteknev}&ensp;{user.keresztnev}
             <Button onClick={handleNameChangeOpen}>
               <EditIcon />
             </Button>
           </CardContent>
-          <CardContent className="profileItem">
+          <CardContent className={styles.profileItem}>
             Felhasználónév:&ensp;
             {user.username}
             <Button onClick={handleUserNameChangeOpen}>
               <EditIcon />
             </Button>
           </CardContent>
-          <CardContent className="profileItem">
+          <CardContent className={styles.profileItem}>
             Email cím:&ensp;{user.email}
             <Button onClick={handleEmailChangeOpen}>
               <EditIcon />
             </Button>
           </CardContent>
-          <CardContent className="profileItem">
+          <CardContent className={styles.profileItem}>
             Kedvenc csapat:&ensp;{user.fav_team}
             <Button onClick={handleFavTeamChangeOpen}>
               <EditIcon />
             </Button>
           </CardContent>
-          <CardContent className="profileItem">
-            Kedvenc versenyző:&ensp;{user.fav_driver}
+          <CardContent className={styles.profileItem}>
+            Kedvenc versenyző:&ensp;{searchFavoriteDriver(user.fav_driver)}
             <Button onClick={handleFavDriverChangeOpen}>
               <EditIcon />
             </Button>
           </CardContent>
-          <CardContent className="profileItem">
+          <CardContent className={styles.profileItem}>
             <Button
               variant="contained"
               style={{
@@ -411,12 +425,12 @@ function Profile() {
               Profilkép feltöltése
             </Button>
           </CardContent>
-          <CardActions className="profileItem">
+          <CardActions className={styles.profileItem}>
             <Button
               variant="contained"
               color="error"
               onClick={handleDeleteOpen}
-              className="userDeleteButton"
+              className={styles.userDeleteButton}
             >
               Fiók törlése
             </Button>
@@ -479,27 +493,13 @@ function Profile() {
 }
 
 export const ProfilLoader: LoaderFunction<UserModel> = async () => {
-  const current_user_url = "http://localhost:3000/current_user";
-  const teams_url = "http://localhost:3000/api/v1/teams";
-  const driver_url = "http://localhost:3000/api/v1/drivers";
   const jwt_token = localStorage.getItem("jwt");
   const allData: typeof allDataType = {
     teams: [],
     drivers: [],
-    user: {
-      id: 0,
-      email: "",
-      admin: false,
-      username: "",
-      keresztnev: "",
-      vezeteknev: "",
-      fav_team: "",
-      fav_driver: "",
-      banned: false,
-      images: [],
-    },
+    user: userInterface,
   };
-  await fetch(`${current_user_url}`, {
+  await fetch(`${getCurrentUser}`, {
     method: "GET",
     headers: {
       Authorization: `${jwt_token}`,
@@ -507,12 +507,12 @@ export const ProfilLoader: LoaderFunction<UserModel> = async () => {
   })
     .then(async (response) => {
       await axios
-        .get(teams_url)
+        .get(getTeamNames)
         .then((data) => {
           allData.teams = data.data;
         })
         .then(async () => {
-          await axios.get(driver_url).then((data) => {
+          await axios.get(getDriverNames).then((data) => {
             allData.drivers = data.data;
           });
         });

@@ -1,5 +1,6 @@
 .mainDiv{
-    height: 100vh !important;
+    height: 50em;
+    margin-top: -4.75%;
 }
 
 .kep {
@@ -12,6 +13,7 @@
     max-height: 17vw !important;
     min-height: 17vw !important;
     object-fit: cover;
+    margin-top: 10% !important;
 }
 
 .propertiesGrid {
@@ -20,6 +22,7 @@
     font-size: 2vw;
     font-weight: bold;
     padding-right: 5%;
+    margin-top: 5% !important;
 }
 
 .divider {
@@ -50,18 +53,7 @@
 
 .link, :visited, :active, :checked, :hover{
     text-decoration: none;
-}
-
-.backgroundStuff {
-    background-size: cover;
-    background-position: center;
-    width: 100vw;
-    height: 5% !important;
-    top: 0;
-    left: 0;
-    background-repeat: no-repeat;
-    position: absolute;
-    z-index:-1;
+    color: white;
 }
 
 .fav_driverButton{

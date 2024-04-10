@@ -1,8 +1,8 @@
 .tracksMainDiv{
-    background-color: #BCD2BE;
+    background-color: #007FFF;
 }
 .AllTrackCard{
-    box-shadow: 10px 15px rgba(150,150, 150, 0.9) !important;
+    box-shadow: 10px 15px rgba(250,250, 250, 0.6) !important;
     border: 2px solid black;
     background-color: white !important;
     width: 70%;
@@ -18,11 +18,17 @@
 .divider{
     color: black !important;
 }
-
+.link, :hover{
+    text-decoration: none;
+    color: black;
+}
 .textTrack{
     margin-top: 0.5vw;
     font-size: 1.7vw;
     font-weight: bolder;
     margin-bottom: 0.5vw; 
-
+}
+.addButton{
+    width: 100%;
+    height: 100%;
 }

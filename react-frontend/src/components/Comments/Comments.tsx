@@ -10,8 +10,7 @@ import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import { getComments, getCurrentUser, getPosts } from "../../api_links";
 import { userInterface } from "../../interface/userInterface";
 import { postInterface } from "../../interface/postInterface";
-//import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-//import FavoriteIcon from "@mui/icons-material/Favorite";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 let allDataType: {
   user: UserModel;
@@ -31,9 +30,10 @@ function Comments() {
   };
 
   const submitComment = async () => {
+    const jwt = localStorage.getItem("jwt");
     await fetch(getComments, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `${jwt}` },
       body: JSON.stringify({
         comment: {
           body: comment,
@@ -51,61 +51,78 @@ function Comments() {
     });
   };
 
+  async function handleCommentDelete(id: number) {
+    console.log(id);
+    await axios.delete(getComments + id).then((data) => {
+      toastNotification(0, data.data.message);
+      window.location.reload();
+    });
+  }
+
   return (
-    <div className={styles.commentMainDiv}>
-      <div className={styles.post}>
-        <Card className={styles.mainPostCard}>
-          <CustomSnackbar />
-          <p className={styles.postTitle}>{post.title}</p>
-          <CardContent className={styles.postBody}>{post.body}</CardContent>
-          {post.like} kedvelés
-          <CardContent className={styles.postAuthor}>
+    <div className={styles.post}>
+      <Card className={styles.mainPostCard}>
+        <CustomSnackbar />
+        <p className={styles.postTitle}>{post.title}</p>
+        <CardContent className={styles.postBody}>{post.body}</CardContent>
+        <CardContent className={styles.postInfo}>
+          <span className={styles.postLikes}>{post.like} kedvelés</span>
+          <span className={styles.postAuthor}>
             {post.user.vezeteknev}&nbsp;
             {post.user.keresztnev}
+          </span>
+        </CardContent>
+      </Card>
+      <Card className={styles.writeCommentonPage}>
+        <TextField
+          className={styles.commentField}
+          placeholder="Komment"
+          autoFocus
+          multiline
+          minRows={4}
+          maxRows={5}
+          inputProps={{ maxLength: 400 }}
+          id="comment"
+          type="text"
+          value={comment}
+          onChange={handleCommentChange}
+        />
+        <Button
+          variant="contained"
+          color="success"
+          className={styles.submitButton}
+          onClick={submitComment}
+        >
+          Válasz
+        </Button>
+      </Card>
+      {comments.map((comment) => (
+        <Card className={styles.commentCard} key={comment.id}>
+          <CardContent className={styles.commentBody}>
+            {comment.body}
+          </CardContent>
+
+          <CardContent className={styles.postAuthor}>
+            {user.admin && (
+              <Button
+                onClick={() => {
+                  handleCommentDelete(comment.id - 1);
+                }}
+              >
+                <DeleteIcon color="error" />
+              </Button>
+            )}
+            {comment.user.vezeteknev}
+            &nbsp;
+            {comment.user.keresztnev}
           </CardContent>
         </Card>
-        <Card className={styles.writeCommentonPage}>
-          <TextField
-            className={styles.commentField}
-            placeholder="Komment"
-            autoFocus
-            multiline
-            minRows={4}
-            maxRows={5}
-            inputProps={{ maxLength: 400 }}
-            id="comment"
-            type="text"
-            value={comment}
-            onChange={handleCommentChange}
-          />
-          <Button
-            variant="contained"
-            color="success"
-            className={styles.submitButton}
-            onClick={submitComment}
-          >
-            Válasz
-          </Button>
-        </Card>
-        {comments.map((comment) => (
-          <Card className={styles.commentCard} key={comment.id}>
-            <CardContent className={styles.commentBody}>
-              {comment.body}
-            </CardContent>
-            <CardContent className={styles.postAuthor}>
-              {comment.user.vezeteknev}
-              &nbsp;
-              {comment.user.keresztnev}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }
 
 export const CommentLoader: LoaderFunction<UserModel> = async ({ params }) => {
-  console.log(params);
   const jwt_token = localStorage.getItem("jwt");
 
   const allData: typeof allDataType = {

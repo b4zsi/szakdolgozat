@@ -189,7 +189,7 @@ function SignUp() {
               <Box>
                 <Link className={styles.link} to="/login">
                   Ha van már fiókod, <br />
-                  ide kattinta bejelentkezhetsz
+                  ide kattintva bejelentkezhetsz
                 </Link>
               </Box>
             </CardActions>

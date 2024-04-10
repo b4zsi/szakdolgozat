@@ -3,11 +3,12 @@
 body {
     background-repeat: no-repeat;
     position: relative;
-    background: #BCD2BE ;
+    background: #007FFF ;
     margin: 0;
     width: 100%;
     height: 100%;
-    font-family: 'Roboto Mono';
+    font-family: 'Roboto Mono' !important;
+    font-weight: bold;
     color: white;
 }
 
@@ -15,7 +16,7 @@ body {
     background-repeat: no-repeat;
     position: absolute;
     z-index:-1;
-    background: #BCD2BE ;
+    background: #007FFF ;
     background-size: cover;
     background-position: center;
     width: 100%;
@@ -31,46 +32,41 @@ body {
     text-align: center !important;
 }
 
-.oneLineDiv{
-    display: flex;
-    overflow: scroll;
-    height: 23em;
-}
-.oneLineDivTeam{
-    display: flex;
-    overflow: hidden;
-    height: 30em;
-}
-
 .imageList{
     display: flex !important;
-    overflow: scroll;
+    margin: auto;   
+    height: 22em;
+    width: 100em;
+    border: 2px solid yellow;  
 }
 .imageListTeam{
     display: flex !important;
-    overflow: scroll;
+    margin: auto;   
+    height: 30em;
+    overflow-y: auto;
+    border: 2px solid yellow;  
+
 }
 
-.driverGrid{
-    height: 15em;
-    padding-left: 1%;
-}
-.teamGrid{
-    height: 25em;
-    padding-left: 1%;
-}
+.image-list:hover {
+    scrollbar-color: auto auto; /* Firefox */
+  }
+  
+  .image-list::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .image-list::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Chrome/Safari */
+  }
+  
+  .image-list:hover::-webkit-scrollbar-thumb {
+    background-color: auto; /* Chrome/Safari */
+  }
 
-.teamPaper{
-    margin-top: 3%;
-    background: transparent !important;
-    height: 28em;
-    border: none !important;
-}
-.driverPaper{
-    background: transparent !important;
-    margin-top: 3%;
-    height: 20em;
-    border: none !important;
+
+.imageListTeam{
+    display: flex !important;
 }
 
 .driverLink,  :visited, :active, :focus{

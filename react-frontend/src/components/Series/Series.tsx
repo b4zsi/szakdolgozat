@@ -1,8 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { DriverModel } from "../../model/DriverModel";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import {
   Box,
   Button,
@@ -84,6 +82,7 @@ const Series = () => {
     (a: DriverModel, b: DriverModel) => driverSort(a, b)
   );
   const teams: TeamSeriesModel[] = allData.teams;
+  console.log(teams);
   const image: ImageModel = allData.image;
   const user: UserModel = allData.user;
   const [results, setResults] = useState<Result>();
@@ -127,14 +126,14 @@ const Series = () => {
     });
   }
 
-  const searchTeamMembers = (teamName: string): number => {
+  const searchTeamMembers = (teamName: string, szeriaMax: number): boolean => {
     let teamMembers = 0;
     teams.map((team: TeamSeriesModel) => {
       if (team.name === teamName) {
         teamMembers++;
       }
     });
-    return teamMembers;
+    return teamMembers >= szeriaMax;
   };
 
   const submitDriverAdd = async () => {
@@ -145,25 +144,21 @@ const Series = () => {
     ) {
       toastNotification(1, "Minden mezőt tölts ki");
     } else {
-      if (searchTeamMembers(newDriverTeam) >= 2) {
+      if (searchTeamMembers(newDriverTeam, series.id)) {
         toastNotification(1, "A csapat már megtelt!, Válassz másikat!");
       } else {
-        await axios
-          .post(getDrivers, {
-            drivers: {
-              name: newDriverName,
-              age: newDriverAge,
-              natianality: newDriverNationality,
-              number_of_wins: newDriverWins,
-              number_of_podiums: newDriverPodiums,
-              description: newDriverDescription,
-              series_id: series.id,
-              team_slug: newDriverTeam,
-            },
-          })
-          .then((data) => {
-            console.log(data);
-          });
+        await axios.post(getDrivers, {
+          drivers: {
+            name: newDriverName,
+            age: newDriverAge,
+            natianality: newDriverNationality,
+            number_of_wins: newDriverWins,
+            number_of_podiums: newDriverPodiums,
+            description: newDriverDescription,
+            series_id: series.id,
+            team_slug: newDriverTeam,
+          },
+        });
       }
     }
   };
@@ -465,31 +460,19 @@ const Series = () => {
             </Button>
           )}
         </div>
-
-        <Paper variant="outlined" className={styles.driverPaper}>
-          <Grid
-            container
-            spacing={3}
-            alignItems={"center"}
-            justifyContent={"center"}
-            wrap="nowrap"
-            className={styles.driverGrid}
-          >
-            <div className={styles.oneLineDiv}>
-              <ImageList className={styles.imageList}>
-                {drivers.map((item: DriverModel) => (
-                  <Drivers
-                    key={item.name}
-                    properties={item}
-                    team_color={getTeamColor(teams, item)}
-                    team_id={item.team_id}
-                    user={user}
-                  />
-                ))}
-              </ImageList>
-            </div>
-          </Grid>
-        </Paper>
+        <div className={styles.container}>
+          <ImageList className={styles.imageList} gap={10}>
+            {drivers.map((item: DriverModel) => (
+              <Drivers
+                key={item.name}
+                properties={item}
+                team_color={getTeamColor(teams, item)}
+                team_id={item.team_id}
+                user={user}
+              />
+            ))}
+          </ImageList>
+        </div>
       </Box>
       <Box sx={{ margin: 5 }}>
         <div className={styles.title}>
@@ -506,23 +489,11 @@ const Series = () => {
             </Button>
           )}
         </div>
-        <Paper variant="outlined" className={styles.teamPaper}>
-          <Grid
-            container
-            spacing={2}
-            alignItems={"center"}
-            wrap="nowrap"
-            className={styles.teamGrid}
-          >
-            <div className={styles.oneLineDivTeam}>
-              <ImageList className={styles.imageListTeam}>
-                {teams.map((item: TeamSeriesModel) => (
-                  <Teams properties={item} user={user} key={item.name} />
-                ))}
-              </ImageList>
-            </div>
-          </Grid>
-        </Paper>
+        <ImageList className={styles.imageListTeam}>
+          {teams.map((item: TeamSeriesModel) => (
+            <Teams properties={item} user={user} key={item.name} />
+          ))}
+        </ImageList>
       </Box>
     </div>
   );
@@ -554,7 +525,6 @@ export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
       },
     })
     .then((data) => {
-      console.log(data.data);
       returnData.user = data.data;
     })
     .catch((err) => {

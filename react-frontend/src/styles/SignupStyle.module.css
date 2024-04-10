@@ -21,6 +21,10 @@ section {
     font-size: 6vh !important;
     font-family: 'Roboto Mono' !important;
     font-weight: bold !important;
+    color:black
+}
+.title:hover {
+    color: black;
 }
 
 .signUpForm{

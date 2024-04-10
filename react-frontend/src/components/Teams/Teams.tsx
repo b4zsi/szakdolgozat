@@ -64,7 +64,6 @@ const Teams: FC<Team> = (team: Team) => {
       console.log(response);
       toastNotification(0, "Sikeres törlés!");
       setTeamDeleteOpen(false);
-      window.location.reload();
     });
   }
 
@@ -241,7 +240,7 @@ const Teams: FC<Team> = (team: Team) => {
       <Link to={`/teams/${team.properties.slug}`}>
         <Card
           sx={{
-            backgroundColor: `${hexRgb(team.properties.team_color + "B3", {
+            backgroundColor: `${hexRgb(team.properties.team_color + "C3", {
               format: "css",
             })}`,
           }}
@@ -287,17 +286,7 @@ const Teams: FC<Team> = (team: Team) => {
 
           <CardContent>
             <Divider variant="middle" style={{ height: 2 }} />
-            <Typography
-              gutterBottom
-              component="div"
-              style={{
-                textAlign: "center",
-                margin: 0,
-                padding: 0,
-                fontSize: "1.5em",
-                fontFamily: "Monaco",
-              }}
-            >
+            <Typography gutterBottom className={styles.name}>
               {team.properties.name}
             </Typography>
           </CardContent>

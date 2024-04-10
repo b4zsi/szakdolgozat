@@ -221,7 +221,7 @@ const Drivers: FC<Driver> = (driver: Driver) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Link to={`/drivers/${driver.properties.id}`}>
+      <Link to={`/drivers/${driver.properties.slug}`}>
         <Card
           sx={{ border: `2px solid #${driver.team_color}` }}
           className={styles.card}
@@ -263,7 +263,7 @@ const Drivers: FC<Driver> = (driver: Driver) => {
           )}
           <CardContent>
             <Divider variant="middle" style={{ height: 2 }} />
-            <Typography gutterBottom component="div" className={styles.name}>
+            <Typography gutterBottom className={styles.name}>
               {driver.properties.name}
             </Typography>
           </CardContent>

@@ -15,23 +15,21 @@ import {
   Typography,
 } from "@mui/material";
 import React, { Fragment, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../../styles/SignupStyle.css";
+import { Link } from "react-router-dom";
+import styles from "../../styles/SignupStyle.module.css";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
-
-const api_url = "http://localhost:3000";
+import { login } from "../../api_links";
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, SetShowPassword] = useState<boolean>(false);
   const loading = false;
-  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    await fetch(`${api_url}/login`, {
+    await fetch(`${login}`, {
       method: "POST",
       body: JSON.stringify({
         user: {
@@ -42,23 +40,30 @@ function Login() {
       headers: {
         "Content-type": "application/json",
       },
-    }).then(async (response: Response) => {
-      if (response.ok) {
-        const jwt = response.headers.get("Authorization");
-        localStorage.setItem("jwt", jwt!);
-        toastNotification(0, "Sikeres bejelentkezés.").then(() => {
-          navigate("/");
-        });
-      } else {
-        toastNotification(1, "Helytelen email cím vagy jelszó.");
-      }
-    });
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          const data = await response.json();
+          const jwt = response.headers.get("Authorization");
+          localStorage.setItem("jwt", jwt!);
+          toastNotification(0, data.status.message).then(() => {
+            location.href = "/";
+          });
+        } else {
+          throw new Error(await response.text());
+        }
+      })
+      .catch((error: Error) => {
+        toastNotification(1, error.message);
+      });
   };
 
   const passwordInput = (
     <Input
       autoComplete="current-password"
       value={password}
+      required
+      inputProps={{}}
       onChange={(e) => {
         setPassword(e.target.value);
       }}
@@ -81,14 +86,13 @@ function Login() {
 
   return (
     <Fragment>
-      {/* <div className="backgroundStuff"></div> */}
       <CustomSnackbar />
       <section>
-        <Container maxWidth="md" className="container">
+        <Container maxWidth="md" className={styles.container}>
           <Card sx={{ boxShadow: 1, maxWidth: "md" }}>
             <CardContent>
-              <Container maxWidth="sm" className="container">
-                <Typography variant="h2" className="title" gutterBottom>
+              <Container maxWidth="sm" className={styles.container}>
+                <Typography variant="h2" className={styles.title} gutterBottom>
                   Bejelentkezés
                 </Typography>
                 <form id="sign_in_form" onSubmit={handleSubmit}>
@@ -100,6 +104,7 @@ function Login() {
                       autoComplete="email"
                       id="email"
                       type="email"
+                      required
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
@@ -138,11 +143,11 @@ function Login() {
             >
               <Box>
                 <Typography variant="body2" align="center">
-                  <Link to="/forgot-password" className="link">
+                  <Link to="/forgot-password" className={styles.link}>
                     Elfelejtett jelszó
                   </Link>
                   <br />
-                  <Link to="/signup" className="link">
+                  <Link to="/signup" className={styles.link}>
                     Nincs még fiókod? Regisztrálj most
                   </Link>
                 </Typography>

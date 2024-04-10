@@ -17,6 +17,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { LikeModel } from "../../model/LikeModel";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getComments,
   getCurrentUser,
@@ -54,13 +55,14 @@ function Forum() {
   ): void => {
     setBody(event.target.value);
   };
-  console.log(posts[0].like);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const jwt = localStorage.getItem("jwt");
     await fetch(getPosts, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `${jwt}`,
       },
       body: JSON.stringify({
         post: {
@@ -81,8 +83,6 @@ function Forum() {
       }
     });
   };
-
-  console.log(likes);
 
   function findId(post_id: number): number {
     let id = 0;
@@ -132,6 +132,19 @@ function Forum() {
     }
   }
 
+  async function handlePostDelete(id: number) {
+    const jwt_token = localStorage.getItem("jwt");
+    await axios
+      .delete(getPosts + id, { headers: { Authorization: `${jwt_token}` } })
+      .then((response) => {
+        if (response.status === 200) {
+          toastNotification(0, response.data.message).then(() => {
+            window.location.reload();
+          });
+        }
+      });
+  }
+
   function likedByUser(post_id: number): boolean {
     let counter = 0;
     likes.map((like) => {
@@ -152,9 +165,9 @@ function Forum() {
       </Card>
     </div>
   ) : (
-    <div className={styles.ForumMainDiv}>
-      <CustomSnackbar />
+    <>
       <div className={styles.postCreateDivContainer}>
+        <CustomSnackbar />
         <div className={styles.postCreateDiv}>
           <form onSubmit={handleSubmit}>
             <h2 className={styles.postCreateDivTitle}>
@@ -213,16 +226,21 @@ function Forum() {
             <Card key={post.id} className={styles.postCard}>
               <p className={styles.postTitle}>{post.title}</p>
               <CardContent className={styles.postBody}>{post.body}</CardContent>
-              <CardContent className={styles.postByName}>
+              <CardContent className={styles.bottom}>
                 <Tooltip
                   className={styles.tooltip}
                   placement="top-end"
                   title={`Felhasználónév: ${user.username} Kedvenc csapat: ${user.fav_team}`}
                 >
-                  <div>
+                  <div className={styles.postByName}>
                     {post.user.vezeteknev}&ensp;{post.user.keresztnev}
                   </div>
                 </Tooltip>
+                {user !== undefined && user.admin && (
+                  <Button onClick={() => handlePostDelete(post.id)}>
+                    <DeleteIcon color="error" />
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     navigate(`comment/${post.id}`);
@@ -258,7 +276,7 @@ function Forum() {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 .mainCarDiv{
-    background-color: #BCD2BE;
+    background-color: #007FFF;
     min-height: 85em;
     margin-top: 1.5%;
     text-align: center;
@@ -9,8 +9,8 @@
     min-height: 14em;
     max-height: 14em;
     border-radius: 20px !important;
-    box-shadow: 10px 10px 5px grey !important;
-    background-color: #013220 !important;
+    box-shadow: 15px 15px rgba(250, 250, 250, 0.6) !important;
+    background-color: #003c79 !important;
     color: white !important;
 }
 .left{
@@ -26,7 +26,7 @@
 .carDescription{
     margin-top: 4%;
     border-radius: 20px !important;
-    background-color: #013220 !important;
+    background-color: #003c79 !important;
     color: white !important;
     font-weight: bold;
     min-height: 32em;

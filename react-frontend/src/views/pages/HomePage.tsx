@@ -25,19 +25,13 @@ const HomePage = () => {
         </div>
         <div>
           <CustomButton variant="contained" className={styles.button1}>
-            <Link
-              to="/gallery"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              Galéria
+            <Link to="/rules" className={styles.link}>
+              Szabályok
             </Link>
           </CustomButton>
-          <CustomButton variant="contained" className="button2">
-            <Link
-              to="/calendar"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              Naptár
+          <CustomButton variant="contained" className={styles.button2}>
+            <Link to="/tracks" className={styles.link}>
+              Pályák
             </Link>
           </CustomButton>
         </div>
@@ -50,15 +44,17 @@ const HomePage = () => {
               className={styles.homePageHelmet}
             />
             <CardContent className={styles.text}>
-              Nézz szét az oldalon, ismerdd meg a versenyzőket, csapatokat,
-              pályákat, ha esetleg kérdésed támad, bátran tedd fel a&nbsp;
-              <Link to="/forum">fórum</Link>on!
+              Nézz szét az oldalon, ismerdd meg a versenyzőket,{" "}
+              <Link to={"/series"}>csapatokat</Link>, pályákat. Ha esetleg
+              kérdésed támad, bátran tedd fel a&nbsp;
+              <Link to="/forum">fórumon</Link>!
             </CardContent>
           </Card>
           <Card className={styles.homePageCard}>
             <CardContent className={styles.text}>
-              Ha még nem vagy tagja a csapatnak, akkor regisztrálj itt, és
-              csatlakozz a forumunkhoz!
+              Ha még nem vagy tagja a csapatnak, akkor{" "}
+              <Link to="/signup">regisztrálj itt</Link>. Ha már tag vagy,{" "}
+              jelentkezz be <Link to="/login">itt.</Link>
               <hr style={{ width: "50%" }} />
               Ha még nem ismered a szabályokat, akkor itt mindent megtalálsz:{" "}
               <Link to="/rules">Szabályok</Link>

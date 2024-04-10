@@ -5,11 +5,15 @@ class Users::SessionsController < Devise::SessionsController
   respond_to :json
   private
 
+  def devise_error_messages!
+    return "" if resource.errors.unauthenticated
+  end
+
   def respond_with(resource, _opts = {})
-    render json: {
-      status: {code: 200, message: 'Logged in sucessfully.'},
-      data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
-    }, status: :ok
+      render json: {
+        status: {code: 200, message: 'Sikeres bejelentkezés.'},
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+      }, status: :ok
   end
 
     def respond_to_on_destroy

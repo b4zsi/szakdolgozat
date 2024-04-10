@@ -1,25 +1,18 @@
-.commentMainDiv{
-    background-color: #BCD2BE;
-    display: flex !important;
-    flex-direction: column !important;
-}
 
 .mainPostCard{
-    box-shadow: 10px 15px rgba(100,100, 100, 0.9) !important;
     border: 2px solid black;
     background-color: white;
     width: 75%;
-    height: 12vw;
-    min-height: 12vw;
-    border-radius: 1vw;
+    min-height: 14em;
+    border-radius: 10px;
     margin-top: 2em !important;
     margin: auto;
     justify-content: center;
 }
 .commentCard{
     background-color: white;
-    width: 70%;
-    height: 15vh !important; 
+    width: 75%;
+    height: 8em !important; 
     margin: auto;
     margin-top: 0.5%; 
     margin-bottom: 2%;
@@ -27,14 +20,14 @@
 
 .commentBody{
     max-height: 3em;
-    min-height: 3em;
+    min-height: 2.5em;
 }
 .writeCommentonPage{
     background-color: white;
     width: 75%;
     height: 10em;
     margin-top: 1%;
-    margin-left: 11vw;
+    margin-left: 12.5%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,24 +36,34 @@
 }
 .commentField{
     width:100%;
-    border-radius: 10px;
+    min-height: 4em !important;
+    border-radius: 15px;
+    border: none !important;
 }
 
 .postTitle{
     margin: auto;
     text-align: center;
-    font-size: 2vw;
+    font-size: 25px;
     font-weight: bold;
-    max-height: 4.5vw !important;
-    min-height: 5vw ;
+    max-height: 4.5em;
+    min-height: 1em ;
 }
 .post{
     width:90%;
     margin: auto;
     align-items: center;
 }
+.postInfo{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1%;
+}
 .postAuthor{
     float: right;
+}
+.postLikes{
+    float: left;
 }
 .submitButton{
     height: 2vw;

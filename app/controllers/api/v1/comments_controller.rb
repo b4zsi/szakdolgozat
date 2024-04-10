@@ -1,4 +1,6 @@
 class Api::V1::CommentsController < ApplicationController
+    before_action :authenticate_user!, only: [:create, :destroy, :update]
+
     def index
         comments = Comment.all
         render json: comments
@@ -19,7 +21,12 @@ class Api::V1::CommentsController < ApplicationController
     end
 
     def destroy
-
+        comment = Comment.find(params[:id])
+        if comment.destroy
+            render json: {message: "Komment sikeresen törölve."}, status: 200
+        else
+            render json: {message: "Hiba a komment törlése közben.",errors: post.errors.full_messages}, status: 422
+        end
     end
 
     private

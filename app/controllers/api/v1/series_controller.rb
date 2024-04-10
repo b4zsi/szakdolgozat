@@ -60,6 +60,6 @@ class Api::V1::SeriesController < ApplicationController
 
          def options
             #@options []= {inckude: %i[drivers]}
-            #ez majd kesobb lesz joxd
+
          end
 end

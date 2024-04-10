@@ -67,7 +67,8 @@ function ResponsiveAppBar() {
     "& .MuiPaper-root": {
       borderRadius: 3,
       marginTop: theme.spacing(1),
-      minWidth: 90,
+      minWidth: 150,
+      maxWidth: 150,
       color: theme.palette.mode === "light" ? "black" : theme.palette.grey[300],
       boxShadow:
         "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
@@ -109,7 +110,6 @@ function ResponsiveAppBar() {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.data);
           setUser(response.data);
           if (response.data.admin) {
             setPages(adminPages);
@@ -186,9 +186,17 @@ function ResponsiveAppBar() {
   return (
     <AppBar
       position="static"
-      style={{ background: "inherit", boxShadow: "none", zIndex: 1 }}
+      style={{
+        background: "inherit",
+        boxShadow: "none",
+        zIndex: 1,
+        display: "flex",
+        justifyContent: "center",
+        margin: "auto",
+        color: "black",
+      }}
     >
-      <Container maxWidth="sm">
+      <Container>
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -231,7 +239,14 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              margin: "auto",
+              justifyContent: "center",
+            }}
+          >
             {pages.map((page, index) =>
               !page.name.match("Szeriák") ? (
                 <Button

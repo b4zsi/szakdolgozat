@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { DriverModel } from "../../model/DriverModel";
-import DriverSingular from "../Drivers/Drivers";
 import ImageList from "@material-ui/core/ImageList";
 
-const SingleLineGridList: FC<String> = ({ drivers }: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SingleLineGridList: FC<string> = ({ drivers }: any) => {
+  console.log(drivers);
   return (
     <div
       style={{

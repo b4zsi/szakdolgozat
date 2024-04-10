@@ -32,8 +32,11 @@ class Api::V1::DriversController < ApplicationController
 
     def destroy
         @driver = Driver.find(params[:id])
-        @driver.destroy
-        render json: {message: "Versenyző sikeresen törölve."}, status: :ok
+        if @driver.destroy
+            render json: {message: "Versenyző sikeresen törölve."}, status: :ok
+        else
+            render json: {message: "Hiba történt a törlés során."}, status: :unprocessable_entity
+        end
     end
 
     def nameAndSlug

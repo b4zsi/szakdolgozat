@@ -3,9 +3,6 @@
   color: white;
   height: 100%;
 }
-body{
-height: 200vh;
-}
 .button1{
   margin: 50;
 }
@@ -19,13 +16,13 @@ height: 200vh;
   margin-top: 22%;
 }
 .homePageCard{
-  background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%) !important;
+  background: linear-gradient(45deg, #FE6B8B 30%, #f17634 90%) !important;
   display: flex;
   width: 85%;
-  height: 40vh;
+  height: 20em;
   border-radius: 20px !important;
   margin: auto;
-  margin-top: 2%;
+  margin-bottom: 2%;
 }
 .homePageHelmet{
   margin-right: 7.5%;
@@ -37,4 +34,8 @@ height: 200vh;
   font-size: 2.5vw !important;
   font-weight: bold;
   text-align: center;
+}
+.link{
+  text-decoration: none;
+  color: white !important;
 }

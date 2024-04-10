@@ -226,11 +226,18 @@ export const CalendarLoader: LoaderFunction<UserModel> = async () => {
     headers: {
       Authorization: `${jwt_token}`,
     },
-  }).then(async (response) => {
-    if (response.status === 200) {
-      allData.user = response.data;
-    }
-  });
+  })
+    .then(async (response) => {
+      console.log(response);
+      if (response.status === 200) {
+        allData.user = response.data;
+      } else {
+        window.location.href = "/notfound";
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   await axios.get(getCalendarEvents).then((data) => {
     allData.calendar_events = data.data;
   });

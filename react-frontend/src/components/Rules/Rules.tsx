@@ -5,10 +5,10 @@ import { Card, CardContent } from "@mui/material";
 function Rules() {
   return (
     <div className={styles.rulesMainDiv}>
-      <div style={{ marginTop: "2em" }}>
+      <div style={{ marginTop: "2em" }} className={styles.rulesMainDiv}>
         <Link to="formula-1">
-          <Card className={`${styles.rulesMainDiv} ${styles.formula1Image}`}>
-            <CardContent className={styles.rulesCardTitle}>
+          <Card className={`${styles.rulesCard} ${styles.formula1Image}`}>
+            <CardContent className={`${styles.rulesCardTitle} `}>
               Forma 1 Szabályok
             </CardContent>
           </Card>

@@ -4,6 +4,7 @@ import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import { Button, Divider, Grid, Paper } from "@mui/material";
 import styles from "../../styles/Driver_singular.module.css";
 import { DriverModel } from "../../model/DriverModel";
+import { UserModel } from "../../model/UserModel";
 import hexRgb from "hex-rgb";
 import { TeamModel } from "../../model/TeamModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
@@ -13,18 +14,22 @@ import noHelmet from "../../images/nohelmet.png";
 import { getCurrentUser, getTeams, getDrivers } from "../../api_links";
 import { driverInterface } from "../../interface/driverInterface";
 import { teamInterface } from "../../interface/teamInterface";
+import { userInterface } from "../../interface/userInterface";
 
 let allDataType: {
   driver: DriverModel;
   team: TeamModel;
+  user: UserModel;
 };
 const Driver_singular = () => {
   const allData: typeof allDataType = useLoaderData() as {
     driver: DriverModel;
     team: TeamModel;
+    user: UserModel;
   };
   const driver = allData.driver;
   const team = allData.team;
+  const user = allData.user;
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isFlipped2, setIsFlipped2] = useState<boolean>(false);
   const handleClick = (event: React.MouseEvent) => {
@@ -61,20 +66,12 @@ const Driver_singular = () => {
   return (
     <Fragment>
       <div
-        className={styles.backgroundStuff}
         style={{
           backgroundColor: `${hexRgb(team.team_color + "B3", {
             format: "css",
           })}`,
         }}
-      ></div>
-      <div
-        style={{
-          backgroundColor: `${hexRgb(team.team_color + "B3", {
-            format: "css",
-          })}`,
-        }}
-        className="mainDiv"
+        className={styles.mainDiv}
       >
         <Grid container spacing={3} className={styles.mainGrid}>
           <Grid item xs={4}>
@@ -142,15 +139,17 @@ const Driver_singular = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Button
-          variant="contained"
-          className={styles.fav_driverButton}
-          onClick={() => {
-            submitFavDriver();
-          }}
-        >
-          Kedvenc versenyző
-        </Button>
+        {user.email !== "" && user.id !== 0 && (
+          <Button
+            variant="contained"
+            className={styles.fav_driverButton}
+            onClick={() => {
+              submitFavDriver();
+            }}
+          >
+            Kedvenc versenyző
+          </Button>
+        )}
 
         <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
           <div className={styles.flipCard} onClick={handleClick}>
@@ -192,6 +191,7 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
   const allData: typeof allDataType = {
     driver: driverInterface,
     team: teamInterface,
+    user: userInterface,
   };
   await axios
     .get(getDrivers + params.slug)
@@ -203,6 +203,19 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
     .then(async (data) => {
       await axios.get(getTeams + data.team_slug).then(async (data) => {
         allData.team = data.data[0];
+      });
+    })
+    .then(async () => {
+      await fetch(getCurrentUser, {
+        method: "GET",
+        headers: {
+          Authorization: `${localStorage.getItem("jwt")}`,
+        },
+      }).then(async (response) => {
+        console.log(response);
+        if (response.ok) {
+          allData.user = await response.json();
+        }
       });
     });
   return allData;

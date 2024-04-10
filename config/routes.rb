@@ -2,8 +2,10 @@ Rails.application.routes.draw do
   get '/current_user', to: 'current_user#index'
   put '/current_user', to: 'current_user#update'
   put '/api/v1/users/:id', to: 'api/v1/users#update'
+  put '/api/v1/tracks/:id', to: 'api/v1/tracks#update'
   delete 'api/v1/images/:id', to: 'api/v1/images#destroy'
   delete 'api/v1/likes/:id', to: 'api/v1/likes#destroy'
+  delete "api/v1/comments/:id", to: "api/v1/comments#destroy"
   get 'api/v1/teams/nameAndSlug', to: 'api/v1/teams#nameAndSlug'
   get 'api/v1/drivers/nameAndSlug', to: 'api/v1/drivers#nameAndSlug'
   get 'api/v1/series/nameAndId', to: 'api/v1/series#nameAndId'
