@@ -3,17 +3,18 @@ class Api::V1::PostsController < ApplicationController
 
     def index
         post = Post.includes(:user).all.order(created_at: :desc)
-        render json: post
+        render json: post, Serializer: PostSerializer
     end
 
     def show
         post = Post.find(params[:id])
-        render json: post
+        render json: post, Serializer: PostSerializer
     end
 
     def create
         post = Post.new(post_params)
-        if post.save
+        if post.valid?
+            post.save
             render json: {message: "Poszt sikeresen hozzáadva."}, status: 200
         else
             render json: {message: "Hiba a poszt feltöltése közben.",errors: post.errors.full_messages}, status: 422
@@ -31,7 +32,6 @@ class Api::V1::PostsController < ApplicationController
 
     def update
         @post = Post.find(params[:id])
-
         if @post.update(post_params)
             render json: {message: "Poszt sikeresen módosítva."}, status: 200
         else

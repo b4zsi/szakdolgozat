@@ -23,17 +23,22 @@ class Api::V1::TeamsController < ApplicationController
     end
 
     def create
-        teams = Team.new(teams_create_params)
-        if teams.save
-            render json: teams, Serializer:TeamSerializer
+        @team = Team.new(teams_create_params)
+        if @team.valid? && @team.save
+            render json: @team, Serializer:TeamSerializer
         else
-            render json: {error: teams.errors.message}, status: 422
+            render json: {error: team.errors.message}, status: 422
         end
     end
 
     def update
         @team = Team.find(params[:id])
-        @team.update(teams_create_params)
+        @team.assign_attributes(teams_params)
+        if @team.valid?
+            @team.update(teams_create_params)
+        else
+            render json: {error: "Hiba a csapat módosítása közben"}, status: 422
+        end
         #@team.image.attach(params[:image])
         render json: @team, status: :ok
     end

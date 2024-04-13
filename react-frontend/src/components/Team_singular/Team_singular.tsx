@@ -3,7 +3,14 @@ import { Link, LoaderFunction, useLoaderData } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/Team_singular.module.css";
 import hexRgb from "hex-rgb";
-import { Button, Dialog, Divider, Grid, TextField } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  Divider,
+  Grid,
+  TextField,
+} from "@mui/material";
 import Slider from "../imageSlider/imageSlider";
 import { TeamModel } from "../../model/TeamModel";
 import { DriverModel } from "../../model/DriverModel";
@@ -32,6 +39,13 @@ const Team_singular = () => {
   const drivers: DriverModel[] = allData.drivers;
   const [open, setOpen] = useState<boolean>(false);
   const [engine, setEngine] = useState<string>("");
+  const [battery, setBattery] = useState<string>("");
+  const [horsepower, setHorsepower] = useState<number>();
+  const [fuel, setFuel] = useState<string>("");
+  const [wins, setWins] = useState<number>();
+  const [podiums, setPodiums] = useState<number>();
+  const [poles, setPoles] = useState<number>();
+
   const images: ImageModel[] = allData.images;
   const user = allData.user;
 
@@ -71,8 +85,10 @@ const Team_singular = () => {
           setOpen(false);
         }}
       >
-        <form>
+        <DialogTitle>Autó hozzáadása</DialogTitle>
+        <form className={styles.addCarDialog}>
           <TextField
+            className={styles.addCarTF}
             required
             focused
             id="engine"
@@ -81,28 +97,61 @@ const Team_singular = () => {
             onChange={(e) => setEngine(e.target.value)}
           />
           <TextField
+            className={styles.addCarTF}
             required
             focused
-            id="engine"
-            label="Motor"
-            value={engine}
-            onChange={(e) => setEngine(e.target.value)}
+            id="battery"
+            label="Akkumulátor"
+            value={battery}
+            onChange={(e) => setBattery(e.target.value)}
           />
           <TextField
+            className={styles.addCarTF}
             required
             focused
-            id="engine"
-            label="Motor"
-            value={engine}
-            onChange={(e) => setEngine(e.target.value)}
+            id="horsepower"
+            label="Lóerő"
+            value={horsepower}
+            onChange={(e) => setHorsepower(e.target.value as unknown as number)}
           />
           <TextField
+            className={styles.addCarTF}
             required
             focused
-            id="engine"
-            label="Motor"
-            value={engine}
-            onChange={(e) => setEngine(e.target.value)}
+            id="fuel"
+            label="Üzemanyag"
+            value={fuel}
+            onChange={(e) => setFuel(e.target.value)}
+          />
+          <TextField
+            className={styles.addCarTF}
+            required
+            focused
+            type="number"
+            id="wins"
+            label="Győzelmek"
+            value={wins}
+            onChange={(e) => setWins(e.target.value as unknown as number)}
+          />
+          <TextField
+            className={styles.addCarTF}
+            required
+            focused
+            type="number"
+            id="podiums"
+            label="Dobogók"
+            value={podiums}
+            onChange={(e) => setPodiums(e.target.value as unknown as number)}
+          />
+          <TextField
+            className={styles.addCarTF}
+            required
+            focused
+            type="number"
+            id="poles"
+            label="Pole pozíciók"
+            value={poles}
+            onChange={(e) => setPoles(e.target.value as unknown as number)}
           />
           <Button variant="outlined" onSubmit={handleSubmit}>
             Hozzáadás

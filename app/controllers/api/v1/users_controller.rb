@@ -11,7 +11,9 @@ class Api::V1::UsersController < ApplicationController
 
     def update
         user = User.find(params[:id])
-        if user.update(user_params)
+        user.assign_attributes(user_params)
+        if user.valid?
+            user.update(user_params)
             render json: user
         else
             render json: {error: user.errors.full_messages}

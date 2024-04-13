@@ -67,6 +67,7 @@ function SignUp() {
       }}
       autoComplete="new-password"
       style={{ marginBottom: "10px" }}
+      inputProps={{ minLength: 8 }}
       id="new-password"
       type={showPassword ? "text" : "password"}
       endAdornment={
@@ -92,6 +93,7 @@ function SignUp() {
       }}
       autoComplete="new-password"
       style={{ marginBottom: "20px" }}
+      inputProps={{ minLength: 8 }}
       id="password-confirm"
       type={showPassword ? "text" : "password"}
       endAdornment={

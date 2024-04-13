@@ -13,7 +13,8 @@ class Api::V1::CommentsController < ApplicationController
 
     def create
         comment = Comment.new(comment_params)
-        if comment.save
+        if comment.valid?
+            comment.save
             render json: {message: "Komment sikeresen hozzáadva."}, status: 200
         else
             render json: {message: "Hiba a komment feltöltése közben.",errors: post.errors.full_messages}, status: 422

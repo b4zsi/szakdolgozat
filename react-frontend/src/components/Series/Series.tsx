@@ -302,7 +302,7 @@ const Series = () => {
         </Button>
       </Dialog>
 
-      <Dialog open={teamCreateOpen}>
+      <Dialog open={teamCreateOpen} className={styles.addTeamDialog}>
         <DialogTitle>Új csapat hozzáadása</DialogTitle>
         <form className={styles.newTeamForm}>
           <Input
@@ -515,7 +515,9 @@ export const SeriesLoader: LoaderFunction<typeof allDataType> = async ({
     returnData.drivers = data.data.drivers;
     returnData.series = data.data;
     returnData.teams = data.data.teams;
-    returnData.image = data.data.images[0];
+    if (data.data.images.length > 0) {
+      returnData.image = data.data.images[0];
+    }
   });
   await axios
     .get(getCurrentUser, {

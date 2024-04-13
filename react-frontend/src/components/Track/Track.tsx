@@ -144,6 +144,8 @@ function Track() {
           setOpen(false);
         } else {
           console.log(response);
+          toastNotification(1, "Sikertelen módosítás!");
+          setOpen(false);
         }
       });
   };
@@ -160,6 +162,7 @@ function Track() {
           label="Pálya neve"
           placeholder="Monza"
           type="text"
+          inputProps={{ maxLength: 50, minLength: 10 }}
           fullWidth
           value={name}
           onChange={handleNameChange}
@@ -171,7 +174,8 @@ function Track() {
           id="length"
           label="Pálya hossza (méter)"
           placeholder="2345"
-          type="text"
+          type="number"
+          inputProps={{ min: 1000 }}
           fullWidth
           value={length}
           onChange={handleLengthChange}
@@ -183,6 +187,7 @@ function Track() {
           id="country"
           label="Ország"
           type="text"
+          inputProps={{ maxLength: 50, minLength: 5 }}
           fullWidth
           value={country}
           onChange={handleCountryChange}
@@ -194,6 +199,7 @@ function Track() {
           id="city"
           label="Város"
           type="text"
+          inputProps={{ maxLength: 50, minLength: 5 }}
           fullWidth
           value={city}
           onChange={handleCityChange}
@@ -231,6 +237,7 @@ function Track() {
           placeholder="Versenyző"
           type="text"
           fullWidth
+          inputProps={{ maxLength: 50, minLength: 5 }}
           value={driverPole}
           onChange={handleDriverPoleChange}
         >
@@ -240,18 +247,6 @@ function Track() {
             </MenuItem>
           ))}
         </Select>
-        <TextField
-          required
-          autoFocus
-          margin="dense"
-          id="length"
-          label="Kanyarok száma"
-          type="number"
-          inputProps={{ min: 0, max: 100 }}
-          fullWidth
-          value={turns}
-          onChange={handleTurnsChange}
-        />
         <TextField
           multiline
           required

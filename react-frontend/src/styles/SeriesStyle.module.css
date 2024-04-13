@@ -100,7 +100,12 @@ body {
     margin-bottom: 5%;
 }
 .newTeamForm {
-    width: 1000px !important;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.addTeamDialog{
+    width: 100%;
 }
 .subTitle{
     margin: auto !important;

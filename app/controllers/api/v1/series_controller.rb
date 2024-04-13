@@ -15,7 +15,9 @@ class Api::V1::SeriesController < ApplicationController
 
     def create
         series = Series.new(series_params)
-        if series.save
+
+        if series.valid?
+            series.save
             render json: series
         else
             render json: {error: series.errors.message}, status: 422
@@ -24,7 +26,9 @@ class Api::V1::SeriesController < ApplicationController
 
     def update
         series = Series.new(series_params)
-        if series.save
+        series.assign_attributes(series_params)
+        if series.valid?
+            series.save
             render json: series
         else
             render json: {error: series.errors.message}, status: 422
@@ -32,8 +36,8 @@ class Api::V1::SeriesController < ApplicationController
     end
 
     def destroy
-        series = Series.new(series_params)
-        if series.save
+        series = Series.find(params[:id])
+        if series.destroy
             render json: series
         else
             render json: {error: series.errors.message}, status: 422

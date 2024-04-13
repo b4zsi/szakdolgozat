@@ -272,6 +272,7 @@ function Profile() {
             type="text"
             fullWidth
             value={vezeteknev}
+            inputProps={{ maxLength: 50, minLength: 5 }}
             onChange={handleVeznevChange}
           />
           <TextField
@@ -281,6 +282,7 @@ function Profile() {
             label="Keresztnév"
             type="text"
             fullWidth
+            inputProps={{ maxLength: 50, minLength: 5 }}
             value={keresztnev}
             onChange={handleKernevChange}
           />
@@ -300,6 +302,7 @@ function Profile() {
             label="Felhasználónév"
             type="text"
             fullWidth
+            inputProps={{ maxLength: 50, minLength: 5 }}
             value={username}
             onChange={handleUsernameChange}
           />
@@ -317,7 +320,9 @@ function Profile() {
             margin="dense"
             id="email"
             label="Email cím"
-            type="text"
+            type="email"
+            inputMode="email"
+            inputProps={{ maxLength: 50, minLength: 5 }}
             fullWidth
             value={email}
             onChange={handleEmailChange}
@@ -337,6 +342,7 @@ function Profile() {
             id="team_slug"
             label="Csapat"
             type="text"
+            inputProps={{ maxLength: 50, minLength: 5 }}
             fullWidth
             value={favTeam}
             onChange={handleFavTeamChange}
@@ -363,6 +369,7 @@ function Profile() {
             label="Versenyző"
             type="text"
             fullWidth
+            inputProps={{ maxLength: 50, minLength: 5 }}
             value={favDriver}
             onChange={handleFavDriverChange}
           >

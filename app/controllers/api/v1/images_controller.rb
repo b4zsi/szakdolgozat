@@ -19,7 +19,9 @@ class Api::V1::ImagesController < ApplicationController
         image_data = params[:imagesForm][:image_url]
         image = Image.new(image_create_params)
         image.team_slug = team.slug
-        if image.save
+
+        if image.valid?
+            image.save
             render json: {message: "Kép sikeresen hozzáadva."}, status: 200
         else
             render json: {message: "Hiba a feltöltés közben.",errors: image.errors.full_messages}, status: 422

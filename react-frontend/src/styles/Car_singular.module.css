@@ -20,18 +20,16 @@
     margin-right: 10%;
 }
 .right > .number{
-    font-size: 5em !important;
+    font-size: 4.5em !important;
     font-weight: bold;
 }
 .carDescription{
-    margin-top: 4%;
+    margin-top: 2%;
     border-radius: 20px !important;
     background-color: #003c79 !important;
-    color: white !important;
-    font-weight: bold;
-    min-height: 32em;
     text-align: left;
     margin-bottom: 2.5em;
+    font-size: 1.5em;
 }
 .carImage{
     margin-top: 30%;
@@ -40,9 +38,18 @@
 .carCard > .cardTitle{
     font-size: 2.5rem;
     font-weight: bold;
-    margin-top: 0 !important;
+    margin: 10px !important;
 }
 .cardContent{
     font-size: 1.5rem ;
     font-weight: bold;
+}
+.divider{
+    background-color: white;
+    margin: auto;
+    width: 50%;
+}
+.editButton{
+    margin: auto;
+    width: 50% !important;
 }

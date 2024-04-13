@@ -5,4 +5,8 @@ class Image < ApplicationRecord
     def image_url
         Rails.application.routes.url_helpers.url_for(image) if image.attached?
     end
+
+    validates :name, presence: true, length: { minimum: 5, maximum: 50 }
+    validates :team_slug, presence: true, length: { minimum: 5, maximum: 50 }
+    validates :description, presence: true, length: { minimum: 10, maximum: 100 }
 end

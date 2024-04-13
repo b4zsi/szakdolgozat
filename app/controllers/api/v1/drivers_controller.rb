@@ -25,9 +25,14 @@ class Api::V1::DriversController < ApplicationController
 
     def update
         @driver = Driver.find(params[:id])
-        @driver.update(driver_create_params)
-        @driver.image.attach(params[:image])
-        render json: @driver, status: :ok
+        @driver.assign_attributes(driver_create_params)
+        if @driver.valid?
+            @driver.update(driver_create_params)
+            @driver.image.attach(params[:image])
+            render json: @driver, status: :ok
+        else
+            render json: @driver.errors, status: :unprocessable_entity
+        end
     end
 
     def destroy

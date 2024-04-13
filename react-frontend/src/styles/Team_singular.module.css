@@ -83,6 +83,14 @@
     object-fit: cover;
     height:5em;
 }
+.addCarDialog{
+    display: flex;
+    flex-direction: column ;
+    width: 100%;
+}
+.addCarTF{
+    margin: 1em !important;
+}
 
 @keyframes fade-in {
     0% {
