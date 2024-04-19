@@ -20,6 +20,7 @@ import { getCurrentUser, getImages, getTeams } from "../../api_links";
 import { teamInterface } from "../../interface/teamInterface";
 import { UserModel } from "../../model/UserModel";
 import { userInterface } from "../../interface/userInterface";
+import noHelmet from "../../images/nohelmet.png";
 
 let allDataType: {
   team: TeamModel;
@@ -54,6 +55,7 @@ const Team_singular = () => {
   };
 
   const handleSubmit = async () => {};
+  console.log(images.length);
 
   const submitFavTeam = async () => {
     const jwt = localStorage.getItem("jwt");
@@ -161,10 +163,15 @@ const Team_singular = () => {
           </Button>
         </form>
       </Dialog>
-      <div>
-        <Slider images={images} team_name={team.name} />
-      </div>
+
       <div className={styles.mainDivTeam}>
+        <div>
+          {images.length === 0 ? (
+            <img src={noHelmet} alt="kep" className={styles.noImage} />
+          ) : (
+            <Slider images={images} team_name={team.name} />
+          )}
+        </div>
         <CustomSnackbar />
         {user.id === 0 && user.email === "" && (
           <Button
@@ -183,8 +190,10 @@ const Team_singular = () => {
           <Button variant="outlined" onClick={handleOpen}>
             Adj hozzá autót a csapathoz
           </Button>
+        ) : team.cars.length === 0 && !user.admin ? (
+          <div></div>
         ) : (
-          <Link to={`/cars/${team.cars[0].id}`} className={styles.carLink}>
+          <Link to={`/cars/${team.cars[0]}`} className={styles.carLink}>
             <Button className={styles.carButton}>
               nézd meg a csapat autóját
             </Button>
@@ -255,7 +264,7 @@ const Team_singular = () => {
                 key={driver.id}
               >
                 {driver.name}
-                <Divider variant="middle" className={styles.dividerTeam} />
+                <Divider variant="middle" className={styles.divider} />
                 <Link to={"/drivers/" + driver.slug}>
                   <img
                     src={driver.images[0].image_url}
@@ -285,7 +294,7 @@ const Team_singular = () => {
                 key={driver.id}
               >
                 {driver.name}
-                <Divider variant="middle" className={styles.dividerTeam} />
+                <Divider variant="middle" className={styles.divider} />
                 <img
                   src={driver.images[0].image_url}
                   alt="kep"

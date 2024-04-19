@@ -1,6 +1,7 @@
 class Api::V1::TeamsController < ApplicationController
     before_action :set_teams, only: [:nameAndSlug]
     before_action :permit_all_parameters
+    before_action :authenticate_user!, only: [:create, :update, :destroy]
 
     def index
         @team = Team.all
@@ -24,10 +25,11 @@ class Api::V1::TeamsController < ApplicationController
 
     def create
         @team = Team.new(teams_create_params)
-        if @team.valid? && @team.save
+        if @team.valid?
+            @team.save
             render json: @team, Serializer:TeamSerializer
         else
-            render json: {error: team.errors.message}, status: 422
+            render json: {message: "Hiba a csapat hozzáadása során!"}, status: 422
         end
     end
 
@@ -62,7 +64,7 @@ class Api::V1::TeamsController < ApplicationController
          end
 
          def teams_create_params
-            params.require(:team).permit(:id, :name, :slug, :series_id, :number_of_championships, :number_of_races, :headquarters_city, :technical_director, :first_win, :last_championship_win, :date_of_establishment, :team_color, :slug, :images)
+            params.require(:team).permit(:id, :name, :slug, :series_id, :number_of_championships, :number_of_races, :headquarters_city, :technical_director, :first_win, :last_championship_win, :date_of_establishment, :team_color, :slug, :images, :description)
          end
          def permit_all_parameters
             params.permit!

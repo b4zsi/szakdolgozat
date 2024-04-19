@@ -4,7 +4,7 @@ class Track < ApplicationRecord
   validates :name, presence: true, uniqueness: true, length: { minimum: 10, maximum: 50 }
   validates :country, presence: true, length: { minimum: 5, maximum: 50 }
   validates :city, presence: true, length: { minimum: 5, maximum: 50 }
-  validates :length, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1000 }, :default =>  1000
+  validates :length, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1000 }
   validates :turns, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to:100 }
   validates :lap_record, presence: true, length: { minimum: 5, maximum: 50 }
   validates :lap_record_in_seconds, presence: true, numericality: { only_integer: false, greater_than_or_equal_to: 0 }

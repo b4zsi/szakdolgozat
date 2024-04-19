@@ -29,7 +29,9 @@
 .cardContainer:hover {
     transform: scale(1.1);
 }
-
+.divider{
+    background-color: white;
+}
 .name{
     font-size: 1.5em !important;
     font-family: "Monaco";

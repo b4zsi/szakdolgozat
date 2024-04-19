@@ -51,7 +51,7 @@
     color: white !important;
 }
 
-.link, :visited, :active, :checked, :hover{
+.link :visited :active :checked :hover{
     text-decoration: none;
     color: white;
 }

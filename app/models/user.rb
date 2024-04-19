@@ -7,9 +7,8 @@ class User < ApplicationRecord
        validates :username, presence: true, uniqueness: true, length: { minimum: 5, maximum: 50 }
        validates :keresztnev, presence: true, length: { minimum: 5, maximum: 50 }
        validates :vezeteknev, presence: true, length: { minimum: 5, maximum: 50 }
-       validates :fav_team, presence: true, length: { minimum: 5, maximum: 50 }
-       validates :fav_driver, presence: true, length: { minimum: 5, maximum: 50 }
-       validates :banned, presence: true, :default => false
+       validates :fav_team, presence: true, length: { minimum: 4, maximum: 50 }
+       validates :fav_driver, presence: true, length: { minimum: 4, maximum: 50 }
        validates :images, presence: false
 
        def image_url

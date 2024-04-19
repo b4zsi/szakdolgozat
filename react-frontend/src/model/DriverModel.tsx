@@ -12,6 +12,6 @@ export interface DriverModel {
   series_id: number;
   team_slug: string;
   team_id: number;
-  slug: "";
+  slug: string;
   images: ImageModel[];
 }

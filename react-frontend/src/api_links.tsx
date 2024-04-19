@@ -6,7 +6,7 @@ export const getCars = "http://localhost:3000/api/v1/cars/";
 export const login = "http://localhost:3000/login";
 export const logout = "http://localhost:3000/logout";
 export const signup = "http://localhost:3000/signup";
-export const getTeamNames = "http://localhost:3000/api/v1/teams/NameAndSlug/";
+export const getTeamNames = "http://localhost:3000/api/v1/teams/nameAndSlug";
 export const getDriverNames =
   "http://localhost:3000/api/v1/drivers/nameAndSlug";
 export const getUsers = "http://localhost:3000/api/v1/users/";

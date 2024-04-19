@@ -24,6 +24,8 @@ import { signup } from "../../api_links";
 function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [vezeteknev, setVezeteknev] = useState<string>("");
+  const [keresztnev, setKeresztnev] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [showPassword, SetShowPassword] = useState(false);
@@ -39,24 +41,33 @@ function SignUp() {
       toastNotification(1, "Hiányzó jelszó.");
       return;
     }
-    const response = await fetch(signup, {
+    await fetch(signup, {
       method: "POST",
+      headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         user: {
-          email,
-          password,
-          username,
+          email: email,
+          password: password,
+          username: username,
+          keresztnev: keresztnev,
+          vezeteknev: vezeteknev,
+          banned: false,
+          admin: false,
+          fav_driver: "none",
+          fav_team: "none",
         },
       }),
-      headers: { "Content-type": "application/json" },
+    }).then(async (response) => {
+      if (response.ok) {
+        toastNotification(0, "Sikeres regisztráció");
+        location.href = "/";
+      } else {
+        await response.json().then((data) => {
+          console.log(data.status);
+          toastNotification(1, data.status.message);
+        });
+      }
     });
-
-    if (response.ok) {
-      toastNotification(0, "Sikeres regisztráció");
-      location.href = "/";
-    } else {
-      toastNotification(1, response.statusText);
-    }
   };
 
   const passwordInput = (
@@ -150,10 +161,43 @@ function SignUp() {
                       }}
                     />
                   </FormControl>
-
-                  <FormControl fullWidth>
+                  <FormControl fullWidth className={styles.signUpForm}>
+                    <InputLabel
+                      required
+                      htmlFor="vezeteknev"
+                      id="vezeteknev-label"
+                    >
+                      Vezetéknév
+                    </InputLabel>
+                    <Input
+                      id="vezeteknev"
+                      type="text"
+                      value={vezeteknev}
+                      onChange={(e) => {
+                        setVezeteknev(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth className={styles.signUpForm}>
+                    <InputLabel
+                      required
+                      htmlFor="kereztnev"
+                      id="keresztnev-label"
+                    >
+                      Keresztnév
+                    </InputLabel>
+                    <Input
+                      id="kereztnev"
+                      type="text"
+                      value={keresztnev}
+                      onChange={(e) => {
+                        setKeresztnev(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth className={styles.signupForm}>
                     <InputLabel required htmlFor="password" id="password-label">
-                      Jelszó
+                      Jelszó (min. 8 karakter)
                     </InputLabel>
                     {passwordInput}
                     <FormHelperText id="email-helper-text">

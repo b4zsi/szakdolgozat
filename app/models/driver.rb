@@ -21,5 +21,5 @@ class Driver < ApplicationRecord
     validates :number_of_podiums, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
     validates :series_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 4 }
     validates :team_id, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-    validates :description, presence: true, length: { minimum: 50, maximum: 200 }
+    validates :description, presence: true, length: { minimum: 10, maximum: 200 }
 end

@@ -60,16 +60,29 @@ const Teams: FC<Team> = (team: Team) => {
   //#endregion
 
   async function handleTeamDelete(): Promise<void> {
-    await axios.delete(getTeams + team.properties.id).then((response) => {
-      console.log(response);
-      toastNotification(0, "Sikeres törlés!");
-      setTeamDeleteOpen(false);
-    });
+    await axios
+      .delete(getTeams + team.properties.id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("jwt")}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        toastNotification(0, "Sikeres törlés!");
+        setTeamDeleteOpen(false);
+        window.location.reload();
+      });
   }
 
   async function handleTeamEdit(): Promise<void> {
-    await axios
-      .put(getTeams + team.properties.id, {
+    await fetch(getTeams + team.properties.id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
         team: {
           name: teamName,
           team_color: teamColor,
@@ -82,13 +95,26 @@ const Teams: FC<Team> = (team: Team) => {
           date_of_establishment: dateOfEstablishment,
           series_id: team.properties.series_id,
         },
-      })
-      .then((response) => {
-        console.log(response);
+      }),
+    }).then((response) => {
+      if (response.status === 422) {
+        toastNotification(1, "Hibás adatok!");
+        return;
+      } else {
         toastNotification(0, "Sikeres módosítás!");
+
         setTeamEditOpen(false);
-        window.location.reload();
-      });
+        setTeamName(teamName);
+        setTeamColor(teamColor);
+        setNumberOfChampionships(numberOfChampionships);
+        setNumberOfRaces(numberOfRaces);
+        setHeadquartersCity(headquartersCity);
+        setTechnicalDirector(technicalDirector);
+        setFirstWin(firstWin);
+        setLastChampionshipWin(lastChampionshipWin);
+        setDateOfEstablishment(dateOfEstablishment);
+      }
+    });
   }
 
   return (
@@ -273,6 +299,7 @@ const Teams: FC<Team> = (team: Team) => {
               image={noHelmet}
               title="teams"
               className={styles.cardMedia}
+              style={{ padding: "10px" }}
             />
           ) : (
             <CardMedia className={styles.cardMedia} title="teams">
@@ -285,7 +312,11 @@ const Teams: FC<Team> = (team: Team) => {
           )}
 
           <CardContent>
-            <Divider variant="middle" style={{ height: 2 }} />
+            <Divider
+              variant="middle"
+              style={{ height: 2 }}
+              className={styles.divider}
+            />
             <Typography gutterBottom className={styles.name}>
               {team.properties.name}
             </Typography>

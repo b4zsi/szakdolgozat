@@ -14,7 +14,8 @@ export interface TeamModel {
   series_id: number;
   team_picture: string;
   team_color: string;
-  slug: "";
+  // prettier-ignore
+  slug: string;
   images: ImageModel[];
   cars: CarModel[];
 }
@@ -32,6 +33,7 @@ export interface TeamSeriesModel {
   series_id: number;
   team_picture: string;
   team_color: string;
-  slug: "";
+  // prettier-ignore
+  slug: string;
   first_image: ImageModel;
 }

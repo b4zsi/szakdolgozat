@@ -7,8 +7,7 @@ body {
     margin: 0;
     width: 100%;
     height: 100%;
-    font-family: 'Roboto Mono' !important;
-    font-weight: bold;
+    font-family: 'Monaco' !important;
     color: white;
 }
 
@@ -36,16 +35,15 @@ body {
     display: flex !important;
     margin: auto;   
     height: 22em;
-    width: 100em;
+    width: 85em;
     border: 2px solid yellow;  
 }
 .imageListTeam{
     display: flex !important;
     margin: auto;   
     height: 30em;
-    overflow-y: auto;
-    border: 2px solid yellow;  
-
+    width: 85em;
+    border: 2px solid yellow;
 }
 
 .image-list:hover {
@@ -69,7 +67,7 @@ body {
     display: flex !important;
 }
 
-.driverLink,  :visited, :active, :focus{
+.driverLink :visited, :active, :focus{
     text-decoration: none;
 }
 
@@ -87,7 +85,7 @@ body {
     align-items: center;
 }
 .addDriverInput {
-    margin: 1em;
+    margin-top:1.5em !important;
 }
 .driverAddForm {
     display: flex;
@@ -110,4 +108,7 @@ body {
 .subTitle{
     margin: auto !important;
     text-align: center !important;
+}
+.addTeamTF{
+    margin-bottom: 15px;
 }

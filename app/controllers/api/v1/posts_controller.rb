@@ -1,5 +1,5 @@
 class Api::V1::PostsController < ApplicationController
-    before_action :authenticate_user!, only: [:create, :destroy]
+    before_action :authenticate_user!, only: [:index, :create, :destroy]
 
     def index
         post = Post.includes(:user).all.order(created_at: :desc)

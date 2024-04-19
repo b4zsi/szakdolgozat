@@ -2,6 +2,7 @@
   text-align: center;
   color: white;
   height: 100%;
+  font-family: 'Monaco' !important;
 }
 .button1{
   margin: 50;

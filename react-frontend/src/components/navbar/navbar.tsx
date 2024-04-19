@@ -308,7 +308,10 @@ function ResponsiveAppBar() {
                       src={user.images[0].image_url}
                       alt="profilkep"
                       width={65}
-                      style={{ borderRadius: "3vh" }}
+                      style={{
+                        borderRadius: "3vh",
+                        objectFit: "cover",
+                      }}
                     />
                   ) : (
                     <PermIdentityIcon

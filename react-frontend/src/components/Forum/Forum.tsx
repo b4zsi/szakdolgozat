@@ -36,6 +36,7 @@ let allDataType: {
 function Forum() {
   const [title, setTitle] = useState<string>();
   const [body, setBody] = useState<string>();
+  // eslint-disable-next-line
   const [like, setLike] = useState<number>(0);
 
   const loaderData: typeof allDataType = useLoaderData() as typeof allDataType;
@@ -57,6 +58,7 @@ function Forum() {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(posts.length);
     const jwt = localStorage.getItem("jwt");
     await fetch(getPosts, {
       method: "POST",
@@ -72,16 +74,30 @@ function Forum() {
           author_id: user?.id,
         },
       }),
-    }).then(async (response) => {
-      if (response.ok) {
-        await response.json().then((data) => {
-          window.location.reload;
-          toastNotification(0, data.message).then(() => {
-            window.location.reload();
+    })
+      .then(async (response) => {
+        if (response.status === 200) {
+          await response.json().then((data) => {
+            posts.push({
+              id: posts.length + 1,
+              title: title!,
+              body: body!,
+              author_id: user.id,
+              author_name: user.vezeteknev + " " + user.keresztnev,
+              like: 0,
+              user: user,
+            });
+            toastNotification(0, data.message);
           });
-        });
-      }
-    });
+        } else {
+          response.json().then((data) => {
+            toastNotification(1, data.message);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   function findId(post_id: number): number {
@@ -96,20 +112,20 @@ function Forum() {
 
   async function switchLike(id: number, like: number) {
     if (likedByUser(id)) {
-      await axios.delete(getLikes + `/${findId(id)}`);
-      await axios
-        .put(getPosts + `/${id}`, {
-          post: {
-            id: id,
-            like: like - 1,
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            window.location.reload();
-          }
-        });
-      return;
+      await axios.delete(getLikes + `/${findId(id)}`).then((response) => {
+        console.log(response);
+        if (response.status === 201) {
+          console.log("first");
+          likes.splice(id, 1);
+          posts[id].like -= 1;
+        }
+      });
+      await axios.put(getPosts + `/${id}`, {
+        post: {
+          id: id,
+          like: like - 1,
+        },
+      });
     } else {
       await axios.post(getLikes, {
         like: {
@@ -125,8 +141,13 @@ function Forum() {
           },
         })
         .then((response) => {
-          if (response.status === 200) {
-            window.location.reload();
+          if (response.status === 201) {
+            likes.push({
+              id: likes.length + 1,
+              post_id: id,
+              user_id: user.id,
+            });
+            posts[id].like += 1;
           }
         });
     }
@@ -139,7 +160,7 @@ function Forum() {
       .then((response) => {
         if (response.status === 200) {
           toastNotification(0, response.data.message).then(() => {
-            window.location.reload();
+            posts.splice(id, 1);
           });
         }
       });
@@ -253,7 +274,7 @@ function Forum() {
                 {likedByUser(post.id) ? (
                   <Button
                     onClick={() => {
-                      setLike(like - 1);
+                      setLike(post.like - 1);
                       switchLike(post.id, post.like);
                     }}
                     className={styles.like}
@@ -263,7 +284,7 @@ function Forum() {
                 ) : (
                   <Button
                     onClick={() => {
-                      setLike(like + 1);
+                      setLike(post.like + 1);
                       switchLike(post.id, post.like);
                     }}
                     className={styles.like}
@@ -294,11 +315,20 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
     headers: {
       Authorization: `${jwt_token}`,
     },
-  }).then(async (response) => {
-    if (response.ok) {
-      allData.user = await response.json();
-    }
-  });
+  })
+    .then(async (response) => {
+      if (response.ok) {
+        allData.user = await response.json();
+      } else {
+        window.location.href = "/login";
+        return;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      window.location.href = "/login";
+      return;
+    });
   await axios.get(getPosts).then((data) => {
     allData.posts = data.data;
   });
@@ -308,6 +338,7 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
   await axios.get(getLikes + allData.user.id).then((data) => {
     allData.likes = data.data;
   });
+
   return allData;
 };
 

@@ -23,7 +23,6 @@ import { UserModel } from "../../model/UserModel";
 import noHelmet from "../../images/nohelmet.png";
 import { getDrivers } from "../../api_links";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { toastNotification } from "../Snackbar/snackbar";
 import nemzetek from "../../nemzetek.js";
 
@@ -55,16 +54,30 @@ const Drivers: FC<Driver> = (driver: Driver) => {
     return a.id - b.id;
   });
   async function handleDriverDelete(): Promise<void> {
-    await axios.delete(getDrivers + driver.properties.id).then((response) => {
-      console.log(response);
-      toastNotification(0, "Sikeres törlés!");
-      setDriverDeleteOpen(false);
-      window.location.reload();
+    await fetch(getDrivers + driver.properties.id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("jwt")}`,
+      },
+    }).then(async (response) => {
+      if (response.status === 201) {
+        await response.json().then((data) => {
+          toastNotification(0, data.message);
+          setDriverDeleteOpen(false);
+          window.location.reload();
+        });
+      }
     });
   }
   async function handleDriverEdit(): Promise<void> {
-    await axios
-      .put(getDrivers + driver.properties.id, {
+    await fetch(getDrivers + driver.properties.id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
         drivers: {
           name: driverName,
           age: driverAge,
@@ -72,13 +85,21 @@ const Drivers: FC<Driver> = (driver: Driver) => {
           nationality: driverNationality,
           number_of_podiums: driverPodiums,
         },
-      })
-      .then((response) => {
-        console.log(response);
+      }),
+    }).then((response) => {
+      if (response.status === 201) {
         toastNotification(0, "Sikeres módosítás!");
         setDriverEditOpen(false);
-        window.location.reload();
-      });
+        setDriverName(driverName);
+        setDriverAge(driverAge);
+        setDriverWins(driverWins);
+        setDriverNationality(driverNationality);
+        setDriverPodiums(driverPodiums);
+        setDriverEditOpen(false);
+      } else {
+        toastNotification(1, "Hiba történt a módosítás során!");
+      }
+    });
   }
 
   return (

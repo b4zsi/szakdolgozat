@@ -49,11 +49,11 @@ function Profile() {
   const [keresztnev, setKeresztnev] = useState<string>(user.vezeteknev);
   const [username, setUsername] = useState<string>(user.username);
   const [favTeam, setFavTeam] = useState<string>(
-    user.fav_team == undefined ? "Oracle Red Bull Racing" : user.fav_team
+    user.fav_team === undefined ? "Oracle Red Bull Racing" : user.fav_team
   );
   const [image, setImage] = useState("");
   const [base64Image, setBase64Image] = useState<File>();
-  const [favDriver, setFavDriver] = useState<string>();
+  const [favDriver, setFavDriver] = useState<string>(user.fav_driver);
   const [open, setOpen] = useState(false);
   const [nameDialogOpen, setNameDialogOpen] = useState<boolean>(false);
   const [usernameDialogOpen, setUsernameDialogOpen] = useState<boolean>(false);
@@ -182,7 +182,6 @@ function Profile() {
     event.preventDefault();
 
     const formData = new FormData();
-
     formData.append("imagesForm[image_name]", email);
     formData.append("imagesForm[image]", base64Image!);
     formData.append("imagesForm[team_slug]", "none");
@@ -211,6 +210,7 @@ function Profile() {
     })
       .then(async (response) => {
         if (response.ok) {
+          console.log(response);
           await response.json().then(async (data) => {
             toastNotification(0, data.message);
             await fetch(getTeamNames, {
@@ -256,6 +256,15 @@ function Profile() {
       }
     });
     return favDriverName;
+  }
+  function searchFavoriteTeam(fav_team: string): React.ReactNode {
+    let favTeamName: string = "";
+    itemData.teams.forEach((team) => {
+      if (team.slug === fav_team) {
+        favTeamName = team.name;
+      }
+    });
+    return favTeamName;
   }
 
   return (
@@ -374,7 +383,7 @@ function Profile() {
             onChange={handleFavDriverChange}
           >
             {itemData.drivers.map((driver: DriverModel) => (
-              <MenuItem value={driver.name} key={driver.slug}>
+              <MenuItem value={driver.slug} key={driver.slug}>
                 {driver.name}
               </MenuItem>
             ))}
@@ -408,7 +417,7 @@ function Profile() {
             </Button>
           </CardContent>
           <CardContent className={styles.profileItem}>
-            Kedvenc csapat:&ensp;{user.fav_team}
+            Kedvenc csapat:&ensp;{searchFavoriteTeam(user.fav_team)}
             <Button onClick={handleFavTeamChangeOpen}>
               <EditIcon />
             </Button>
@@ -516,6 +525,7 @@ export const ProfilLoader: LoaderFunction<UserModel> = async () => {
       await axios
         .get(getTeamNames)
         .then((data) => {
+          console.log(data);
           allData.teams = data.data;
         })
         .then(async () => {

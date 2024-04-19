@@ -16,17 +16,15 @@ class Api::V1::ImagesController < ApplicationController
 
     def create
         team = Team.find_by(slug: params[:imagesForm][:team_slug])
-        image_data = params[:imagesForm][:image_url]
         image = Image.new(image_create_params)
         image.team_slug = team.slug
 
-        if image.valid?
-            image.save
-            render json: {message: "Kép sikeresen hozzáadva."}, status: 200
+        if image.save
+          render json: { message: "Kép sikeresen hozzáadva." }, status: 200
         else
-            render json: {message: "Hiba a feltöltés közben.",errors: image.errors.full_messages}, status: 422
+          render json: { message: "Hiba a feltöltés közben.", errors: image.errors.full_messages }, status: 422
         end
-    end
+      end
 
     def destroy
         @image = Image.find(params[:id])

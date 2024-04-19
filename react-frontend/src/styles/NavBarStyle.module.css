@@ -3,16 +3,10 @@
     color:black !important;
     width: 100%;
 }
-.navbarLink:hover{
-    color: black;
-}
 .profileOptions{
     width: 100%;
     margin: auto;
     text-align: center;
-    color:black
-}
-.profileOptions:hover{
     color:black
 }
 .profileOptions:hover > .disable{

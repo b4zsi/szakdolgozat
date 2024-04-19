@@ -45,8 +45,9 @@ const HomePage = () => {
             />
             <CardContent className={styles.text}>
               Nézz szét az oldalon, ismerdd meg a versenyzőket,{" "}
-              <Link to={"/series"}>csapatokat</Link>, pályákat. Ha esetleg
-              kérdésed támad, bátran tedd fel a&nbsp;
+              <Link to={"/series/1"}>csapatokat</Link>,{" "}
+              <Link to={"/tracks"}>pályákat</Link>. Ha esetleg kérdésed támad,
+              bátran tedd fel a&nbsp;
               <Link to="/forum">fórumon</Link>!
             </CardContent>
           </Card>

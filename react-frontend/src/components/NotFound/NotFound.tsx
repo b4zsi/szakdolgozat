@@ -6,7 +6,8 @@ export default function NotFound() {
   return (
     <div className={styles.background}>
       <Card className={styles.notFoundCard}>
-        Ez az oldal nem létezik. Vissza a&ensp;
+        Ez az oldal nem létezik vagy csak <Link to="signup">regisztráció</Link>{" "}
+        után elérhető. Vissza a&ensp;
         <Link to="/" className={styles.link}>
           Főoldalra
         </Link>

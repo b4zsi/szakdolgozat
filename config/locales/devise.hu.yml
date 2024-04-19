@@ -20,7 +20,7 @@ hu:
       invalid_token: 'Hibás bejelentkező token.'
       timeout: 'A munkafolyamat lejárt. Újboli bejelentkezés szükséges.'
       inactive: 'A fiók még nincs aktiválva.'
-      not_found_in_database: 'Kérlek minden mezőt tölts ki.'
+      not_found_in_database: 'Az email cím nem található.'
     sessions:
       signed_in: 'Sikeres bejelentkezés.'
       signed_out: 'A kijelentkezés sikeres.'

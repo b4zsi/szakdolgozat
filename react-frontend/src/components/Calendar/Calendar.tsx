@@ -123,9 +123,9 @@ function Calendar() {
                   },
                 }),
               })
-                .then((response) => {
-                  response.json().then((data) => {
-                    window.location.reload();
+                .then(async (response) => {
+                  await response.json().then((data) => {
+                    console.log(data);
                     toastNotification(0, data.message);
                   });
                 })
@@ -203,7 +203,7 @@ function Calendar() {
               })
               .catch((response: Response) => {
                 response.json().then((data) => {
-                  toastNotification(1, data);
+                  toastNotification(1, data.message);
                 });
               });
           }}
