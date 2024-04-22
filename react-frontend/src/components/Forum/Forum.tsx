@@ -329,9 +329,15 @@ export const ForumLoader: LoaderFunction<UserModel> = async () => {
       window.location.href = "/login";
       return;
     });
-  await axios.get(getPosts).then((data) => {
-    allData.posts = data.data;
-  });
+  await axios
+    .get(getPosts, {
+      headers: {
+        Authorization: `${jwt_token}`,
+      },
+    })
+    .then((data) => {
+      allData.posts = data.data;
+    });
   await axios.get(getComments).then((data) => {
     allData.comments = data.data;
   });

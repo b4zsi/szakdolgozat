@@ -43,7 +43,9 @@ function Calendar() {
   const calendar_events: CalendarEventModel[] = loaderData!.calendar_events;
 
   return (
-    <div style={{ backgroundColor: "white", color: "black" }}>
+    <div
+      style={{ backgroundColor: "#007FFF", color: "black", minHeight: "80vh" }}
+    >
       {user && (
         <Scheduler
           view="month"
@@ -53,6 +55,7 @@ function Calendar() {
           draggable={user.admin}
           deletable={user.admin}
           locale={hu}
+          timeZone="UCT"
           disableViewNavigator={false}
           hourFormat="24"
           month={{
@@ -69,7 +72,7 @@ function Calendar() {
           }}
           week={{
             weekDays: [0, 1, 2, 3, 4, 5, 6],
-            weekStartOn: 0,
+            weekStartOn: 1,
             startHour: 0,
             endHour: 24,
             step: 60,
@@ -107,6 +110,7 @@ function Calendar() {
           }}
           events={calendarTypeConversion(calendar_events)}
           onConfirm={async (event, action) => {
+            console.log(event);
             if (action === "create") {
               await fetch(getCalendarEvents, {
                 method: "POST",
@@ -133,6 +137,7 @@ function Calendar() {
                   console.log(error);
                 });
             } else if (action === "edit") {
+              console.log("edit");
               await fetch(getCalendarEvents + event.event_id, {
                 method: "PUT",
                 headers: {
@@ -162,14 +167,16 @@ function Calendar() {
           onDelete={async (deletedEventId) => {
             await fetch(getCalendarEvents + deletedEventId, {
               method: "DELETE",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${jwt_token}`,
+              },
               body: JSON.stringify({
                 id: deletedEventId,
               }),
             })
               .then((response) => {
                 response.json().then((data) => {
-                  window.location.reload();
                   toastNotification(0, data.message);
                 });
               })

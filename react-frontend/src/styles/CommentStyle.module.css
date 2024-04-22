@@ -1,3 +1,9 @@
+.MainDiv{
+    width:90%;
+    margin: auto;
+    align-items: center;
+    min-height: 80vh !important;
+}
 
 .mainPostCard{
     border: 2px solid black;
@@ -49,11 +55,7 @@
     max-height: 4.5em;
     min-height: 1em ;
 }
-.post{
-    width:90%;
-    margin: auto;
-    align-items: center;
-}
+
 .postInfo{
     display: flex;
     justify-content: space-between;

@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import { ImageModel } from "../../model/ImageModel";
 import axios from "axios";
-import {
-  Link,
-  LoaderFunction,
-  useLoaderData,
-  useNavigate,
-} from "react-router-dom";
+import { LoaderFunction, useLoaderData, useNavigate } from "react-router-dom";
 import {
   Button,
-  Card,
   Dialog,
   DialogActions,
   DialogContent,
@@ -30,11 +24,18 @@ import { TeamModel } from "../../model/TeamModel";
 import getUser from "../userManagement";
 import { UserModel } from "../../model/UserModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
-import { getImages, getTeams } from "../../api_links";
+import {
+  getDriverNames,
+  getImages,
+  getTeamNames,
+  getTeams,
+} from "../../api_links";
 import { userInterface } from "../../interface/userInterface";
+import { DriverModel } from "../../model/DriverModel";
 
 let allDataType: {
   teams: TeamModel[];
+  drivers: DriverModel[];
   images: ImageModel[];
   user: UserModel;
 };
@@ -43,6 +44,7 @@ const Gallery = () => {
   const jwt_token = localStorage.getItem("jwt");
   const itemData: typeof allDataType = useLoaderData() as {
     teams: TeamModel[];
+    drivers: DriverModel[];
     images: ImageModel[];
     user: UserModel;
   };
@@ -55,8 +57,21 @@ const Gallery = () => {
   const [image, setImage] = useState("");
   const [base64Image, setBase64Image] = useState<File>();
   const [teamSlug, setTeamSlug] = useState<string>(itemData.teams[0].name);
+  const [driverSlug, setDriverSlug] = useState<string>(
+    itemData.drivers[0].name
+  );
   const [description, setDescription] = useState<string>("");
+  const [imageValue, setImageValue] = useState<string>("");
   const navigate = useNavigate();
+
+  const options = [
+    { name: "Versenyző", value: "driver" },
+    { name: "Sisak", value: "helmet" },
+    { name: "Logo", value: "logo" },
+    { name: "Egyéb", value: "other" },
+    { name: "Autó", value: "car" },
+    { name: "Pálya", value: "track" },
+  ];
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -72,15 +87,20 @@ const Gallery = () => {
   const handleTeamChange = (event: SelectChangeEvent<string>) => {
     setTeamSlug(event.target.value);
   };
+  const handleDriverChange = (event: SelectChangeEvent<string>) => {
+    setDriverSlug(event.target.value);
+  };
   const handledescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setDescription(event.target.value);
   };
-
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImage(URL.createObjectURL(event.target.files![0]));
     setBase64Image(event.target.files![0]);
+  };
+  const handleValueChange = (event: SelectChangeEvent<string>) => {
+    setImageValue(event.target.value);
   };
 
   const handleSubmit = async (event: React.MouseEvent) => {
@@ -123,6 +143,7 @@ const Gallery = () => {
           navigate("/gallery");
           window.location.reload();
         } else {
+          toastNotification(1, "Hiba történt a kép feltöltésekor!");
           console.log(response);
         }
       })
@@ -149,16 +170,7 @@ const Gallery = () => {
     });
   };
 
-  return !user ? (
-    <div className={styles.userOnly}>
-      <Card className={styles.userOnlyCard}>
-        A galéria csak felhasználóknak elérhető.&emsp;
-        <Link to="/login">Jelentkezz be</Link>&ensp;vagy ha még nincs fiókod,
-        akkor&emsp;
-        <Link to="/signup">regisztrálj</Link>!
-      </Card>
-    </div>
-  ) : (
+  return (
     <div className={styles.wrapper}>
       <div>
         <Dialog
@@ -186,23 +198,47 @@ const Gallery = () => {
               type="file"
               onChange={handleImageChange}
             />
-            <Select
-              required
-              autoFocus
-              margin="dense"
-              id="team_slug"
-              label="Csapat"
-              type="text"
-              fullWidth
-              value={teamSlug}
-              onChange={handleTeamChange}
-            >
-              {itemData.teams.map((team: TeamModel) => (
-                <MenuItem value={team.slug} key={team.slug}>
-                  {team.name}
-                </MenuItem>
+            {imageValue === "team" ||
+              (imageValue === "car" && (
+                <Select
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="team_slug"
+                  label="Csapat"
+                  type="text"
+                  fullWidth
+                  value={teamSlug}
+                  onChange={handleTeamChange}
+                >
+                  {itemData.teams.map((team: TeamModel) => (
+                    <MenuItem value={team.slug} key={team.slug}>
+                      {team.name}
+                    </MenuItem>
+                  ))}
+                </Select>
               ))}
-            </Select>
+            {imageValue === "driver" ||
+              (imageValue === "helmet" && (
+                <Select
+                  required
+                  autoFocus
+                  margin="dense"
+                  id="driver_slug"
+                  label="Versenyző"
+                  type="text"
+                  fullWidth
+                  value={driverSlug}
+                  onChange={handleDriverChange}
+                >
+                  {itemData.teams.map((team: TeamModel) => (
+                    <MenuItem value={team.slug} key={team.slug}>
+                      {team.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              ))}
+
             <TextField
               required
               autoFocus
@@ -215,8 +251,27 @@ const Gallery = () => {
               onChange={handledescriptionChange}
               maxRows={2}
             />
+            <Select
+              required
+              autoFocus
+              margin="dense"
+              id="image-type"
+              label="Kép típusa"
+              type="text"
+              fullWidth
+              value={imageValue}
+              onChange={handleValueChange}
+            >
+              {options.map((option) => (
+                <MenuItem value={option.value} key={option.value}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </Select>
             <label htmlFor="raised-button-file"></label>
-            {image && <img src={`${image}`} alt="Preview" />}
+            {image && (
+              <img src={`${image}`} alt="Preview" width={400} height={400} />
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
@@ -233,15 +288,13 @@ const Gallery = () => {
           </DialogActions>
         </Dialog>
       </div>
-      {!user.admin && (
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "#5C8E5E", borderRadius: 0 }}
-          onClick={handleClickOpen}
-        >
-          Kép hozzáadása
-        </Button>
-      )}
+      <Button
+        variant="contained"
+        style={{ backgroundColor: "#5C8E5E", borderRadius: 0 }}
+        onClick={handleClickOpen}
+      >
+        Kép hozzáadása
+      </Button>
       <div className={styles.filterSwitch}>
         Szűrők:
         <Switch
@@ -311,16 +364,14 @@ const Gallery = () => {
                   title={image.description}
                   subtitle={
                     <span>
-                      {!user.admin && (
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          className={styles.imageDeleteButton}
-                          onClick={() => handleImageDelete(image.id)}
-                        >
-                          törlés
-                        </Button>
-                      )}
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        className={styles.imageDeleteButton}
+                        onClick={() => handleImageDelete(image.id)}
+                      >
+                        törlés
+                      </Button>
                     </span>
                   }
                 />
@@ -337,33 +388,38 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
   const allData: typeof allDataType = {
     teams: [],
     images: [],
+    drivers: [],
     user: userInterface,
   };
 
-  await axios
-    .get(getImages, {
-      maxContentLength: 10000,
-      maxBodyLength: 10000,
-      responseType: "json",
-    })
-    .then((data) => {
-      console.log(data.data);
-      data.data.map((data: ImageModel) => {
-        const image = data;
-        allData.images.push(image);
+  await getUser().then((data) => {
+    allData.user = data!;
+  });
+  if (allData.user.admin === true) {
+    await axios
+      .get(getImages, {
+        maxContentLength: 10000,
+        maxBodyLength: 10000,
+        responseType: "json",
+      })
+      .then((data) => {
+        data.data.map((data: ImageModel) => {
+          const image = data;
+          allData.images.push(image);
+        });
+      })
+      .then(async () => {
+        await axios.get(getTeamNames).then((data) => {
+          allData.teams = data.data;
+        });
+        await axios.get(getDriverNames).then((data) => {
+          allData.drivers = data.data;
+        });
       });
-    })
-    .then(async () => {
-      await axios.get(getTeams).then((data) => {
-        allData.teams = data.data;
-      });
-    })
-    .then(async () => {
-      getUser().then((data) => {
-        allData.user = data!;
-      });
-    });
-  return allData;
+    return allData;
+  } else {
+    window.location.href = "/";
+  }
 };
 
 export default Gallery;

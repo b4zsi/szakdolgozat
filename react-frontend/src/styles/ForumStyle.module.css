@@ -32,7 +32,7 @@ body{
 }
 
 .postCreateDiv{
-    margin-top: 30em;
+    margin-top: 29%;
     background-color: white;
     border: 2px solid black;
     margin-bottom: 10%;
@@ -48,7 +48,7 @@ body{
     border: 2px solid black;
     background-color: white !important;
     height: 13.5em;
-    width: 70em;
+    width: 70vw !important;
     border-radius: 1vh !important;
     margin: auto;
     margin-top:3em;
@@ -65,7 +65,7 @@ body{
 .postBody{
     font-size: 2vh;
     padding: 3px !important;
-    min-height: 8em;
+    min-height: 55%;
     max-height: 2em;
 }
 .postContainer{
@@ -88,8 +88,7 @@ body{
     width:500px !important;
 }
 .writeComment{
-    margin-left: 30% !important;
-    margin-right: 10% !important;
+    margin-left: 50% !important;
     border: none;
     color: black !important;
     text-decoration: none;

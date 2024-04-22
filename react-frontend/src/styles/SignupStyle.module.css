@@ -1,6 +1,5 @@
 section {
-    height: 100%;
-    min-height:38em;
+    min-height:80vh !important;
     background-image: url("../images/authBack.jpg");
     background-size: cover;
     align-items: center;

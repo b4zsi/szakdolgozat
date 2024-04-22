@@ -60,7 +60,7 @@ function Comments() {
   }
 
   return (
-    <div className={styles.post}>
+    <div className={styles.MainDiv}>
       <Card className={styles.mainPostCard}>
         <CustomSnackbar />
         <p className={styles.postTitle}>{post.title}</p>
