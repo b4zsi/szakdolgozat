@@ -36,7 +36,6 @@ function ResponsiveAppBar() {
     { name: "Szeriák", url: "/series" },
     { name: "Fórum", url: "/forum" },
     { name: "Naptár", url: "/calendar" },
-    { name: "Galéria", url: "/gallery" },
     { name: "Szabálykönyv", url: "/rules" },
     { name: "Pályák", url: "/tracks" },
   ];

@@ -31,14 +31,16 @@ function Car_singular() {
   const car: CarModel = data.car;
   const [open, setOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [engine, setEngine] = useState<string>(car.engine);
-  const [fuel, setFuel] = useState<string>(car.fuel);
+  const [engine, setEngine] = useState<string>("");
+  const [fuel, setFuel] = useState<string>("");
   const [horsepower, setHorsepower] = useState<number>(car.horsepower);
   const [wins, setWins] = useState<number>(car.races_won);
   const [podiums, setPodiums] = useState<number>(car.podiums);
   const [poles, setPoles] = useState<number>(car.pole_positions);
   const [description, setDescription] = useState<string>(car.description);
   const image = [] as File[];
+
+  console.log(car);
 
   const handleOpen = () => {
     setOpen(true);
@@ -345,7 +347,9 @@ export const CarLoader: LoaderFunction<typeof allDataType> = async ({
   const allData: typeof allDataType = {
     car: carInterface,
   };
+  console.log(params);
   await axios.get(getCars + params.id).then((data) => {
+    console.log(data.data[0]);
     allData.car = data.data[0];
   });
   return allData;

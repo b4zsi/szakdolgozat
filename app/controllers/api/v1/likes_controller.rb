@@ -1,5 +1,7 @@
 class Api::V1::LikesController < ApplicationController
 
+  #GET /api/v1/likes
+
   def show
     @likes = Like.all
     render json: @likes

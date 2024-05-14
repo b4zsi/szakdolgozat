@@ -46,8 +46,8 @@
 }
 .divider{
     background-color: white;
-    margin: auto;
-    width: 50%;
+    margin: auto !important;
+    width: 60%;
 }
 .editButton{
     margin: auto;

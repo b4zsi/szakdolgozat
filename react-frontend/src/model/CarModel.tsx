@@ -13,4 +13,5 @@ export interface CarModel {
   horsepower: number;
   fuel: string;
   description: string;
+  slug: string;
 }

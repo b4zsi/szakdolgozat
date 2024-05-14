@@ -197,6 +197,7 @@ export const DriverLoader: LoaderFunction<typeof allDataType> = async ({
     .get(getDrivers + params.slug)
     .then((data) => {
       allData.driver = data.data[0];
+      console.log(data.data[0]);
       allData.driver.images[0] = data.data[0].images[0];
       return data.data[0];
     })

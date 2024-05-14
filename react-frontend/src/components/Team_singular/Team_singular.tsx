@@ -163,15 +163,13 @@ const Team_singular = () => {
           </Button>
         </form>
       </Dialog>
-
+      <div className={styles.imageDiv}>
+        {images.length === 0 && (
+          <img src={noHelmet} alt="kep" className={styles.noImage} />
+        )}
+        <Slider images={images} team_name={team.name} />
+      </div>
       <div className={styles.mainDivTeam}>
-        <div>
-          {images.length === 0 ? (
-            <img src={noHelmet} alt="kep" className={styles.noImage} />
-          ) : (
-            <Slider images={images} team_name={team.name} />
-          )}
-        </div>
         <CustomSnackbar />
         {user.id === 0 && user.email === "" && (
           <Button
@@ -184,8 +182,6 @@ const Team_singular = () => {
             Kedvenc csapat
           </Button>
         )}
-
-        <Divider variant="middle" className={styles.divider} />
         {team.cars.length === 0 && user.admin ? (
           <Button variant="outlined" onClick={handleOpen}>
             Adj hozzá autót a csapathoz
@@ -193,10 +189,8 @@ const Team_singular = () => {
         ) : team.cars.length === 0 && !user.admin ? (
           <div></div>
         ) : (
-          <Link to={`/cars/${team.cars[0]}`} className={styles.carLink}>
-            <Button className={styles.carButton}>
-              nézd meg a csapat autóját
-            </Button>
+          <Link to={`/cars/${team.cars[0].id}`} className={styles.carLink}>
+            nézd meg a csapat autóját
           </Link>
         )}
 

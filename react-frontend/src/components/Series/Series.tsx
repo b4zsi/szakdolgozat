@@ -110,6 +110,7 @@ const Series = () => {
   const [newTeamDescription, setNewTeamDescription] = useState<string>("");
   const [newDriverTeamID, setDriverTeamID] = useState<number>(0);
 
+  console.log(teams);
   async function handleTeamAdd(): Promise<void> {
     const jwt = localStorage.getItem("jwt");
     await fetch(getTeams, {
@@ -246,6 +247,7 @@ const Series = () => {
                 profile_picture: "",
                 images: [],
               });
+              setOpenDriverAdd(false);
             });
           })
           .catch(async (response) => {

@@ -21,6 +21,7 @@ gem 'active_model_serializers'
 gem "devise"
 gem "devise-jwt", "0.10.0"
 gem "jsonapi-serializer"
+gem 'rails-erd', :group => :development
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

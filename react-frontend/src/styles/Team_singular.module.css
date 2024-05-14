@@ -16,8 +16,12 @@
     left: 0;
     margin-bottom: 150px;
 }
+.imageDiv{
+    height: 41em;
+}
 
 .mainDivTeam{
+    border: 2px solid yellow;
     position: relative;
     margin-bottom: 5%;
     background-color: #007FFF !important;

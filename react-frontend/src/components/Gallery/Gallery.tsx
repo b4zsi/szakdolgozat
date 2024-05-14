@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ImageModel } from "../../model/ImageModel";
 import axios from "axios";
-import { LoaderFunction, useLoaderData, useNavigate } from "react-router-dom";
+import { LoaderFunction, useLoaderData } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -25,17 +25,22 @@ import getUser from "../userManagement";
 import { UserModel } from "../../model/UserModel";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import {
-  getDriverNames,
+  getCars,
+  getDrivers,
   getImages,
-  getTeamNames,
   getTeams,
+  getTracks,
 } from "../../api_links";
 import { userInterface } from "../../interface/userInterface";
 import { DriverModel } from "../../model/DriverModel";
+import { CarModel } from "../../model/CarModel";
+import { TrackModel } from "../../model/TrackModel";
 
 let allDataType: {
   teams: TeamModel[];
   drivers: DriverModel[];
+  cars: CarModel[];
+  tracks: TrackModel[];
   images: ImageModel[];
   user: UserModel;
 };
@@ -45,29 +50,29 @@ const Gallery = () => {
   const itemData: typeof allDataType = useLoaderData() as {
     teams: TeamModel[];
     drivers: DriverModel[];
+    cars: CarModel[];
+    tracks: TrackModel[];
     images: ImageModel[];
     user: UserModel;
   };
   const [teamFilter, setTeamFilter] = useState<string>("all");
   const [useFilter, setUseFilter] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [user, setUser] = useState<UserModel | null>(itemData.user);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [image, setImage] = useState("");
   const [base64Image, setBase64Image] = useState<File>();
-  const [teamSlug, setTeamSlug] = useState<string>(itemData.teams[0].name);
+  const [teamSlug, setTeamSlug] = useState<string>(itemData.teams[0].slug);
   const [driverSlug, setDriverSlug] = useState<string>(
-    itemData.drivers[0].name
+    itemData.drivers[0].slug
   );
+  const [track, setTrack] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [imageValue, setImageValue] = useState<string>("");
-  const navigate = useNavigate();
-
+  const [imageValue, setImageValue] = useState<string>("other");
+  const [filename, setFilename] = useState<string>("");
   const options = [
-    { name: "Versenyző", value: "driver" },
-    { name: "Sisak", value: "helmet" },
-    { name: "Logo", value: "logo" },
+    { name: "Versenyző profil", value: "driver" },
+    { name: "Versenyző sisak", value: "helmet" },
+    { name: "Csapat logó", value: "logo" },
     { name: "Egyéb", value: "other" },
     { name: "Autó", value: "car" },
     { name: "Pálya", value: "track" },
@@ -75,6 +80,60 @@ const Gallery = () => {
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+  const findDriver = (driverSlug: string): DriverModel => {
+    let a: DriverModel | undefined = undefined;
+    itemData.drivers.map((driver) => {
+      if (driver.slug === driverSlug) {
+        a = driver;
+      } else {
+        return undefined;
+      }
+    });
+    return a as unknown as DriverModel;
+  };
+  const findTeam = (): TeamModel => {
+    let a: TeamModel | undefined = undefined;
+    itemData.teams.map((team) => {
+      if (team.slug === teamSlug) {
+        a = team;
+      } else {
+        return undefined;
+      }
+    });
+    return a as unknown as TeamModel;
+  };
+  const findLogo = (): number => {
+    findTeam().images.map((image) => {
+      if (image.image_url.includes(teamSlug + "-profile")) {
+        return image.id;
+      }
+    });
+    return 0;
+  };
+  const findImage = (images: ImageModel[], a: string): number => {
+    images.map((image) => {
+      if (image.image_url.includes(a)) {
+        return image.id;
+      }
+    });
+    return 0;
+  };
+  const findCar = (teamSlug: string): CarModel | undefined => {
+    itemData.cars.map((car) => {
+      if (car.team_slug === teamSlug) {
+        return car;
+      }
+    });
+    return undefined;
+  };
+  const findTrack = (trackSlug: string): TrackModel | undefined => {
+    itemData.tracks.map((track) => {
+      if (track.slug === trackSlug) {
+        return track;
+      }
+    });
+    return undefined;
   };
 
   const handleClose = () => {
@@ -102,15 +161,135 @@ const Gallery = () => {
   const handleValueChange = (event: SelectChangeEvent<string>) => {
     setImageValue(event.target.value);
   };
+  const handleTrackChange = (event: SelectChangeEvent<string>) => {
+    setTrack(event.target.value);
+  };
 
   const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
     const formData = new FormData();
 
+    if (imageValue === "driver") {
+      setName(driverSlug);
+      console.log(findDriver(driverSlug));
+      setTeamSlug(findDriver(driverSlug)!.team_slug);
+      setFilename(driverSlug + "-profile");
+    } else if (imageValue === "helmet") {
+      setName(driverSlug);
+      setTeamSlug(findDriver(driverSlug)!.team_slug);
+      setFilename(driverSlug + "-profile");
+    } else if (imageValue === "car") {
+      setName(teamSlug + "-car");
+      setFilename(teamSlug + "-car");
+    } else if (imageValue === "team") {
+      setName(teamSlug);
+    } else if (imageValue === "logo") {
+      setName(teamSlug);
+      setFilename(teamSlug + "-profile");
+    }
+
     formData.append("imagesForm[image_name]", name);
     formData.append("imagesForm[team_slug]", teamSlug);
     formData.append("imagesForm[description]", description);
     formData.append("imagesForm[image]", base64Image!);
+    formData.append("imagesForm[filename]", filename);
+
+    console.log(findDriver(driverSlug)!.images);
+    if (imageValue === "driver" || imageValue === "helmet") {
+      if (findDriver(driverSlug)!.images.length > 0) {
+        await fetch(
+          getImages +
+            findDriver(driverSlug)!.images[
+              findImage(findDriver(driverSlug)!.images, "profile")
+            ].id,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${jwt_token}`,
+            },
+          }
+        ).then(async (response) => {
+          if (response.ok) {
+            await response.json().then((data) => {
+              toastNotification(0, data.message);
+            });
+          }
+        });
+      }
+      if (findDriver(driverSlug)!.images.length > 0) {
+        await fetch(
+          getImages +
+            findDriver(driverSlug)!.images[
+              findImage(findDriver(driverSlug)!.images, "helmet")
+            ].id,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${jwt_token}`,
+            },
+          }
+        ).then(async (response) => {
+          if (response.ok) {
+            await response.json().then((data) => {
+              toastNotification(0, data.message);
+            });
+          }
+        });
+      }
+    }
+    console.log(findTeam());
+    if (imageValue === "logo" && findTeam()!.images.length > 0) {
+      await fetch(getImages + findTeam()!.images[findLogo()].id, {
+        method: "DELETE",
+        headers: {
+          Authorization: `${jwt_token}`,
+        },
+      }).then(async (response) => {
+        if (response.ok) {
+          await response.json().then((data) => {
+            toastNotification(0, data.message);
+          });
+        }
+      });
+    }
+    if (imageValue === "car" && findCar(teamSlug)!.images.length > 0) {
+      await fetch(
+        getImages +
+          findDriver(driverSlug)!.images[
+            findImage(findDriver(driverSlug)!.images, "car")
+          ].id,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${jwt_token}`,
+          },
+        }
+      ).then(async (response) => {
+        if (response.ok) {
+          await response.json().then((data) => {
+            toastNotification(0, data.message);
+          });
+        }
+      });
+    }
+    if (imageValue === "track" && findTrack(track)!.images.length > 0) {
+      await fetch(getImages + findTrack(track)!.images[0].id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${jwt_token}`,
+        },
+      }).then(async (response) => {
+        if (response.ok) {
+          await response.json().then((data) => {
+            toastNotification(0, data.message);
+          });
+        }
+      });
+    }
 
     await fetch(getImages, {
       method: "POST",
@@ -123,32 +302,18 @@ const Gallery = () => {
         if (response.ok) {
           await response.json().then(async (data) => {
             toastNotification(0, data.message);
-            await fetch(getTeams, {
-              method: "PUT",
-              headers: {
-                Authorization: `${jwt_token}`,
-              },
-              body: JSON.stringify({
-                drivers: {
-                  id: name,
-                  image: base64Image,
-                  slug: teamSlug,
-                },
-              }),
-            }).then((response) => {
-              console.log(response);
-            });
           });
           setOpen(false);
-          navigate("/gallery");
           window.location.reload();
         } else {
           toastNotification(1, "Hiba történt a kép feltöltésekor!");
-          console.log(response);
+          await response.json().then((data) => {
+            console.log(data);
+          });
         }
       })
-      .catch((response: Response) => {
-        response.json().then((data) => {
+      .catch(async (response: Response) => {
+        await response.json().then((data) => {
           console.log(data);
         });
       });
@@ -187,7 +352,10 @@ const Gallery = () => {
               id="name"
               label="Kép neve"
               type="text"
+              maxRows={1}
+              inputProps={{ minLength: 5, maxLength: 50 }}
               fullWidth
+              disabled={imageValue !== "other"}
               value={name}
               onChange={handleNameChange}
             />
@@ -198,46 +366,46 @@ const Gallery = () => {
               type="file"
               onChange={handleImageChange}
             />
-            {imageValue === "team" ||
-              (imageValue === "car" && (
-                <Select
-                  required
-                  autoFocus
-                  margin="dense"
-                  id="team_slug"
-                  label="Csapat"
-                  type="text"
-                  fullWidth
-                  value={teamSlug}
-                  onChange={handleTeamChange}
-                >
-                  {itemData.teams.map((team: TeamModel) => (
-                    <MenuItem value={team.slug} key={team.slug}>
-                      {team.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              ))}
-            {imageValue === "driver" ||
-              (imageValue === "helmet" && (
-                <Select
-                  required
-                  autoFocus
-                  margin="dense"
-                  id="driver_slug"
-                  label="Versenyző"
-                  type="text"
-                  fullWidth
-                  value={driverSlug}
-                  onChange={handleDriverChange}
-                >
-                  {itemData.teams.map((team: TeamModel) => (
-                    <MenuItem value={team.slug} key={team.slug}>
-                      {team.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              ))}
+            {(imageValue === "logo" ||
+              imageValue === "car" ||
+              imageValue === "other") && (
+              <Select
+                required
+                autoFocus
+                margin="dense"
+                id="team_slug"
+                label="Csapat"
+                type="text"
+                fullWidth
+                value={teamSlug}
+                onChange={handleTeamChange}
+              >
+                {itemData.teams.map((team: TeamModel) => (
+                  <MenuItem value={team.slug} key={team.name}>
+                    {team.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+            {(imageValue === "driver" || imageValue === "helmet") && (
+              <Select
+                required
+                autoFocus
+                margin="dense"
+                id="driver_slug"
+                label="Versenyző"
+                type="text"
+                fullWidth
+                value={driverSlug}
+                onChange={handleDriverChange}
+              >
+                {itemData.drivers.map((driver: DriverModel) => (
+                  <MenuItem value={driver.slug} key={driver.slug}>
+                    {driver.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
 
             <TextField
               required
@@ -246,11 +414,32 @@ const Gallery = () => {
               id="description"
               label="Képleírás"
               type="text"
+              inputProps={{ maxLength: 200 }}
               fullWidth
               value={description}
               onChange={handledescriptionChange}
               maxRows={2}
             />
+            {imageValue === "track" && (
+              <Select
+                required
+                autoFocus
+                margin="dense"
+                id="track"
+                label="Pálya"
+                type="text"
+                fullWidth
+                value={track}
+                onChange={handleTrackChange}
+              >
+                {itemData.tracks.map((track: TrackModel) => (
+                  <MenuItem value={track.slug} key={track.name}>
+                    {track.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+
             <Select
               required
               autoFocus
@@ -268,6 +457,7 @@ const Gallery = () => {
                 </MenuItem>
               ))}
             </Select>
+
             <label htmlFor="raised-button-file"></label>
             {image && (
               <img src={`${image}`} alt="Preview" width={400} height={400} />
@@ -389,10 +579,16 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
     teams: [],
     images: [],
     drivers: [],
+    cars: [],
+    tracks: [],
     user: userInterface,
   };
 
   await getUser().then((data) => {
+    if (data === undefined) {
+      window.location.href = "/";
+      return;
+    }
     allData.user = data!;
   });
   if (allData.user.admin === true) {
@@ -409,11 +605,17 @@ export const GalleryLoader: LoaderFunction<ImageModel[]> = async () => {
         });
       })
       .then(async () => {
-        await axios.get(getTeamNames).then((data) => {
+        await axios.get(getTeams).then((data) => {
           allData.teams = data.data;
         });
-        await axios.get(getDriverNames).then((data) => {
+        await axios.get(getDrivers).then((data) => {
           allData.drivers = data.data;
+        });
+        await axios.get(getCars).then((data) => {
+          allData.cars = data.data;
+        });
+        await axios.get(getTracks).then((data) => {
+          allData.tracks = data.data;
         });
       });
     return allData;

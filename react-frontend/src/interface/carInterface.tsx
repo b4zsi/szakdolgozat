@@ -13,4 +13,5 @@ export const carInterface: CarModel = {
   horsepower: 0,
   fuel: "",
   description: "",
+  slug: "",
 };
