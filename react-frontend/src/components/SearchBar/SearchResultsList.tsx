@@ -1,40 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "./SearchResultsList.css";
 import { SearchResult } from "./SearchResult";
-import { FC, useRef, useState } from "react";
-import React from "react";
+import { FC } from "react";
 
 type Result = {
   results: string[];
-  resultSlugs: string[];
 };
-const [isVisible, setIsVisible] = useState(true);
-const resultsListRef = useRef<HTMLDivElement>(null);
 
-React.useEffect(() => {
-  function handleClickOutside(event: MouseEvent) {
-    if (
-      resultsListRef.current &&
-      !resultsListRef.current.contains(event.target as Node)
-    ) {
-      setIsVisible(false);
-    }
-  }
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [resultsListRef]);
+function slugify(name: string) {
+  return name.toLowerCase().replaceAll(" ", "-");
+}
 
 export const SearchResultsList: FC<Result> = (result: Result) => {
   return (
-    <div
-      ref={resultsListRef}
-      className={`results-list ${isVisible ? "visible" : "hidden"}`}
-    >
+    <div className="results-list">
       {result.results.map((resultNames: string, id: number) => {
-        return <SearchResult name={resultNames} slug={resultNames} key={id} />;
+        return (
+          <SearchResult
+            name={resultNames}
+            slug={slugify(resultNames)}
+            key={id}
+          />
+        );
       })}
     </div>
   );

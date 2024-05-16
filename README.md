@@ -1,7 +1,7 @@
 # Formautózás Hírportál
 
 Információs és közösségi interakciós lehetőségeket biztosít a motorsportok kedvelőinek. A portál
-tartalmaz olyan funkciókat, mint a hírek, eseménynaptárak és fórumok, ahol a felhasználók megvitathatják kedvenc témáikat ebben a témában. A közösségi felület lehetővé teszi a felhasználók számára, hogy kapcsolatba lépjenek egymással, megosszák tapasztalataikat, és közösséget építsenek közös szenvedélyük köré.
+tartalmaz olyan funkciókat, mint az eseménynaptár és fórum, ahol a felhasználók megvitathatják kedvenc témáikat ebben a témában. A közösségi felület lehetővé teszi a felhasználók számára, hogy kapcsolatba lépjenek egymással, megosszák tapasztalataikat, és közösséget építsenek közös szenvedélyük köré.
 
 ## Tartalomjegyzék
 
@@ -42,6 +42,7 @@ tartalmaz olyan funkciókat, mint a hírek, eseménynaptárak és fórumok, ahol
 4. Docker konténer beállítása
 
 ```bash
+    cd config
     docker compose up
 ```
 
@@ -51,7 +52,7 @@ tartalmaz olyan funkciókat, mint a hírek, eseménynaptárak és fórumok, ahol
     docker start <container_id>
     rails s
     cd frontend
-    npm run dev
+    npm start
 ```
 
 ## Funkciók

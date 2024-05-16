@@ -11,7 +11,7 @@ class Api::V1::TracksController < ApplicationController
 
   def create
     @track = Track.new(track_params)
-    if track.valid?
+    if @track.valid?
       @track.save
       render json: @track, status: :created
     else

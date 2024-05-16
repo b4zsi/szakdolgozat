@@ -37,14 +37,12 @@ body {
     margin: auto;   
     height: 22em;
     width: 85em;
-    border: 2px solid yellow;  
 }
 .imageListTeam{
     display: flex !important;
     margin: auto;   
     height: 30em;
     width: 85em;
-    border: 2px solid yellow;
 }
 
 .image-list:hover {

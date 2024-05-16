@@ -593,10 +593,7 @@ const Series = () => {
       <div className={styles.searchBarContainer}>
         <SearchBar setResults={setResults} />
         {results && (
-          <SearchResultsList
-            results={results as unknown as string[]}
-            resultSlugs={[]}
-          />
+          <SearchResultsList results={results as unknown as string[]} />
         )}
       </div>
       <Box sx={{ margin: 5 }}>

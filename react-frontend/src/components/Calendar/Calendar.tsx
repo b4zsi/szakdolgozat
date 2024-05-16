@@ -55,7 +55,7 @@ function Calendar() {
           draggable={user.admin}
           deletable={user.admin}
           locale={hu}
-          timeZone="UCT"
+          timeZone="CET"
           disableViewNavigator={false}
           hourFormat="24"
           month={{
@@ -137,7 +137,7 @@ function Calendar() {
                   console.log(error);
                 });
             } else if (action === "edit") {
-              console.log("edit");
+              console.log(event);
               await fetch(getCalendarEvents + event.event_id, {
                 method: "PUT",
                 headers: {

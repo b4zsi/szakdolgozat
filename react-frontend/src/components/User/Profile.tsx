@@ -45,8 +45,8 @@ function Profile() {
   const teams: TeamModel[] = itemData.teams;
   const jwt_token = localStorage.getItem("jwt");
   const [email, setEmail] = useState<string>(user.email);
-  const [vezeteknev, setVezeteknev] = useState<string>(user.keresztnev);
-  const [keresztnev, setKeresztnev] = useState<string>(user.vezeteknev);
+  const [vezeteknev, setVezeteknev] = useState<string>(user.vezeteknev);
+  const [keresztnev, setKeresztnev] = useState<string>(user.keresztnev);
   const [username, setUsername] = useState<string>(user.username);
   const [favTeam, setFavTeam] = useState<string>(
     user.fav_team === undefined ? "Oracle Red Bull Racing" : user.fav_team
@@ -163,20 +163,26 @@ function Profile() {
           fav_driver: favDriver,
         },
       }),
-    }).then(async (response) => {
-      if (response.ok) {
-        setUsernameDialogOpen(false);
-        setEmailDialogOpen(false);
-        setFavTeamDialogOpen(false);
-        await response.json().then((data) => {
-          toastNotification(0, data.message).then(() => {
-            window.location.reload();
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          setUsernameDialogOpen(false);
+          setEmailDialogOpen(false);
+          setFavTeamDialogOpen(false);
+          await response.json().then((data) => {
+            toastNotification(0, data.message).then(() => {
+              window.location.reload();
+            });
           });
-        });
-      } else {
-        console.log(response);
-      }
-    });
+        } else {
+          await response.json().then((data) => {
+            toastNotification(1, data.message);
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const handleImageSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();

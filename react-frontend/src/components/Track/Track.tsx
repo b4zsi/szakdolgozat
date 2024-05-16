@@ -15,7 +15,7 @@ import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { TrackModel } from "../../model/TrackModel";
 import styles from "../../styles/TrackStyle.module.css";
 import axios from "axios";
-import { getDriverNames, getTracks } from "../../api_links";
+import { getCurrentUser, getDriverNames, getTracks } from "../../api_links";
 import { trackInterface } from "../../interface/trackInterface";
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,18 +23,23 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CustomSnackbar, { toastNotification } from "../Snackbar/snackbar";
 import { DriverModel } from "../../model/DriverModel";
 import noHelmet from "../../images/nohelmet.png";
+import { userInterface } from "../../interface/userInterface";
+import { UserModel } from "../../model/UserModel";
 
 let allDataType: {
   track: TrackModel;
   drivers: DriverModel[];
+  user: UserModel;
 };
 function Track() {
   const data: typeof allDataType = useLoaderData() as {
     track: TrackModel;
     drivers: DriverModel[];
+    user: UserModel;
   };
   const track: TrackModel = data.track;
   const drivers: DriverModel[] = data.drivers;
+  const user: UserModel = data.user;
   const [open, setOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [name, setName] = useState<string>(track.name);
@@ -48,6 +53,8 @@ function Track() {
   const [turns, setTurns] = useState<number>(track.turns);
   const [description, setDescription] = useState<string>(track.description);
   const image = [] as File[];
+
+  console.log(user.admin);
 
   const handleOpen = () => {
     setOpen(true);
@@ -365,24 +372,30 @@ function Track() {
           </Grid>
         </Grid>
       </Grid>
-      <div
-        style={{ display: "flex", flexDirection: "column", marginLeft: "40%" }}
-      >
-        <Button
-          variant="contained"
-          onClick={handleOpen}
-          className={styles.editButton}
+      {user.admin && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "40%",
+          }}
         >
-          <EditIcon />
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={handleDeleteOpen}
-          className={styles.editButton}
-        >
-          <DeleteIcon />
-        </Button>
-      </div>
+          <Button
+            variant="contained"
+            onClick={handleOpen}
+            className={styles.editButton}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleDeleteOpen}
+            className={styles.editButton}
+          >
+            <DeleteIcon />
+          </Button>
+        </div>
+      )}
       <Card className={styles.description}>
         <CardContent className={styles.cardContent}>
           {track.description}
@@ -395,9 +408,11 @@ function Track() {
 export const TrackLoader: LoaderFunction<typeof allDataType> = async ({
   params,
 }) => {
+  const jwt = localStorage.getItem("jwt");
   const allData: typeof allDataType = {
     track: trackInterface,
     drivers: [],
+    user: userInterface,
   };
   await axios
     .get(getTracks + params.id)
@@ -408,6 +423,20 @@ export const TrackLoader: LoaderFunction<typeof allDataType> = async ({
       await axios.get(getDriverNames).then((data) => {
         allData.drivers = data.data;
       });
+    });
+  await axios
+    .get(getCurrentUser, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `${jwt}`,
+      },
+    })
+    .then((data) => {
+      allData.user = data.data;
+    })
+    .catch((error) => {
+      console.log(error);
     });
   return allData;
 };

@@ -41,7 +41,7 @@ function Forum() {
 
   const loaderData: typeof allDataType = useLoaderData() as typeof allDataType;
   const user: UserModel = loaderData!.user;
-  const posts: PostModel[] = loaderData!.posts;
+  const [posts, setPosts] = useState<PostModel[]>(loaderData!.posts);
   const likes: LikeModel[] = loaderData!.likes;
 
   const navigate = useNavigate();
@@ -89,6 +89,7 @@ function Forum() {
             });
             toastNotification(0, data.message);
           });
+          setPosts(posts);
         } else {
           response.json().then((data) => {
             toastNotification(1, data.message);
@@ -115,7 +116,6 @@ function Forum() {
       await axios.delete(getLikes + `/${findId(id)}`).then((response) => {
         console.log(response);
         if (response.status === 201) {
-          console.log("first");
           likes.splice(id, 1);
           posts[id].like -= 1;
         }
@@ -160,7 +160,7 @@ function Forum() {
       .then((response) => {
         if (response.status === 200) {
           toastNotification(0, response.data.message).then(() => {
-            posts.splice(id, 1);
+            setPosts(posts.filter((post) => post.id !== id));
           });
         }
       });
