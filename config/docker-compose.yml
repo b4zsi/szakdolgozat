@@ -9,20 +9,5 @@ services:
       POSTGRES_PASSWORD: bogressuti
     ports:
       - "5432:5432"
-    command:
-      ["postgres", "-c", "max_connections=100", "-c", "shared_buffers=256MB"]
-    depends_on:
-      - init-db
-
-  init-db:
-    image: postgres:latest
-    command:
-      ["postgres", "-c", "max_connections=100", "-c", "shared_buffers=256MB"]
-    entrypoint:
-      [
-        "/bin/sh",
-        "-c",
-        "sleep 10 && echo 'Waiting for PostgreSQL to start...' && while ! nc -z postgresql 5432; do sleep 1; done; echo 'PostgreSQL started. Importing backup...' && psql -U postgres -d postgres -a -f ../backup.sql",
-      ]
-    depends_on:
-      - postgresql
+    volumes:
+      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
