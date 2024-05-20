@@ -1,0 +1,5 @@
+.git
+log/*
+tmp/*
+/react-frontend
+/node_modules

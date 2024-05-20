@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: bogressuti
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
+
+  web:
+    build: .
+    container_name: rails_app
+    command: bash -c "rm -f tmp/pids/server.pid && rails server"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_HOST: 0.0.0.0
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: bogressuti
+      DATABASE_NAME: postgres
