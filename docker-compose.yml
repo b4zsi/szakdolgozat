@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 services:
   postgresql:
     image: postgres:latest
@@ -15,13 +15,13 @@ services:
   web:
     build: .
     container_name: rails_app
-    command: bash -c "rm -f tmp/pids/server.pid && rails server"
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
     environment:
-      DATABASE_HOST: 0.0.0.0
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: bogressuti
-      DATABASE_NAME: postgres
+      - DATABASE_HOST=postgresql
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=bogressuti
+      - DATABASE_NAME=postgres
+      - PORT=3000
